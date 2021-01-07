@@ -103,6 +103,12 @@
     <ClCompile Include="equippable.cpp">
       <Filter>Game\GameScene\Shop</Filter>
     </ClCompile>
+    <ClCompile Include="Lines.cpp">
+      <Filter>Framework\Text-Related</Filter>
+    </ClCompile>
+    <ClCompile Include="LineManager.cpp">
+      <Filter>Framework\Text-Related</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="playground.h">
@@ -218,6 +224,12 @@
     </ClInclude>
     <ClInclude Include="equippable.h">
       <Filter>Game\GameScene\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="Lines.h">
+      <Filter>Framework\Text-Related</Filter>
+    </ClInclude>
+    <ClInclude Include="LineManager.h">
+      <Filter>Framework\Text-Related</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
