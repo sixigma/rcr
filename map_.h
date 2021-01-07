@@ -6,6 +6,10 @@ class map_: public gameScene
 {
 	protected:
 	player* pl;
+	vector<RECT> obst;
+	POINT prevPlPos;
+	POINT* currPlPos;
+	RECT tempRct;
 
 	public:
 	map_() {}

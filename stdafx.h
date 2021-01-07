@@ -41,6 +41,7 @@ extern HINSTANCE	_hInst;
 extern HWND			_hWnd;
 extern POINT		_mouse, _currOrg, _newOrg;
 extern RECT			_camMovLim, _totRegion;
+extern BOOL			_moveKeyDisabled;
 
 #include "keyManager.h"
 #include "randomNumber.h"

@@ -3,12 +3,17 @@
 #include "player.h"
 #include "map1.h"
 #include "map2.h"
+#include "map3.h"
+#include "map4.h"
+#include "map4-2.h"
+#include "map5.h"
 
 player* gameScene::_p;
-map1* gameScene::_map1;
-map2* gameScene::_map2;
+vector<map_*> gameScene::_mapList;
 map_* gameScene::_currMap;
-int gameScene::prevMapIdx, gameScene::mapIdx;
+int gameScene::_prevMapNum, gameScene::_mapNum;
+bool gameScene::_isInShop, gameScene::_shouldBePaused;
+int gameScene::_countForReEnablingKeyInput;
 
 gameScene::gameScene()
 {
@@ -21,8 +26,6 @@ gameScene::~gameScene()
 HRESULT gameScene::init()
 {
 	_currOrg = _newOrg = { 0, 0 };
-	IMG->addF("테스트", "test.bmp", 624, 184, 6, 2, TRUE, RGB(255, 0, 255));
-	IMG->find("테스트")->changeColor(RGB(0, 232, 216), RGB(0, 255, 0));
 
 	_p = new player;
 	_p->init();
@@ -30,14 +33,18 @@ HRESULT gameScene::init()
 	_isInShop = false;
 	_shouldBePaused = false;
 	
-	_map1 = new map1;
-	_map2 = new map2;
+	_mapList.push_back(new map1); // 0
+	_mapList.push_back(new map2); // 1
+	_mapList.push_back(new map3); // 2
+	_mapList.push_back(new map4); // 3
+	_mapList.push_back(new map4_2); // 4
+	_mapList.push_back(new map5); // 5
 
-	prevMapIdx = mapIdx = 0;
+	_prevMapNum = _mapNum = 0;
 
 	_totRegion = { 0, 0, 3036, 640 };
 	_camMovLim = { _totRegion.left, _totRegion.top, _totRegion.right - _totRegion.left - WINW, _totRegion.top };
-	_currMap = _map1;
+	_currMap = _mapList[0];
 	_currMap->setLinkTo(_p);
 	_currMap->init();
 	return S_OK;
@@ -49,49 +56,105 @@ void gameScene::release()
 	SAFE_DEL(_p);
 
 	_currMap->release();
-	SAFE_DEL(_map1);
-	SAFE_DEL(_map2);
+	for (size_t i = 0; i < _mapList.size(); ++i)
+	{
+		SAFE_DEL(_mapList[i]);
+	}
 }
 
 void gameScene::update()
 {
-
+	_p->update();
 	_currMap->update();
 }
 
 void gameScene::render()
 {
-	PatBlt(getMemDC(), 0, 0, WINW, WINH, BLACKNESS);
+	if (_moveKeyDisabled && _prevMapNum == _mapNum)
+	{
+		if (_countForReEnablingKeyInput == 0) _moveKeyDisabled = FALSE;
+		--_countForReEnablingKeyInput;
+	}
+	PatBlt(getMemDC(), 0, 96, WINW, 640, WHITENESS);
 	_currMap->render();
+	_p->render();
 
-	IMG->find("테스트")->frameRender(getMemDC(), _p->getPos().x, _p->getPos().y);
-
+#ifdef _DEBUG
 	char str[256];
+	{
+		if (KEY->isToggledOn(VK_TAB)) DrawRct(getMemDC(), _p->getPos().x - 32, _p->getPos().y - 8, 64, 8);
+	}
+#endif
+
+
+	PatBlt(getMemDC(), 0, 0, WINW, 96, BLACKNESS);
+	PatBlt(getMemDC(), 0, 96 + 640, WINW, WINH - 640 - 96, BLACKNESS);
+
 #ifdef _DEBUG
 	{
 		sprintf_s(str, "Player pos: %d, %d", _p->getPos().x, _p->getPos().y);
 		TextOut(getMemDC(), 0, 48, str, static_cast<int>(strlen(str)));
+
+		sprintf_s(str, "Pointer pos: %d, %d (%d, %d)", _mouse.x + _currOrg.x, _mouse.y + _currOrg.y, _mouse.x, _mouse.y);
+		TextOut(getMemDC(), 0, 64, str, static_cast<int>(strlen(str)));
+
+		if (_mouse.x + 42 < WINW)
+		{
+			Rectangle(getMemDC(), _mouse.x + 9, _mouse.y + 9, _mouse.x + 10 + 33, _mouse.y + 10 + 33);
+			StretchBlt(getMemDC(), _mouse.x + 10, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
+			DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
+			DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 30 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+		}
+		else
+		{
+			Rectangle(getMemDC(), _mouse.x - 43, _mouse.y + 9, _mouse.x + 10 - 19, _mouse.y + 10 + 33);
+			StretchBlt(getMemDC(), _mouse.x - 42, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
+			DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
+			DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 22 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+		}
 	}
 #endif
-	
+
+
 }
 
-void gameScene::goToRoom(int idx)
+void gameScene::goToMap(int num)
 {
+	_moveKeyDisabled = TRUE;
 	_currMap->release();
-
-	prevMapIdx = mapIdx;
-	switch (idx)
+	_countForReEnablingKeyInput = 180;
+	_prevMapNum = _mapNum;
+	switch (num)
 	{
 		case 1:
-			_totRegion = { 0, 0, 3036, 640 };
-			_camMovLim = { _totRegion.left, _totRegion.top, _totRegion.right - _totRegion.left - WINW, _totRegion.top };
-			_currMap = _map1;
+			_totRegion = { 0, 96, 3036, 640 };
+			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_currMap = _mapList[0];
 			break;
 		case 2:
-			_totRegion = { 0, 0, 2012, 640 };
-			_camMovLim = { _totRegion.left, _totRegion.top, _totRegion.right - _totRegion.left - WINW, _totRegion.top };
-			_currMap = _map2;
+			_totRegion = { 0, 96, 2012, 640 };
+			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_currMap = _mapList[1];
+			break;
+		case 3:
+			_totRegion = { 0, 96, 2012, 640 };
+			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_currMap = _mapList[2];
+			break;
+		case 4:
+			_totRegion = { 0, 96, 3040, 640 };
+			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_currMap = _mapList[3];
+			break;
+		case 402:
+			_totRegion = { 0, 96, 1884, 640 };
+			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_currMap = _mapList[4];
+			break;
+		case 5:
+			_totRegion = { 0, 96, 2012, 640 };
+			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_currMap = _mapList[5];
 			break;
 	}
 	_currMap->setLinkTo(_p);
