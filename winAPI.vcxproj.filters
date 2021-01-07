@@ -109,6 +109,18 @@
     <ClCompile Include="LineManager.cpp">
       <Filter>Framework\Text-Related</Filter>
     </ClCompile>
+    <ClCompile Include="map3.cpp">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="map4.cpp">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="map4-2.cpp">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClCompile>
+    <ClCompile Include="map5.cpp">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="playground.h">
@@ -230,6 +242,18 @@
     </ClInclude>
     <ClInclude Include="LineManager.h">
       <Filter>Framework\Text-Related</Filter>
+    </ClInclude>
+    <ClInclude Include="map3.h">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="map4.h">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="map4-2.h">
+      <Filter>Game\GameScene\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="map5.h">
+      <Filter>Game\GameScene\Maps</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

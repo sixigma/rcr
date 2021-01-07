@@ -11,4 +11,3 @@ class map2: public map_
 	void update() override;
 	void render() override;
 };
-
