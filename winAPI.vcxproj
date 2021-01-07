@@ -164,6 +164,8 @@
     <ClInclude Include="item.h" />
     <ClInclude Include="keyAnimManager.h" />
     <ClInclude Include="keyManager.h" />
+    <ClInclude Include="LineManager.h" />
+    <ClInclude Include="Lines.h" />
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="map1.h" />
     <ClInclude Include="map_.h" />
@@ -204,6 +206,8 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="keyAnimManager.cpp" />
     <ClCompile Include="keyManager.cpp" />
+    <ClCompile Include="LineManager.cpp" />
+    <ClCompile Include="Lines.cpp" />
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="map1.cpp" />
     <ClCompile Include="map_.cpp" />
