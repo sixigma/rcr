@@ -53,12 +53,12 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	loadingScene* loadingParams = (loadingScene*)params;
 
 	SC->addScene("°ÔÀÓ Àå¸é", new gameScene);
-	IMG->add("ÀüÅõ ¸Ê 1", "images/maps/1.bmp", 3036, 640, false, RGB(255, 0, 255));
-	IMG->add("ÀüÅõ ¸Ê 2", "images/maps/2.bmp", 2012, 640, false, RGB(255, 0, 255));
-	IMG->add("ÀüÅõ ¸Ê 3", "images/maps/3.bmp", 2012, 640, false, RGB(255, 0, 255));
-	IMG->add("ÀüÅõ ¸Ê 4", "images/maps/4.bmp", 3040, 640, false, RGB(255, 0, 255));
-	IMG->add("ÀüÅõ ¸Ê 4-2", "images/maps/4-2.bmp", 1884, 640, false, RGB(255, 0, 255));
-	IMG->add("ÀüÅõ ¸Ê 5", "images/maps/5.bmp", 2012, 640, false, RGB(255, 0, 255));
+	IMG->add("¸Ê 1", "images/maps/1.bmp", 3036, 640, false, RGB(255, 0, 255));
+	IMG->add("¸Ê 2", "images/maps/2.bmp", 2012, 640, false, RGB(255, 0, 255));
+	IMG->add("¸Ê 3", "images/maps/3.bmp", 2012, 640, false, RGB(255, 0, 255));
+	IMG->add("¸Ê 4", "images/maps/4.bmp", 3040, 640, false, RGB(255, 0, 255));
+	IMG->add("¸Ê 4-2", "images/maps/4-2.bmp", 1884, 640, false, RGB(255, 0, 255));
+	IMG->add("¸Ê 5", "images/maps/5.bmp", 2012, 640, false, RGB(255, 0, 255));
 
 	while (loadingParams->_currentCount != MAX_SLEEP_CALLS)
 	{

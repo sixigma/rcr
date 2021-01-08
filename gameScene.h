@@ -6,20 +6,19 @@ constexpr int VIEWPORT_UPDATE_OFFSET = 2;
 
 class player;
 class map_;
-class map1;
-class map2;
+
 class gameScene : public gameNode
 {
 private:
 	static player* _p;
 
-	static map1* _map1;
-	static map2* _map2;
+	static vector<map_*> _mapList;
 	static map_* _currMap;
 
-	static int prevMapIdx, mapIdx;
+	static int _prevMapNum, _mapNum;
 
-	bool _isInShop, _shouldBePaused;
+	static bool _isInShop, _shouldBePaused;
+	static int _countForReEnablingKeyInput;
 public:
 	gameScene();
 	~gameScene() override;
@@ -28,9 +27,11 @@ public:
 	void release() override;
 	void update() override;
 	void render() override;
-	static void setRoomIdx(int idx) { mapIdx = idx; }
-	static int getPrevRoomIdx() { return prevMapIdx; }
-	static void goToRoom(int idx);
+	static bool getIsInShop() { return _isInShop; }
+	static void setIsInShop(bool b) { _isInShop = b; }
+	static void setMapNum(int num) { _mapNum = num; }
+	static int getPrevMapNum() { return _prevMapNum; }
+	static void goToMap(int num);
 	void updateViewport(int x, int y);
 	void setViewport(int x, int y);
 };

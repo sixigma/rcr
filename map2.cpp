@@ -4,27 +4,76 @@
 
 HRESULT map2::init()
 {
-	setRoomIdx(2);
-	pl->getPos().x = 10;
+	setMapNum(2);
+	currPlPos = &pl->getPos();
+	if (getPrevMapNum() == 1) *currPlPos = { _totRegion.left + 48, 568 };
+	else if (getPrevMapNum() == 3) *currPlPos = { 1792, 516 };
+
+	obst.push_back({ 0, 96, 32, 480 });
+	obst.push_back({ 32, 352, 1632, 476 });
+	obst.push_back({ 1632, 96, 1696, 480 });
+	obst.push_back({ 1888, 352, _totRegion.right, 476 });
+
+	prevPlPos = *currPlPos;
 	gameScene::setViewport(pl->getPos().x, pl->getPos().y);
+
 	return S_OK;
 }
 
 void map2::release()
 {
+	obst.clear();
 }
 
 void map2::update()
 {
-	pl->update();
+	if (currPlPos->x < 32) gameScene::goToMap(1);
+	else if (currPlPos->y < 428 && currPlPos->x >= 1696 + 32 && currPlPos->x + 32 <= 1888)
+		gameScene::goToMap(3);
 
-	if (pl->getPos().x < 10)
-		gameScene::goToRoom(1);
+	if (currPlPos->x + 32 > _totRegion.right) currPlPos->x = _totRegion.right - 32;
 
-	gameScene::updateViewport(pl->getPos().x, pl->getPos().y);
+	for (size_t i = 0; i < obst.size(); ++i)
+	{
+		if (currPlPos->y < obst[i].top - 1 && prevPlPos.y > obst[i].top - 1 &&
+			currPlPos->x + 32 >= obst[i].left && currPlPos->x - 32 <= obst[i].right)
+			currPlPos->y = obst[i].top - 1;
+		else if (currPlPos->y - 4 < obst[i].bottom && prevPlPos.y - 4 >= obst[i].bottom &&
+			currPlPos->x + 32 > obst[i].left && currPlPos->x - 32 < obst[i].right)
+			currPlPos->y = obst[i].bottom + 4;
+		if (currPlPos->x - 32 > obst[i].left && currPlPos->x - 32 < obst[i].right
+			&& currPlPos->y - 4 < obst[i].bottom && prevPlPos.x != currPlPos->x)
+			currPlPos->x = obst[i].right + 32;
+		else if (currPlPos->x + 32 > obst[i].left && currPlPos->x + 32 < obst[i].right
+				 && currPlPos->y - 4 < obst[i].bottom && prevPlPos.x != currPlPos->x)
+			currPlPos->x = obst[i].left - 32;
+	}
+
+	if (currPlPos->y > 96 + 640) currPlPos->y = 96 + 640;
+
+	gameScene::updateViewport(currPlPos->x, currPlPos->y);
+	prevPlPos = *currPlPos;
 }
 
 void map2::render()
 {
-	IMG->find("ÀüÅõ ¸Ê 2")->render(getMemDC(), _currOrg.x, 96, _currOrg.x, 0, WINW, 640);
+	IMG->find("¸Ê 2")->render(getMemDC(), _currOrg.x, 96, _currOrg.x, 0, WINW, 640);
+
+#ifdef _DEBUG
+	{
+		if (KEY->isToggledOn(VK_CAPITAL))
+		{
+			HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+			HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));
+			HPEN hOPen = (HPEN)SelectObject(getMemDC(), hPen);
+			HBRUSH hOBrush = (HBRUSH)SelectObject(getMemDC(), hBrush);
+			for (size_t i = 0; i < obst.size(); ++i)
+			{
+				DrawRct(getMemDC(), obst[i]);
+			}
+			DeleteObject(SelectObject(getMemDC(), hOPen));
+			DeleteObject(SelectObject(getMemDC(), hOBrush));
+		}
+	}
+#endif
 }
