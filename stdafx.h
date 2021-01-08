@@ -32,6 +32,7 @@ using namespace std;
 #define KAN keyAnimManager::getSingleton()
 #define INI iniDataManager::getSingleton()
 #define SC sceneManager::getSingleton()
+#define L LineManager::getSingleton()
 
 #define SAFE_DEL(p) {if (p) {delete(p); (p) = nullptr;}}
 #define SAFE_REL(p) {if (p) {(p)->release(); (p) = nullptr;}}
@@ -51,6 +52,7 @@ extern RECT			_camMovLim, _totRegion;
 #include "soundManager.h"
 #include "keyAnimManager.h"
 #include "iniDataManager.h"
+#include "LineManager.h"
 #include "utils.h"
 
 using namespace utils;

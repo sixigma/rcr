@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Lines.h"
 
-Lines::Lines() :
+/*Lines::Lines() :
 	CNT(0),
 	STR_IDX(0),
 	APPROACH(true),
@@ -142,3 +142,129 @@ void Lines::kill_Line()
 //     DWORD fdwQuality,          // 정밀도
 //     DWORD fdwPitchAndFamily,   // 정밀도
 //     LPCTSTR lpszFace           // 글꼴이름
+*/
+
+Lines::Lines() : 
+	CURRENT_LEN(0),
+	CNT(0),
+	APPROACH(false),
+	I(0),
+	IMDEAD(false)
+{
+
+}
+
+Lines::~Lines()
+{
+
+}
+
+HRESULT Lines::init(POINT _pos, int _fontsize, int _time, string _Lines)
+{
+	FONT_SIZE = _fontsize;
+	SUBSTR_LINE = _Lines;
+	CLOCK = (float)_time;
+
+	int e = 0;
+	int h = 0;
+
+	//한글자 한글자를 떼어내서 벡터에 담는다.
+	for (int i = 0 ; i < SUBSTR_LINE.size(); )
+	{
+		oneChar ONE_WORD;
+
+		if (SUBSTR_LINE[i] == '/')
+		{
+			e = 0;
+			h++;
+			i++;
+			continue;
+		}
+		ONE_WORD._x = _pos.x + (e * FONT_SIZE);
+		ONE_WORD._y = _pos.y + (h * FONT_SIZE);
+
+		string C_STR_LINE;
+	
+		if ((SUBSTR_LINE[i] & 0x80) == 0x80)
+		{	
+			C_STR_LINE = SUBSTR_LINE.substr(i, 2);
+			i+=2;
+		}
+		else
+		{
+			C_STR_LINE = SUBSTR_LINE.substr(i, 1);
+			i++;
+		}
+
+		sprintf_s(ONE_WORD.oChar, "%s", C_STR_LINE.c_str());
+
+		_vChar.push_back(ONE_WORD);
+
+		e++;
+	}
+	return S_OK;
+}
+
+void Lines::release()
+{
+
+}
+
+void Lines::update()
+{
+	if (!APPROACH) newLine();
+	if (APPROACH) CURRENT_CLOCK += (1.0f / 60.0f);
+	if (APPROACH && CURRENT_CLOCK >= CLOCK) deleteLine();
+}
+
+void Lines::render()
+{
+	HFONT Font = CreateFont(FONT_SIZE, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "궁서체");
+	HFONT oFont = (HFONT)SelectObject(getMemDC(), Font);
+
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
+	SetBkMode(getMemDC(), TRANSPARENT);
+
+	for (int i = I; i < CURRENT_LEN; i++)
+	{
+		TextOut(getMemDC(), _vChar[i]._x, _vChar[i]._y, _vChar[i].oChar, strlen(_vChar[i].oChar));
+	}
+
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+
+	SelectObject(getMemDC(), oFont);
+	DeleteObject(Font);
+}
+
+void Lines::newLine()
+{
+	CNT = CNT % 2;
+
+	if (!CNT)
+	{
+		if (CURRENT_LEN < _vChar.size())
+		{		
+			CURRENT_LEN++;
+		}
+		else if(CURRENT_LEN >= _vChar.size())
+		{
+			CNT = 0;
+			APPROACH = true;
+		}
+	}
+
+	CNT++;
+}
+
+void Lines::deleteLine()
+{
+	CNT = CNT % 2;
+
+	if (!CNT)
+	{
+		if (CURRENT_LEN >= I) I++;
+		if (CURRENT_LEN <= I) IMDEAD = true;
+	}
+
+	CNT++;
+}

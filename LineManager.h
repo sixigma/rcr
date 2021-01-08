@@ -1,8 +1,9 @@
 #pragma once
-#include "gameNode.h"
+#include "singleton.h"
 #include "Lines.h"
+#include <vector>
 
-class LineManager : public gameNode
+class LineManager : public singleton<LineManager>
 {
 private:
 	vector<Lines*> _vLine;
@@ -13,7 +14,7 @@ public:
 	virtual void update();
 	virtual void render();
 
-	void CreateLine(RECT _rect, int _fontsize, bool _alive, int _time, string _Lines);
+	void CreateLine(POINT _rect, int _fontsize, string _Lines, int _time = 99999);
 
 	void AllDeleteLine();
 

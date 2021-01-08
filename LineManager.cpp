@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "LineManager.h"
-#include <vector>
+
 
 HRESULT LineManager::init()
 {
@@ -16,7 +16,7 @@ void LineManager::update()
 {
 	for (int i = 0; i < _vLine.size(); )
 	{
-		if (_vLine[i]->getDeadTrigger())
+		if(_vLine[i]->getDead())
 		{
 			_vLine.erase(_vLine.begin() + i);
 		}
@@ -36,12 +36,12 @@ void LineManager::render()
 	}
 }
 
-void LineManager::CreateLine(RECT _rect, int _fontsize, bool _alive, int _time, string _Lines)
+void LineManager::CreateLine(POINT _rect, int _fontsize, string _Lines, int _time)
 {
 	Lines* line;
 	line = new Lines;
 
-	line->init(_rect, _fontsize, _alive, _time, _Lines);
+	line->init(_rect, _fontsize, _time, _Lines);
 
 	_vLine.push_back(line);
 }
