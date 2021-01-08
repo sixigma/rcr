@@ -6,7 +6,7 @@ HRESULT map4_2::init()
 {
 	setMapNum(402);
 	currPlPos = &pl->getPos();
-	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.left + 40, 592 };
+	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.left + 40, 592, 0 };
 
 	unlandable.push_back({ 0, 96, 96, 336 });
 	obst.push_back({ 96, 288, 288, 384 });

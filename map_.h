@@ -7,8 +7,8 @@ class map_: public gameScene
 	protected:
 	player* pl;
 	vector<RECT> obst;
-	POINT prevPlPos;
-	POINT* currPlPos;
+	POINT3D prevPlPos;
+	POINT3D* currPlPos;
 	RECT tempRct;
 
 	public:
