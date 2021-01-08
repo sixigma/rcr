@@ -21,8 +21,7 @@ HRESULT playground::init()
 
 	SC->changeScene("로딩 장면");
 
-	l = new LineManager;
-	l->CreateLine(MakeRct(300, 800, 200, 200), 20, true, 2, "가na다ra마b사 아");
+
 	return S_OK;
 }
 
@@ -38,7 +37,6 @@ void playground::update()
 {
 	KEY->updateKeyState(keysToCheck);
 	gameNode::update();
-	l->update();
 	SC->update();
 }
 
@@ -48,7 +46,6 @@ void playground::render()
 	//PatBlt(getMemDC(), 0, 0, WINW, WINH, BLACKNESS);
 
 	SC->render();
-	l->render();
 	TIME->render(getMemDC());
 
 	_backBuffer->render(getHDC(), _currOrg.x, _currOrg.y, 0, 0, WINW, WINH);
