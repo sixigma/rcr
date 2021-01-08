@@ -51,16 +51,18 @@ struct tagState
 	bool W1, W2, W3, W4;	//¹«±â
 };
 
+
+
 class character : public gameNode
 {
 protected:
-	POINT pos;
+	POINT3D pos;
 
 public:
 	character() {};
 	~character() override {};
 
-	POINT& getPos() { return pos; }
+	POINT3D& getPos() { return pos; }
 
 	HRESULT init() override;
 	void release() override;

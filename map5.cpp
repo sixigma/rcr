@@ -6,7 +6,7 @@ HRESULT map5::init()
 {
 	setMapNum(5);
 	currPlPos = &pl->getPos();
-	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.left + 40, 592 };
+	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.left + 40, 592, 0 };
 
 	obst.push_back({ 0, 96, 32, 480 });
 	obst.push_back({ 32, 352, 1120, 476 });

@@ -3,6 +3,8 @@
 
 static image* _backBuffer = IMG->add("backBuffer", WINW, WINH);
 
+typedef struct tagPOINT3D { LONG x, y, z; } POINT3D, *LPPOINT3D;
+
 class gameNode
 {
 private:

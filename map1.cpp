@@ -6,9 +6,9 @@ HRESULT map1::init()
 {
 	setMapNum(1);
 	currPlPos = &pl->getPos();
-	if (getPrevMapNum() == 0) *currPlPos = { 154, 568 };
-	else if (getPrevMapNum() == 2) *currPlPos = { _totRegion.right - 48, 568 };
-	else *currPlPos = { 154, 568 };
+	if (getPrevMapNum() == 0) *currPlPos = { 154, 568, 0 };
+	else if (getPrevMapNum() == 2) *currPlPos = { _totRegion.right - 48, 568, 0 };
+	else *currPlPos = { 154, 568, 0 };
 
 	obst.push_back({ 0, 300, 92, 480 });
 	obst.push_back({ 92, 292, 160, 484 });

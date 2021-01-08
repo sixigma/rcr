@@ -7,12 +7,12 @@ HRESULT map3::init()
 	setMapNum(3);
 	currPlPos = &pl->getPos();
 	
-	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.right - 40, 592 };
+	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.right - 40, 592, 0 };
 	else if (getPrevMapNum() == 301) *currPlPos = { 338, 484 + 8 };
 	else if (getPrevMapNum() == 302) *currPlPos = { 734, 484 + 8 };
 	else if (getPrevMapNum() == 303) *currPlPos = { 1144, 484 + 8 };
 	else if (getPrevMapNum() == 304) *currPlPos = { 1824, 484 + 8 };
-	else *currPlPos = { _totRegion.left + 40, 592 };
+	else *currPlPos = { _totRegion.left + 40, 592, 0 };
 
 	obst.push_back({ 0, 96, 416, 480 });
 	obst.push_back({ 416, 96, 480, 484 });
