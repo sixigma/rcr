@@ -35,6 +35,7 @@ HRESULT gameNode::init(bool shouldInitManagers)
 		SND->init();
 		KAN->init();
 		INI->init();
+		L->init();
 	}
 
 	return S_OK;
@@ -59,6 +60,8 @@ void gameNode::release()
 		KAN->release();
 		KAN->releaseSingleton();
 		INI->releaseSingleton();
+		L->release();
+		L->releaseSingleton();
 	}
 	ReleaseDC(_hWnd, _hDC);
 }
