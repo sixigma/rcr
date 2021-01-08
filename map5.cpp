@@ -11,7 +11,7 @@ HRESULT map5::init()
 	obst.push_back({ 0, 96, 32, 480 });
 	obst.push_back({ 32, 352, 1120, 476 });
 	obst.push_back({ 1120, 96, 1184, 480 });
-	obst.push_back({ 1376, 96, _totRegion.right, 476 });
+	obst.push_back({ 1376, 352, _totRegion.right, 476 });
 
 	unlandable = { 1184, 96, 1376, 428 }; // 다음 구역으로 가는 길을 막는다.
 
