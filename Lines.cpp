@@ -220,7 +220,7 @@ void Lines::update()
 
 void Lines::render()
 {
-	HFONT Font = CreateFont(FONT_SIZE, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "AaCassiopeia");
+	HFONT Font = CreateFont(FONT_SIZE, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "RCR");
 	HFONT oFont = (HFONT)SelectObject(getMemDC(), Font);
 
 	SetTextColor(getMemDC(), RGB(255, 255, 255));

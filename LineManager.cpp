@@ -5,7 +5,7 @@
 LineManager::LineManager() :
 	POSITION(false)
 {
-	AddFontResource("AaCassiopeia.ttf");
+	AddFontResource("RCR.ttf");
 }
 LineManager::~LineManager()
 {
@@ -19,7 +19,7 @@ HRESULT LineManager::init()
 
 void LineManager::release()
 {
-	RemoveFontResourceA("AaCassiopeia.ttf");
+	RemoveFontResourceA("RCR.ttf");
 }
 
 void LineManager::update()
