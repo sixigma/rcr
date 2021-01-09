@@ -12,7 +12,6 @@ player* gameScene::_p;
 vector<map_*> gameScene::_mapList;
 map_* gameScene::_currMap;
 int gameScene::_prevMapNum, gameScene::_mapNum;
-bool gameScene::_isInShop, gameScene::_shouldBePaused;
 int gameScene::_countForReEnablingKeyInput;
 
 gameScene::gameScene()
@@ -70,7 +69,7 @@ void gameScene::update()
 
 void gameScene::render()
 {
-	if (_moveKeyDisabled && _prevMapNum == _mapNum)
+	if (_moveKeyDisabled)
 	{
 		if (_countForReEnablingKeyInput == 0) _moveKeyDisabled = FALSE;
 		--_countForReEnablingKeyInput;
@@ -122,7 +121,7 @@ void gameScene::goToMap(int num)
 {
 	_moveKeyDisabled = TRUE;
 	_currMap->release();
-	_countForReEnablingKeyInput = 180;
+	_countForReEnablingKeyInput = 10;
 	_prevMapNum = _mapNum;
 	switch (num)
 	{

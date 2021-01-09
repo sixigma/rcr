@@ -17,7 +17,6 @@ private:
 
 	static int _prevMapNum, _mapNum;
 
-	static bool _isInShop, _shouldBePaused;
 	static int _countForReEnablingKeyInput;
 public:
 	gameScene();
@@ -27,8 +26,6 @@ public:
 	void release() override;
 	void update() override;
 	void render() override;
-	static bool getIsInShop() { return _isInShop; }
-	static void setIsInShop(bool b) { _isInShop = b; }
 	static void setMapNum(int num) { _mapNum = num; }
 	static int getPrevMapNum() { return _prevMapNum; }
 	static void goToMap(int num);
