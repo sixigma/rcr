@@ -1,3 +1,4 @@
+
 #include "stdafx.h"
 #include "Lines.h"
 
@@ -39,7 +40,7 @@ void Lines::update()
 		launcher_Line();
 	}
 	else if (ALIVE)
-	{		 
+	{
 		if (!LAUNCH_COMPLETE) launcher_Line();
 		if (LAUNCH_COMPLETE)  CLOCK_1 += (1.0f/60.0f);	//프레임이 60fps 이므로 1/60하면 1초에 1이된다.
 		if (CLOCK_1 >= CLOCK) kill_Line();
@@ -53,7 +54,7 @@ void Lines::render()
 
 	SetTextColor(getMemDC(), RGB(255, 255, 255));
 	SetBkMode(getMemDC(), TRANSPARENT);
-	
+
 	if (LAUNCH_COMPLETE == false)	DrawText(getMemDC(), OUTPUT_LINE, strlen(OUTPUT_LINE), &LINE_RECT, DT_WORDBREAK | DT_LEFT);
 	if (LAUNCH_COMPLETE)			DrawText(getMemDC(), OUTPUT_LINE, strlen(OUTPUT_LINE), &LINE_RECT, DT_WORDBREAK | DT_RIGHT);
 	//DrawText(getMemDC(), OUTPUT_LINE, strlen(OUTPUT_LINE), &LINE_RECT, DT_WORDBREAK | DT_LEFT);
@@ -83,12 +84,12 @@ void Lines::launcher_Line()
 				C_STR_LINE = SUBSTR_LINE.substr(0, STR_IDX);
 			}
 			//만약 현재의 인덱스가 입력받은 문자열의 인덱스보다 커지거나 같아질때
-			if (STR_IDX >= SUBSTR_LINE.size()) 
-			{ 
-				APPROACH = false; 
+			if (STR_IDX >= SUBSTR_LINE.size())
+			{
+				APPROACH = false;
 				LAUNCH_COMPLETE = true;
-				STR_IDX = 0; 
-				C_STR_LINE = SUBSTR_LINE.substr(0, SUBSTR_LINE.size()); 
+				STR_IDX = 0;
+				C_STR_LINE = SUBSTR_LINE.substr(0, SUBSTR_LINE.size());
 			}
 			//string형 문자열 C_STR_LINE을 c_str()을 이용해 char 형식으로 바꿔 OUTPUT_LINE에 저장함.
 			sprintf_s(OUTPUT_LINE, "%s", C_STR_LINE.c_str());
@@ -116,10 +117,10 @@ void Lines::kill_Line()
 				C_STR_LINE = SUBSTR_LINE.substr(STR_IDX, SUBSTR_LINE.size());
 			}
 			//만약 현재의 인덱스가 입력받은 문자열의 인덱스보다 커지거나 같아질때
-			if (STR_IDX >= SUBSTR_LINE.size()) 
-			{ 
-				KILL_COMPLETE = true; 
-				C_STR_LINE = SUBSTR_LINE.substr(SUBSTR_LINE.size(), SUBSTR_LINE.size()); 
+			if (STR_IDX >= SUBSTR_LINE.size())
+			{
+				KILL_COMPLETE = true;
+				C_STR_LINE = SUBSTR_LINE.substr(SUBSTR_LINE.size(), SUBSTR_LINE.size());
 			}
 			//string형 문자열 C_STR_LINE을 c_str()을 이용해 char 형식으로 바꿔 OUTPUT_LINE에 저장함.
 			sprintf_s(OUTPUT_LINE, "%s", C_STR_LINE.c_str());
@@ -144,7 +145,7 @@ void Lines::kill_Line()
 //     LPCTSTR lpszFace           // 글꼴이름
 */
 
-Lines::Lines() : 
+Lines::Lines() :
 	CURRENT_LEN(0),
 	CNT(0),
 	APPROACH(false),
@@ -169,7 +170,7 @@ HRESULT Lines::init(POINT _pos, int _fontsize, int _time, string _Lines)
 	int h = 0;
 
 	//한글자 한글자를 떼어내서 벡터에 담는다.
-	for (int i = 0 ; i < SUBSTR_LINE.size(); )
+	for (int i = 0; i < SUBSTR_LINE.size(); )
 	{
 		oneChar ONE_WORD;
 
@@ -184,11 +185,11 @@ HRESULT Lines::init(POINT _pos, int _fontsize, int _time, string _Lines)
 		ONE_WORD._y = _pos.y + (h * FONT_SIZE);
 
 		string C_STR_LINE;
-	
+
 		if ((SUBSTR_LINE[i] & 0x80) == 0x80)
-		{	
+		{
 			C_STR_LINE = SUBSTR_LINE.substr(i, 2);
-			i+=2;
+			i += 2;
 		}
 		else
 		{
@@ -219,7 +220,7 @@ void Lines::update()
 
 void Lines::render()
 {
-	HFONT Font = CreateFont(FONT_SIZE, 0, 0, 0, 0, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "궁서체");
+	HFONT Font = CreateFont(FONT_SIZE, 0, 0, 0, 1000, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "AaCassiopeia");
 	HFONT oFont = (HFONT)SelectObject(getMemDC(), Font);
 
 	SetTextColor(getMemDC(), RGB(255, 255, 255));
@@ -238,15 +239,15 @@ void Lines::render()
 
 void Lines::newLine()
 {
-	CNT = CNT % 2;
+	CNT = CNT % 1;
 
 	if (!CNT)
 	{
 		if (CURRENT_LEN < _vChar.size())
-		{		
+		{
 			CURRENT_LEN++;
 		}
-		else if(CURRENT_LEN >= _vChar.size())
+		else if (CURRENT_LEN >= _vChar.size())
 		{
 			CNT = 0;
 			APPROACH = true;
@@ -258,7 +259,7 @@ void Lines::newLine()
 
 void Lines::deleteLine()
 {
-	CNT = CNT % 2;
+	CNT = CNT % 1;
 
 	if (!CNT)
 	{

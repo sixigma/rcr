@@ -1,0 +1,26 @@
+<map1>
+* Cross Town High *
+
+<map245>
+* Sticksville *
+
+<map3>
+* Grotto Mall *
+
+<p_die>
+ALEX has lost all/of his power.
+
+<e_die>
+baff!
+Mammma!
+
+<e_help>
+Helllp!
+
+<e_kind>
+The GENERIC DUDES' turf!
+The JOCKS' turf!
+The FRAT GUYS' turf!
+
+<e_attack>
+Smash!
