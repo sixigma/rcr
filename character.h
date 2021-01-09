@@ -5,13 +5,16 @@ enum STATE
 {
 	IDLE,			//평상시
 	ATTACK,			//공격
+	DEFEND,		//방어
+	HIT,			//피격
+	FALL,			//쓰러짐
 	RUN, 			//달리기
 	RUN_ATTACK,		//달리기 공격
-	RUN_BACK,		//달리다 반대방향 보기
 	JUMP, 			//점프
 	JUMP_ATTACK,		//점프 공격
 	RUN_JUMP,		//달리기 점프
-	RUN_JUMP_ATTACK	//달리기 점프 공격
+	RUN_JUMP_ATTACK,	//달리기 점프 공격
+	KO			//쓰러짐
 };
 
 struct tagCharacterSetting
@@ -20,6 +23,7 @@ struct tagCharacterSetting
 	RECT ch;		//캐릭터 렉트
 	RECT atk;	//캐릭터 공격렉트
 	image* img;	//이미지
+	string chName;	//캐릭터 이름
 };
 
 //펀치		- 펀치 계열 기술 공격력
@@ -31,6 +35,7 @@ struct tagCharacterSetting
 //맷집		- 피격시 데미지 줄임
 //기력	- 체력이 다 떨어졌을 때 부활확률 증가, 기상속도, 피격모션 지속시간 감소 / 기력으로 부활시 기력 15를 소모해 15의 체력으로 부활
 //체력(최대체력)		- 체력
+//소지금			- 돈
 struct tagStatus
 {
 	int punch;	//펀치	
@@ -42,6 +47,8 @@ struct tagStatus
 	int endure;	//맷집	
 	int energy;	//기력	
 	int hp;		//체력	
+	int maxHP;	//최대체력
+	int money;	//소지금 / 떨구는 돈
 };
 
 struct tagState
