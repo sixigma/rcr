@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "imageManager.h"
-
+#include <algorithm>
 
 imageManager::imageManager()
 {
@@ -63,7 +63,7 @@ image* imageManager::add(string strKey, const char * fileName, int width, int he
 	return img;
 }
 
-image * imageManager::addF(string strKey, const char * fileName, float x, float y, int width, int height, int frameX, int frameY, BOOL trans, COLORREF transColor)
+image* imageManager::addF(string strKey, const char * fileName, float x, float y, int width, int height, int frameX, int frameY, BOOL trans, COLORREF transColor)
 {
 	image* img = find(strKey);
 
@@ -84,7 +84,7 @@ image * imageManager::addF(string strKey, const char * fileName, float x, float 
 	return img;
 }
 
-image * imageManager::addF(string strKey, const char * fileName, int width, int height, int frameX, int frameY, BOOL trans, COLORREF transColor)
+image* imageManager::addF(string strKey, const char * fileName, int width, int height, int frameX, int frameY, BOOL trans, COLORREF transColor)
 {
 	image* img = find(strKey);
 
@@ -169,8 +169,76 @@ void imageManager::render(string strKey, HDC hDC, int destX, int destY, int sour
 	if (img) img->render(hDC, destX, destY, sourX, sourY, srcWidth, srcHeight);
 }
 
+void imageManager::frameRender(string strKey, HDC hDC, int destX, int destY)
+{
+	image* img = find(strKey);
+	if (img) img->frameRender(hDC, destX, destY);
+}
+
+void imageManager::frameRender(string strKey, HDC hDC, int destX, int destY, int currentFrameX, int currentFrameY)
+{
+	image* img = find(strKey);
+	if (img) img->frameRender(hDC, destX, destY, currentFrameX, currentFrameY);
+}
+
+void imageManager::adjFrameRender(string strKey, HDC hDC, int destX, int destY, int currentFrameX, int currentFrameY, int adjWidth, int adjHeight)
+{
+	image* img = find(strKey);
+	if (img) img->adjFrameRender(hDC, destX, destY, currentFrameX, currentFrameY, adjWidth, adjHeight);
+}
+
+void imageManager::alphaRender(string strKey, HDC hDC, BYTE alpha)
+{
+	image* img = find(strKey);
+	if (img) img->alphaRender(hDC, alpha);
+}
+
+void imageManager::alphaRender(string strKey, HDC hDC, int destX, int destY, BYTE alpha)
+{
+	image* img = find(strKey);
+	if (img) img->alphaRender(hDC, destX, destY, alpha);
+}
+
+void imageManager::alphaRender(string strKey, HDC hDC, int destX, int destY, int srcX, int srcY, int srcWidth, int srcHeight, BYTE alpha)
+{
+	image* img = find(strKey);
+	if (img) img->alphaRender(hDC, destX, destY, srcX, srcY, srcWidth, srcHeight, alpha);
+}
+
+void imageManager::aniRender(string strKey, HDC hDC, int destX, int destY, animation* anim)
+{
+	image* img = find(strKey);
+	if (img) img->aniRender(hDC, destX, destY, anim);
+}
+
 void imageManager::loopRender(string strKey, HDC hDC, const LPRECT drawArea, int offSetX, int offSetY)
 {
 	image* img = find(strKey);
 	if (img) img->loopRender(hDC, drawArea, offSetX, offSetY);
 }
+
+void imageManager::execZ()
+{
+	if (!_funcListKeys.empty()) _funcListKeys.clear();
+	if (_funcsToCall.empty()) return;
+	_funcListKeys.reserve(_funcsToCall.size());
+
+	for (auto& iter : _funcsToCall)
+	{
+		_funcListKeys.push_back(iter.first);
+	}
+
+	sort(_funcListKeys.begin(), _funcListKeys.end());
+
+	for (LONG& key : _funcListKeys)
+	{
+		auto iterRange = _funcsToCall.equal_range(key);
+		for (auto& it = iterRange.first; it != iterRange.second; ++it)
+		{
+			it->second();
+		}
+		//_funcsToCall.find(key)->second();
+	}
+	_funcsToCall.clear();
+}
+

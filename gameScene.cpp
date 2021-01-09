@@ -78,6 +78,8 @@ void gameScene::render()
 	_currMap->render();
 	_p->render();
 
+	IMG->execZ();
+
 #ifdef _DEBUG
 	char str[256];
 	{
