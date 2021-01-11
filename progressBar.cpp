@@ -39,7 +39,31 @@ void progressBar::render()
 		static_cast<int>(_width), _progressBarFront->getHeight());
 }
 
-void progressBar::setGauge(float currentGauge, float maxGauge)
+void progressBar::setGauge(float currVal, float maxVal)
 {
-	_width = (currentGauge / maxGauge) * _progressBarBack->getWidth();
+	_width = (currVal / maxVal) * _progressBarBack->getWidth();
+}
+
+void progressBar::updateGauge(float currVal, float maxVal)
+{
+	if (currVal < FLT_EPSILON)
+	{
+		_width = 0; return;
+	}
+
+	float targetWidth = (currVal / maxVal) * _progressBarBack->getWidth();
+
+	if (abs(currVal - maxVal) < FLT_EPSILON)
+	{
+		_width = targetWidth;
+	}
+	else if (_width < ((currVal - 1.f) / maxVal) * _progressBarBack->getWidth())
+	{
+		_width = ((currVal - 1.f) / maxVal) * _progressBarBack->getWidth();
+	}
+	else
+	{
+		if (abs(targetWidth - _width) > 4.f) _width += 4.f * (targetWidth - _width) / abs(targetWidth - _width);
+		else _width = targetWidth;
+	}
 }

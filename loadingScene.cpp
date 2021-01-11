@@ -13,7 +13,7 @@ HRESULT loadingScene::init()
 {
 	_loadingBar = new progressBar;
 	_loadingBar->init(0, WINH - 30, WINW, 30);
-	_loadingBar->setGauge(0, 0);
+	_loadingBar->updateGauge(0, 0);
 
 	hThread = (HANDLE)_beginthreadex(NULL, 0, threadFunc, this, CREATE_SUSPENDED, NULL);
 	if (!hThread)
@@ -33,7 +33,7 @@ void loadingScene::release()
 void loadingScene::update()
 {
 	_loadingBar->update();
-	_loadingBar->setGauge(static_cast<float>(_currentCount), MAX_SLEEP_CALLS);
+	_loadingBar->updateGauge(static_cast<float>(_currentCount), MAX_SLEEP_CALLS);
 }
 
 void loadingScene::render()
@@ -53,24 +53,47 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	loadingScene* loadingParams = (loadingScene*)params;
 
 	SC->addScene("게임 장면", new gameScene);
+	++loadingParams->_currentCount;
+
+	// 시작 화면 이미지
+	IMG->add("제작사 로고", "images/preGame/logo.bmp", 714, 128, false, RGB(255, 0, 255));
+	IMG->add("제목", "images/preGame/title.bmp", 1024, 640, false, RGB(255, 0, 255));
+	++loadingParams->_currentCount;
+
+	// 맵 이미지
 	IMG->add("맵 1", "images/maps/1.bmp", 3036, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 2", "images/maps/2.bmp", 2012, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 3", "images/maps/3.bmp", 2012, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 4", "images/maps/4.bmp", 3040, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 4-2", "images/maps/4-2.bmp", 1884, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 5", "images/maps/5.bmp", 2012, 640, false, RGB(255, 0, 255));
-	//캐릭터 이미지
-	loadingParams->playerImg();
-	loadingParams->enemyImgOne();
-	loadingParams->enemyImgTwo();
-	loadingParams->enemyImgThree();
-	loadingParams->enemyImgFour();
-	loadingParams->enemyImgFive();
-	loadingParams->enemyImgSix();
-	loadingParams->enemyImgSeven();
-	loadingParams->enemyImgEight();
-	loadingParams->enemyImgNine();
-	loadingParams->enemyImgBoss();
+	++loadingParams->_currentCount;
+
+	// 캐릭터 이미지
+	loadingParams->playerImg(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgOne(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgTwo(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgThree(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgFour(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgFive(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgSix(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgSeven(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgEight(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgNine(); ++loadingParams->_currentCount;
+	loadingParams->enemyImgBoss(); ++loadingParams->_currentCount;
+
+	// 무기 이미지
+	loadingParams->wpImg();	++loadingParams->_currentCount;
+
+	// 동전 이미지
+	IMG->addF("동전", "images/coin.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	++loadingParams->_currentCount;
+
+	// 타일셋 이미지, 화면 배경 이미지
+	IMG->addF("문자 타일셋", "images/tileset/tileset.bmp", 512, 256, 16, 8, false, RGB(0, 0, 0));
+	IMG->add("검은 화면", "images/blackScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
+	IMG->add("파란 화면", "images/blueScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
+	++loadingParams->_currentCount;
 
 	while (loadingParams->_currentCount != MAX_SLEEP_CALLS)
 	{
@@ -374,8 +397,6 @@ void loadingScene::enemyImgEight()
 	IMG->addF("8-박스던지기", "images/enemy/type_8/type8-26_throw-box.bmp", 1896, 408, 6, 2, true, RGB(255, 0, 255));
 	IMG->addF("8-타이어던지기", "images/enemy/type_8/type8-27_throw-tire.bmp", 1896, 408, 6, 2, true, RGB(255, 0, 255));
 	IMG->addF("8-사람던지기", "images/enemy/type_8/type8-28_throw-human.bmp", 1896, 408, 6, 2, true, RGB(255, 0, 255));
-
-
 }
 
 void loadingScene::enemyImgNine()
@@ -440,4 +461,16 @@ void loadingScene::enemyImgBoss()
 	IMG->addF("보스-박스던지기", "images/enemy/type_boss/boss-26_throw-box.bmp", 1896, 408, 6, 2, true, RGB(255, 0, 255));
 	IMG->addF("보스-타이어던지기", "images/enemy/type_boss/boss-27_throw-tire.bmp", 1896, 408, 6, 2, true, RGB(255, 0, 255));
 	IMG->addF("보스-사람던지기", "images/enemy/type_boss/boss-28_throw-human.bmp", 1896, 408, 6, 2, true, RGB(255, 0, 255));
+}
+
+void loadingScene::wpImg()
+{
+	IMG->addF("쓰레기통", "images/weapon/can.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMG->addF("체인", "images/weapon/chain.bmp", 432, 72, 6, 1, true, RGB(255, 0, 255));
+	IMG->addF("박스", "images/weapon/crate.bmp", 480, 64, 6, 1, true, RGB(255, 0, 255));
+	IMG->addF("너클", "images/weapon/knuckles.bmp", 56, 32, 2, 1, true, RGB(255, 0, 255));
+	IMG->addF("파이프", "images/weapon/pipe.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMG->addF("돌", "images/weapon/rock.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
+	IMG->addF("스틱", "images/weapon/stick.bmp", 256, 64, 4, 1, true, RGB(255, 0, 255));
+	IMG->addF("타이어", "images/weapon/tire.bmp", 384, 64, 6, 1, true, RGB(255, 0, 255));
 }

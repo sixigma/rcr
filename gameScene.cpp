@@ -63,28 +63,37 @@ void gameScene::release()
 
 void gameScene::update()
 {
-	_p->update();
-	_currMap->update();
+	if (_moveKeyDisabled)
+	{
+		if (_countForReEnablingKeyInput == 10) _shouldFadeOut = FALSE;
+		if (_countForReEnablingKeyInput == 0) _moveKeyDisabled = FALSE;
+		--_countForReEnablingKeyInput;
+	}
+	if (!_shouldFadeOut && !_shouldShowMenuScreen)
+	{
+		_p->update();
+		_currMap->update();
+	}
 }
 
 void gameScene::render()
 {
-	if (_moveKeyDisabled)
+#ifdef _DEBUG
+	if (KEY->down(VK_F1)) _shouldShowMenuScreen = !_shouldShowMenuScreen; // 리마인더: 시험용
+#endif
+	if (_shouldShowMenuScreen) IMG->render("파란 화면", getMemDC(), _currOrg.x, _currOrg.y);
+	else
 	{
-		if (_countForReEnablingKeyInput == 0) _moveKeyDisabled = FALSE;
-		--_countForReEnablingKeyInput;
-	}
-	PatBlt(getMemDC(), 0, 96, WINW, 640, WHITENESS);
-	_currMap->render();
-	_p->render();
+		PatBlt(getMemDC(), 0, 96, WINW, 640, WHITENESS);
+		_currMap->render();
+		_p->render();
 
-	IMG->execZ();
+		IMG->execZ();
+	}
 
 #ifdef _DEBUG
 	char str[256];
-	{
-		if (KEY->isToggledOn(VK_TAB)) DrawRct(getMemDC(), _p->getPos().x - 32, _p->getPos().y - 8, 64, 8);
-	}
+	if (KEY->isToggledOn(VK_TAB)) DrawRct(getMemDC(), _p->getPos().x - 32, _p->getPos().y - 8, 64, 8);
 #endif
 
 
@@ -121,9 +130,10 @@ void gameScene::render()
 
 void gameScene::goToMap(int num)
 {
+	_shouldFadeOut = TRUE;
 	_moveKeyDisabled = TRUE;
 	_currMap->release();
-	_countForReEnablingKeyInput = 10;
+	_countForReEnablingKeyInput = 24;
 	_prevMapNum = _mapNum;
 	switch (num)
 	{

@@ -1,0 +1,9 @@
+can.bmp
+chain.bmp
+crate.bmp
+knuckles.bmp
+list.txt
+pipe.bmp
+rock.bmp
+stick.bmp
+tire.bmp

@@ -10,7 +10,7 @@ HINSTANCE	_hInst;
 HWND		_hWnd;
 POINT		_mouse, _currOrg, _newOrg;
 RECT		_camMovLim, _totRegion;
-BOOL		_moveKeyDisabled, _isInShop, _shouldBePaused;
+BOOL		_moveKeyDisabled, _isInShop, _shouldBePaused, _shouldFadeOut, _shouldShowMenuScreen;
 
 playground _pg;
 
