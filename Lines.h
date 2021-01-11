@@ -3,8 +3,8 @@
 #include "gameNode.h"
 #include <vector>
 
-class Lines : public gameNode
-{
+//class Lines : public gameNode
+//{
 	/*private:
 		int
 			CNT,		//글자가 나오는 속도에대한 인터벌
@@ -45,9 +45,9 @@ class Lines : public gameNode
 
 		bool getDeadTrigger() { return KILL_COMPLETE; }*/
 
-private:
+/*private:
 
-	/*각각의 한글자한글자에 대한 좌표와 글자*/
+	//각각의 한글자한글자에 대한 좌표와 글자
 	struct oneChar
 	{
 		float _x, _y;
@@ -88,6 +88,63 @@ public:
 	virtual void release();
 	virtual void update();
 	virtual void render();
+
+	bool getDead() { return IMDEAD; }
+
+};
+*/
+
+class Lines : public gameNode
+{
+private:
+	//각각의 한글자한글자에 대한 좌표와 글자
+	struct oneChar
+	{
+		float _x, _y;
+		int oChar;
+	};
+
+	int
+		CNT,				//띄우는속도에대한 인터벌
+		FONT_SIZE,			//폰트 사이즈
+		CURRENT_LEN,		//현재가리키고있는 배열번호
+		I					//이건그냥 지울때 필요한 변수
+		;
+
+	bool
+		APPROACH,			//접근제한, 글자가 생성이 완료될때 true가 된다.
+		IMDEAD,
+		BOLD
+		;
+
+	float
+		CLOCK,				//init으로 부터 받아온 초단위시간
+		CURRENT_CLOCK		//현재 프레임에 맞춰 1초를 카운트해주는 변수
+		;
+
+	string SUBSTR_LINE;		//init으로 부터 받아온 대사 문자열
+
+	POINT LINE_POS;			//init으로 부터 받아온 생성위치
+
+	char WORD_CLIST[256];
+	int WORD_ILIST[256];
+
+	vector<oneChar> _vChar;	//한글자한글자에가 저장되어있는 벡터
+
+public:
+	Lines();
+	~Lines();
+
+	virtual HRESULT init(POINT _pos, int _time, string _Lines, bool _bold);
+	virtual void release();
+	virtual void update();
+	virtual void render();
+
+	void charRender();
+
+	void deleteLine();
+
+	void newLine();
 
 	bool getDead() { return IMDEAD; }
 

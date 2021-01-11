@@ -8,7 +8,7 @@
 * Grotto Mall *
 
 <p_die>
-ALEX has lost all/of his power.
+ALEX has lost all%of his power.
 
 <e_die>
 baff!

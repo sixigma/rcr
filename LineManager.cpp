@@ -14,6 +14,7 @@ LineManager::~LineManager()
 
 HRESULT LineManager::init()
 {
+	IMG->addF("타일셋", "images/tileset/tileset.bmp", 512, 256, 16, 8, true, RGB(0, 0, 0));
 	return S_OK;
 }
 
@@ -46,12 +47,13 @@ void LineManager::render()
 	}
 }
 
-void LineManager::CreateLine(POINT _rect, int _fontsize, string _Lines, int _time)
+void LineManager::CreateLine(POINT _rect, int _fontsize, string _Lines, bool _bold, int _time)
 {
 	Lines* line;
 	line = new Lines;
 
-	line->init(_rect, _fontsize, _time, _Lines);
+	//line->init(_rect, _fontsize, _time, _Lines);
+	line->init(_rect, _time, _Lines, _bold);
 
 	_vLine.push_back(line);
 }
@@ -66,29 +68,29 @@ void LineManager::trgLine(Trigger _trg, string _name)
 {
 	if (_trg == MAP1)
 	{
-		CreateLine(MakePt(166, 766), 40, txtFind("<map1>"), 2);
+		CreateLine(MakePt(166, 766), 40, txtFind("<map1>"), false, 2);
 		//CreateLine(MakePt(47, 817), 40, "적 종류", 2);
 	}
 	else if (_trg == MAP2 || _trg == MAP4 || _trg == MAP5)
 	{
-		CreateLine(MakePt(187, 766), 40, txtFind("<map245>"), 2);
+		CreateLine(MakePt(187, 766), 40, txtFind("<map245>"), false, 2);
 	}
 	else if (_trg == MAP3)
 	{
-		CreateLine(MakePt(229, 766), 40, txtFind("<map3>"), 2);
+		CreateLine(MakePt(229, 766), 40, txtFind("<map3>"), false, 2);
 	}
 	else if (_trg == P_DIE)
 	{
-		CreateLine(MakePt(34, 766), 40, txtFind("<p_die>"), 1);
+		CreateLine(MakePt(34, 766), 40, txtFind("<p_die>"), false, 1);
 	}
 	else if (_trg == E_DIE)
 	{
-		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), 40, txtFind("<e_die>", _name, RNG->getInt(2) + 1), 1);
+		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), 40, txtFind("<e_die>", _name, RNG->getInt(2) + 1), false, 1);
 		POSITION = !POSITION;
 	}
 	else if (_trg == E_HELP)
 	{
-		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), 40, txtFind("<e_help>", _name), 1);
+		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), 40, txtFind("<e_help>", _name), false, 1);
 		POSITION = !POSITION;
 	}
 }
