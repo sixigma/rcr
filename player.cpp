@@ -19,6 +19,8 @@ HRESULT player::init()
 	_p_status.punch = 15;
 	_p_status.weapon = 15;
 
+	_count = 0;
+
 	_walk = IMG->find("p-°È±â");
 	_run = IMG->find("p-´Þ¸®±â");
 	_punch = IMG->find("p-ÆÝÄ¡");
@@ -133,6 +135,7 @@ void player::update()
 		_p_character_set.ch = MakeRct(pos.x - 33, pos.y - 130, 66, 130);
 		_p_character_set.ani->frameUpdate(TIME->getElapsedTime() * 10);
 		_count++;
+		if (_count > 400) _count = 0;
 		frameUp();
 
 
