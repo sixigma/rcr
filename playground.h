@@ -7,6 +7,7 @@ class playground : public gameNode
 private:
 	vector<int> keysToCheck;
 	LineManager* l;
+	BYTE _blackScreenAlpha;
 
 public:
 	playground();

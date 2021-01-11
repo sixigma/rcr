@@ -24,7 +24,8 @@ private:
 	Sound**			_sound;
 	Channel**		_channel;
 
-	soundList		_totSounds;
+	soundList		_soundList;
+	soundListIter   _soundListIter;
 
 public:
 	soundManager();
@@ -34,17 +35,16 @@ public:
 	void release();
 	void update();
 
-	//   사운드 추가함수(키 값, 음악파일명, 브금or효과음, 루프할껀지)
-	void addSound(string keyName, string soundName, bool bgm, bool loop);
+	// 음악 파일 추가 함수(키 값, 파일명, 배경음인지 여부, 반복 재생 여부)
+	void addSound(string strKey, string soundFileName, bool isBGM, bool isLoop);
 
-	//                             0.0f ~ 1.0f -> 0 ~ 255
-	void play(string keyName, float volume = 1.0f);
-	void stop(string keyName);
-	void pause(string keyName);
-	void resume(string keyName);
+	// 추가된 음악 파일을 재생 함수 (음량은 0.0f부터 1.0f까지)
+	void play(string strKey, float volume = 1.0f);
+	void stop(string strKey);
+	void pause(string strKey);
+	void resume(string strKey);
 
-	//호옥시이 몰라서 만들어둠
-	bool isPlaySound(string keyName);
-	bool isPauseSound(string keyName);
+	bool isPlaying(string strKey);
+	bool isPaused(string strKey);
 };
 

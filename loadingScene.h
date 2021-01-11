@@ -1,7 +1,7 @@
 #pragma once
 #include "gameNode.h"
 
-constexpr int MAX_SLEEP_CALLS = 100;
+constexpr int MAX_SLEEP_CALLS = 30;
 
 class progressBar;
 
@@ -25,17 +25,17 @@ public:
 
 	static unsigned CALLBACK threadFunc(LPVOID params);
 
-	virtual void playerImg();
-	virtual void enemyImgOne();
-	virtual void enemyImgTwo();
-	virtual void enemyImgThree();
-	virtual void enemyImgFour();
-	virtual void enemyImgFive();
-	virtual void enemyImgSix();
-	virtual void enemyImgSeven();
-	virtual void enemyImgEight();
-	virtual void enemyImgNine();
-	virtual void enemyImgBoss();
-
+	void playerImg();
+	void enemyImgOne();
+	void enemyImgTwo();
+	void enemyImgThree();
+	void enemyImgFour();
+	void enemyImgFive();
+	void enemyImgSix();
+	void enemyImgSeven();
+	void enemyImgEight();
+	void enemyImgNine();
+	void enemyImgBoss();
+	void wpImg();
 };
 
