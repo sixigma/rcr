@@ -4,6 +4,7 @@
 enum STATE
 {
 	IDLE,			//평상시
+	WALK,
 	ATTACK,			//공격
 	DEFEND,		//방어
 	HIT,			//피격
@@ -23,7 +24,9 @@ struct tagCharacterSetting
 	RECT ch;		//캐릭터 렉트
 	RECT atk;	//캐릭터 공격렉트
 	image* img;	//이미지
+	animation* ani;
 	string chName;	//캐릭터 이름
+	
 };
 
 //펀치		- 펀치 계열 기술 공격력
