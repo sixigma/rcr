@@ -24,5 +24,18 @@ public:
 	void render() override;
 
 	static unsigned CALLBACK threadFunc(LPVOID params);
+
+	virtual void playerImg();
+	virtual void enemyImgOne();
+	virtual void enemyImgTwo();
+	virtual void enemyImgThree();
+	virtual void enemyImgFour();
+	virtual void enemyImgFive();
+	virtual void enemyImgSix();
+	virtual void enemyImgSeven();
+	virtual void enemyImgEight();
+	virtual void enemyImgNine();
+	virtual void enemyImgBoss();
+
 };
 
