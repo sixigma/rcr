@@ -34,6 +34,32 @@ void soundManager::update()
 	_system->update();
 }
 
+Sound** soundManager::findSound(string strKey)
+{
+	_soundListIter = _soundList.find(strKey);
+	if (_soundListIter != _soundList.end())
+	{
+		return _soundListIter->second;
+	}
+	return nullptr;
+}
+
+Channel * soundManager::findChannel(string strKey)
+{
+	_soundListIter = _soundList.begin();
+
+	int count = 0;
+
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		if (strKey == _soundListIter->first)
+		{
+			return _channel[count];
+		}
+	}
+	return nullptr;
+}
+
 void soundManager::addSound(string strKey, string soundFileName, bool isBGM, bool isLoop)
 {
 	if (isLoop)

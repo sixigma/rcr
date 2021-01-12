@@ -35,6 +35,10 @@ public:
 	void release();
 	void update();
 
+	Sound** findSound(string strKey);
+
+	Channel* findChannel(string strKey);
+
 	// 음악 파일 추가 함수(키 값, 파일명, 배경음인지 여부, 반복 재생 여부)
 	void addSound(string strKey, string soundFileName, bool isBGM, bool isLoop);
 
