@@ -121,6 +121,9 @@
     <ClCompile Include="map5.cpp">
       <Filter>Game\GameScene\Maps</Filter>
     </ClCompile>
+    <ClCompile Include="MainScene.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="playground.h">
@@ -254,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="map5.h">
       <Filter>Game\GameScene\Maps</Filter>
+    </ClInclude>
+    <ClInclude Include="MainScene.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

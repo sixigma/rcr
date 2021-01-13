@@ -33,7 +33,8 @@ public:
 	virtual void update();
 	virtual void render();
 
-	void CreateLine(POINT _rect, int _fontsize, string _Lines,  bool _bold, int _time = 99999);
+	void CreateLine(POINT _rect, string _Lines, string _name, bool _bold, int _time = 99999);
+	void CorrectLine(string _name, POINT _pos);
 	void trgLine(Trigger _trg, string _name = "no");
 
 	void AllDeleteLine();

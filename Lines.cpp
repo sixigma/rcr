@@ -270,7 +270,7 @@ void Lines::deleteLine()
 	CNT++;
 }*/
 
-Lines::Lines():
+Lines::Lines() :
 	CURRENT_LEN(0),
 	CNT(0),
 	APPROACH(false),
@@ -280,26 +280,26 @@ Lines::Lines():
 {
 	char C_LIST[] =
 	{
-		'ⓒ', '/', '＇', '가', 'ㄱ', '나' ,'ㅏ' ,'다' , 'ㄷ', '라', 'ㄹ', '마', 'ㅁ', '바', 'ㅏ', 'ㅇ',
+		'ⓒ', '/', '\'', '가', 'ㄱ', '나' ,'ㅏ' ,'다' , 'ㄷ', '라', 'ㄹ', '마', 'ㅁ', '바', 'ㅏ', ' ',
 		'Ａ','Ｂ','Ｃ','Ｄ','Ｅ','Ｆ','Ｇ','Ｈ','Ｉ','Ｊ','Ｋ','Ｌ','Ｍ','Ｎ','Ｏ','Ｐ','Ｑ','Ｒ','Ｓ','Ｔ','Ｕ','Ｖ','Ｗ','Ｘ','Ｙ','Ｚ',
-		'*', '/"', '!', '?', '-', ',' ,'.' ,':' , ';', '&', '/,', '▶', '#', '…', '사', 'ㅅ',
+		'*', '\"', '!', '?', '-', ',' ,'.' ,':' , ';', '&', '/,', '▶', '#', '…', '사', 'ㅅ',
 		'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
 		'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
 		'0','1','2','3','4','5','6','7','8','9','$','▼'
 	};
-	int I_LIST[] = 
+	int I_LIST[] =
 	{
 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
 		16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
 		48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-		64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 
-		90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 
+		64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
+		90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115,
 		116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
 	};
 
 	strcpy_s(WORD_CLIST, 256, C_LIST);
 
-	for (int i = 0; i < sizeof(I_LIST)/sizeof(int); i++)
+	for (int i = 0; i < sizeof(I_LIST) / sizeof(int); i++)
 	{
 		WORD_ILIST[i] = I_LIST[i];
 	}
@@ -310,11 +310,12 @@ Lines::~Lines()
 {
 }
 
-HRESULT Lines::init(POINT _pos, int _time, string _Lines, bool _bold)
+HRESULT Lines::init(POINT _pos, int _time, string _Lines, bool _bold, string _name)
 {
 	SUBSTR_LINE = _Lines;
 	CLOCK = (float)_time;
 	BOLD = _bold;
+	NAME = _name;
 
 	int e = 0;
 	int h = 0;
@@ -328,11 +329,10 @@ HRESULT Lines::init(POINT _pos, int _time, string _Lines, bool _bold)
 		{
 			e = 0;
 			h++;
-			i++;
 			continue;
 		}
 		ONE_WORD._x = _pos.x + (e * 32);
-		ONE_WORD._y = _pos.y + (h * 32);
+		ONE_WORD._y = _pos.y + (h * 60);
 
 		//if (sizeof(char) < sizeof(SUBSTR_LINE[i])) //2바이트 한글일떄
 		//else if (sizeof(char) == sizeof(SUBSTR_LINE[i])) //1바이트일때
@@ -341,8 +341,8 @@ HRESULT Lines::init(POINT _pos, int _time, string _Lines, bool _bold)
 		{
 			if (SUBSTR_LINE[i] == WORD_CLIST[j])
 			{
-				if		(!BOLD)	ONE_WORD.oChar = WORD_ILIST[j];
-				else if (BOLD)  ONE_WORD.oChar = WORD_ILIST[j]-48;
+				if (!BOLD)	ONE_WORD.oChar = WORD_ILIST[j];
+				else if (BOLD)  ONE_WORD.oChar = WORD_ILIST[j] - 48;
 				break;
 			}
 		}
@@ -350,6 +350,7 @@ HRESULT Lines::init(POINT _pos, int _time, string _Lines, bool _bold)
 		_vChar.push_back(ONE_WORD);
 
 		e++;
+
 	}
 	return S_OK;
 }
@@ -376,17 +377,10 @@ void Lines::charRender()
 	for (int i = I; i < CURRENT_LEN; i++)
 	{
 		IMG->frameRender("타일셋", getMemDC(), _currOrg.x + _vChar[i]._x, _currOrg.y + _vChar[i]._y,
-			((_vChar[i].oChar) % 16), 
+			((_vChar[i].oChar) % 16),
 			(_vChar[i].oChar) / 16
-		);	
-	}	
-
-	/*char str[128];
-	char dd = 'ⓒ';
-	int ff = (int)dd;
-
-	sprintf_s(str, "%d", ff);
-	TextOut(getMemDC(), 300, 300, str, strlen(str));*/
+		);
+	}
 }
 
 void Lines::newLine()
@@ -420,4 +414,13 @@ void Lines::deleteLine()
 	}
 
 	CNT++;
+}
+
+void Lines::setPos(POINT _pos)
+{
+	for (int i = 0; i < _vChar.size(); i++)
+	{
+		_vChar[i]._x += _pos.x;
+		_vChar[i]._y += _pos.y;
+	}
 }

@@ -167,6 +167,7 @@
     <ClInclude Include="LineManager.h" />
     <ClInclude Include="Lines.h" />
     <ClInclude Include="loadingScene.h" />
+    <ClInclude Include="MainScene.h" />
     <ClInclude Include="map1.h" />
     <ClInclude Include="map3.h" />
     <ClInclude Include="map4-2.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="LineManager.cpp" />
     <ClCompile Include="Lines.cpp" />
     <ClCompile Include="loadingScene.cpp" />
+    <ClCompile Include="MainScene.cpp" />
     <ClCompile Include="map1.cpp" />
     <ClCompile Include="map3.cpp" />
     <ClCompile Include="map4-2.cpp" />
