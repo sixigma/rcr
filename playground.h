@@ -1,12 +1,10 @@
 #pragma once
 #include "gameNode.h"
-#include "LineManager.h"
 
 class playground : public gameNode
 {
 private:
 	vector<int> keysToCheck;
-	LineManager* l;
 	BYTE _blackScreenAlpha;
 
 public:

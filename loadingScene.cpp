@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "loadingScene.h"
 #include "gameScene.h"
+#include "MainScene.h"
 #include "progressBar.h"
 #include <process.h> // _beginthreadex
 
@@ -44,13 +45,16 @@ void loadingScene::render()
 	if (_currentCount == MAX_SLEEP_CALLS)
 	{
 		CloseHandle(hThread);
-		SC->changeScene("게임 장면");
+		SC->changeScene("메인화면");
 	}
 }
 
 unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 {
 	loadingScene* loadingParams = (loadingScene*)params;
+
+	SC->addScene("메인화면", new MainScene);
+	++loadingParams->_currentCount;
 
 	SC->addScene("게임 장면", new gameScene);
 	++loadingParams->_currentCount;
@@ -93,6 +97,7 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	IMG->addF("문자 타일셋", "images/tileset/tileset.bmp", 512, 256, 16, 8, false, RGB(0, 0, 0));
 	IMG->add("검은 화면", "images/blackScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
 	IMG->add("파란 화면", "images/blueScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
+	IMG->add("640파란 화면", "images/640blueScreen.bmp", WINW, 640, false, RGB(0, 0, 0));
 	++loadingParams->_currentCount;
 
 	while (loadingParams->_currentCount != MAX_SLEEP_CALLS)

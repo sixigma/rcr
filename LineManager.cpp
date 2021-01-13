@@ -21,6 +21,7 @@ HRESULT LineManager::init()
 void LineManager::release()
 {
 	RemoveFontResourceA("RCR.ttf");
+	AllDeleteLine();
 }
 
 void LineManager::update()
@@ -29,6 +30,7 @@ void LineManager::update()
 	{
 		if (_vLine[i]->getDead())
 		{
+			SAFE_DEL(_vLine[i]);
 			_vLine.erase(_vLine.begin() + i);
 		}
 		else
@@ -47,15 +49,27 @@ void LineManager::render()
 	}
 }
 
-void LineManager::CreateLine(POINT _rect, int _fontsize, string _Lines, bool _bold, int _time)
+void LineManager::CreateLine(POINT _rect, string _Lines, string _name, bool _bold, int _time)
 {
 	Lines* line;
 	line = new Lines;
 
 	//line->init(_rect, _fontsize, _time, _Lines);
-	line->init(_rect, _time, _Lines, _bold);
+	line->init(_rect, _time, _Lines, _bold, _name);
 
 	_vLine.push_back(line);
+}
+
+void LineManager::CorrectLine(string _name, POINT _pos)
+{
+	for (int i = 0; i < _vLine.size(); i++)
+	{
+		if (_vLine[i]->getName() == _name)
+		{
+			_vLine[i]->setPos(_pos);
+			return;
+		}
+	}
 }
 
 /* 적 종류 */
@@ -68,35 +82,39 @@ void LineManager::trgLine(Trigger _trg, string _name)
 {
 	if (_trg == MAP1)
 	{
-		CreateLine(MakePt(166, 766), 40, txtFind("<map1>"), false, 2);
+		CreateLine(MakePt(166, 766), "n", txtFind("<map1>"), false, 2);
 		//CreateLine(MakePt(47, 817), 40, "적 종류", 2);
 	}
 	else if (_trg == MAP2 || _trg == MAP4 || _trg == MAP5)
 	{
-		CreateLine(MakePt(187, 766), 40, txtFind("<map245>"), false, 2);
+		CreateLine(MakePt(187, 766), "n", txtFind("<map245>"), false, 2);
 	}
 	else if (_trg == MAP3)
 	{
-		CreateLine(MakePt(229, 766), 40, txtFind("<map3>"), false, 2);
+		CreateLine(MakePt(229, 766), "n", txtFind("<map3>"), false, 2);
 	}
 	else if (_trg == P_DIE)
 	{
-		CreateLine(MakePt(34, 766), 40, txtFind("<p_die>"), false, 1);
+		CreateLine(MakePt(34, 766), "n", txtFind("<p_die>"), false, 1);
 	}
 	else if (_trg == E_DIE)
 	{
-		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), 40, txtFind("<e_die>", _name, RNG->getInt(2) + 1), false, 1);
+		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), "n", txtFind("<e_die>", _name, RNG->getInt(2) + 1), false, 1);
 		POSITION = !POSITION;
 	}
 	else if (_trg == E_HELP)
 	{
-		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), 40, txtFind("<e_help>", _name), false, 1);
+		CreateLine(MakePt(34, (766 * (!POSITION)) + (830 * (POSITION))), "n", txtFind("<e_help>", _name), false, 1);
 		POSITION = !POSITION;
 	}
 }
 
 void LineManager::AllDeleteLine()
 {
+	for (int i = 0; i < _vLine.size(); i++)
+	{
+		SAFE_DEL(_vLine[i]);
+	}
 	_vLine.clear();
 }
 
