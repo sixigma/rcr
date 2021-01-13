@@ -6,8 +6,8 @@
 
 using namespace FMOD;
 
-constexpr size_t SOUNDBUFFER = 10;
-constexpr size_t EXTRACHANNELBUFFER = 5;
+constexpr size_t SOUNDBUFFER = 60; // 리마인더: 추가할 음악 파일 개수보다 커야 한다.
+constexpr size_t EXTRACHANNELBUFFER = 6;
 #define TOTALSOUNDBUFFER SOUNDBUFFER + EXTRACHANNELBUFFER
 
 class soundManager : public singleton<soundManager>

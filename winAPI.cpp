@@ -11,6 +11,7 @@ HWND		_hWnd;
 POINT		_mouse, _currOrg, _newOrg;
 RECT		_camMovLim, _totRegion;
 BOOL		_moveKeyDisabled, _isInShop, _shouldBePaused, _shouldFadeOut, _shouldShowMenuScreen;
+float		_currMasterVolume, _currBGMVolume, _currSFXVolume;
 
 playground _pg;
 
@@ -24,7 +25,7 @@ int APIENTRY WinMain(_In_ HINSTANCE hInstance,
 {
 #ifdef _DEBUG 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF); // 메모리 누수를 감지한다.
-	//_CrtSetBreakAlloc(810); // 메모리 누수 시작 위치에서 실행을 정지한다.
+	//_CrtSetBreakAlloc(3362); // 메모리 누수 시작 위치에서 실행을 정지한다.
 #endif
 
 	MSG			message;

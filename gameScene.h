@@ -18,6 +18,9 @@ private:
 	static int _prevMapNum, _mapNum;
 
 	static int _countForReEnablingKeyInput;
+
+	int topBoxAdjX; // 상단 영역 이동 시 사용하는 변수
+	int bottomBoxAdjX; // 하단 영역 이동 시 사용하는 변수
 public:
 	gameScene();
 	~gameScene() override;

@@ -69,10 +69,21 @@ void gameScene::update()
 		if (_countForReEnablingKeyInput == 0) _moveKeyDisabled = FALSE;
 		--_countForReEnablingKeyInput;
 	}
-	if (!_shouldFadeOut && !_shouldShowMenuScreen)
+
+	if (!_shouldFadeOut && !_shouldShowMenuScreen && !_shouldBePaused)
 	{
 		_p->update();
 		_currMap->update();
+	}
+
+	if (KEY->down(VK_RETURN))
+	{
+		if (!_shouldBePaused) SND->play("35.wav", _currMasterVolume * _currSFXVolume);
+		_shouldBePaused = !_shouldBePaused;
+	}
+	if (!_shouldBePaused)
+	{
+		L->update();
 	}
 }
 
@@ -81,7 +92,8 @@ void gameScene::render()
 #ifdef _DEBUG
 	if (KEY->down(VK_F1)) _shouldShowMenuScreen = !_shouldShowMenuScreen; // 리마인더: 시험용
 #endif
-	if (_shouldShowMenuScreen) IMG->render("파란 화면", getMemDC(), _currOrg.x, _currOrg.y);
+
+	if (_shouldShowMenuScreen) IMG->render("파란 화면", getMemDC(), _currOrg.x, 96, 0, 0, WINW, 640);
 	else
 	{
 		PatBlt(getMemDC(), 0, 96, WINW, 640, WHITENESS);
@@ -90,42 +102,43 @@ void gameScene::render()
 
 		IMG->execZ();
 	}
-
+	
 #ifdef _DEBUG
 	char str[256];
 	if (KEY->isToggledOn(VK_TAB)) DrawRct(getMemDC(), _p->getPos().x - 32, _p->getPos().y - 8, 64, 8);
 #endif
 
-
 	PatBlt(getMemDC(), 0, 0, WINW, 96, BLACKNESS);
 	PatBlt(getMemDC(), 0, 96 + 640, WINW, WINH - 640 - 96, BLACKNESS);
+	L->render();
 
 #ifdef _DEBUG
-	{
-		sprintf_s(str, "Player pos: %d, %d", _p->getPos().x, _p->getPos().y);
-		TextOut(getMemDC(), 0, 48, str, static_cast<int>(strlen(str)));
-
-		sprintf_s(str, "Pointer pos: %d, %d (%d, %d)", _mouse.x + _currOrg.x, _mouse.y + _currOrg.y, _mouse.x, _mouse.y);
-		TextOut(getMemDC(), 0, 64, str, static_cast<int>(strlen(str)));
-
-		if (_mouse.x + 42 < WINW)
 		{
-			Rectangle(getMemDC(), _mouse.x + 9, _mouse.y + 9, _mouse.x + 10 + 33, _mouse.y + 10 + 33);
-			StretchBlt(getMemDC(), _mouse.x + 10, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
-			DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
-			DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 30 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+			if (KEY->isToggledOn(VK_SCROLL))
+			{
+				sprintf_s(str, "Player pos: %d, %d", _p->getPos().x, _p->getPos().y);
+				TextOut(getMemDC(), 0, 48, str, static_cast<int>(strlen(str)));
+
+				sprintf_s(str, "Pointer pos: %d, %d (%d, %d)", _mouse.x + _currOrg.x, _mouse.y + _currOrg.y, _mouse.x, _mouse.y);
+				TextOut(getMemDC(), 0, 64, str, static_cast<int>(strlen(str)));
+			}
+
+			if (_mouse.x + 42 < WINW)
+			{
+				Rectangle(getMemDC(), _mouse.x + 9, _mouse.y + 9, _mouse.x + 10 + 33, _mouse.y + 10 + 33);
+				StretchBlt(getMemDC(), _mouse.x + 10, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
+				DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
+				DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 30 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+			}
+			else
+			{
+				Rectangle(getMemDC(), _mouse.x - 43, _mouse.y + 9, _mouse.x + 10 - 19, _mouse.y + 10 + 33);
+				StretchBlt(getMemDC(), _mouse.x - 42, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
+				DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
+				DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 22 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+			}
 		}
-		else
-		{
-			Rectangle(getMemDC(), _mouse.x - 43, _mouse.y + 9, _mouse.x + 10 - 19, _mouse.y + 10 + 33);
-			StretchBlt(getMemDC(), _mouse.x - 42, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
-			DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
-			DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 22 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
-		}
-	}
 #endif
-
-
 }
 
 void gameScene::goToMap(int num)
