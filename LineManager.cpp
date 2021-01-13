@@ -60,6 +60,17 @@ void LineManager::CreateLine(POINT _rect, string _Lines, string _name, bool _bol
 	_vLine.push_back(line);
 }
 
+//그냥 딱 나오는넘
+void LineManager::calmLine(POINT _rect, string _Lines)
+{
+	Lines* line;
+	line = new Lines;
+
+	line->init(_rect, 99998, _Lines, false, "CaLm");
+
+	_vLine.push_back(line);
+}
+
 void LineManager::CorrectLine(string _name, POINT _pos)
 {
 	for (int i = 0; i < _vLine.size(); i++)

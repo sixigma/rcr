@@ -68,13 +68,13 @@ void MainScene::Turn2() //로고
 	//cnt변수 재활용
 	if (cnt == 0)
 	{
-		L->CreateLine(MakePt(287, 160), "MESSAGE SPEED", "n", false);
-		L->CreateLine(MakePt(448, 255), "SLOW", "n", false);
-		L->CreateLine(MakePt(448, 319), "NORMAL", "n", false);
-		L->CreateLine(MakePt(448, 383), "FAST", "n", false);
-		L->CreateLine(MakePt(351, 544), "SKILL LEVEL", "n", false);
-		L->CreateLine(MakePt(159, 640), "NOVICE", "n", false);
-		L->CreateLine(MakePt(608, 640), "ADVANCED", "n", false);
+		L->calmLine(MakePt(287, 160), "MESSAGE SPEED");
+		L->calmLine(MakePt(448, 255), "SLOW");
+		L->calmLine(MakePt(448, 319), "NORMAL");
+		L->calmLine(MakePt(448, 383), "FAST");
+		L->calmLine(MakePt(351, 544), "SKILL LEVEL");
+		L->calmLine(MakePt(159, 640), "NOVICE");
+		L->calmLine(MakePt(608, 640), "ADVANCED");
 		cnt = 1;
 	}
 
@@ -141,7 +141,7 @@ void MainScene::Turn3()	//줄거리
 	}
 	if (cnt == 0)
 	{
-		L->CreateLine(MakePt(64, 159),
+		L->calmLine(MakePt(64, 159),
 			" I hold your city captive &%"
 			"Ryan's girlfriend hostage.%"
 			"With my gangs of students &%"
@@ -150,9 +150,8 @@ void MainScene::Turn3()	//줄거리
 			"else!... P.S. Alex & Ryan if%"
 			"you interfere, you'll be in%"
 			"for the fight of your lives!%"
-			"... SLICK"
-			,
-			"n", false);
+			"... SLICK");
+
 		cnt = 1;
 	}
 	if (cnt == 1)
@@ -208,6 +207,15 @@ void MainScene::Turn4()	//회사로고
 		if (alpha >= 255) { SC->changeScene("게임 장면"); }
 	}
 	
+}
+
+void MainScene::setName()
+{
+	if (cnt == 0)
+	{
+		if (alpha > 0) { alpha -= 5; }
+		//if(alpha <= 0) 
+	}
 }
 
 void MainScene::SceneRender()

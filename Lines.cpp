@@ -355,6 +355,7 @@ HRESULT Lines::init(POINT _pos, int _time, string _Lines, bool _bold, string _na
 	return S_OK;
 }
 
+
 void Lines::release()
 {
 
@@ -362,9 +363,19 @@ void Lines::release()
 
 void Lines::update()
 {
-	if (!APPROACH) newLine();
-	if (APPROACH) CURRENT_CLOCK += (1.0f / 60.0f);
-	if (APPROACH && CURRENT_CLOCK >= CLOCK) deleteLine();
+	if (CLOCK == 99998 && NAME == "CaLm")
+	{
+		I = 0;
+		CURRENT_LEN = _vChar.size();
+	}
+
+	if (CLOCK != 99998 && NAME != "CaLm")
+	{
+		if (!APPROACH) newLine();
+		if (APPROACH) CURRENT_CLOCK += (1.0f / 60.0f);
+		if (APPROACH && CURRENT_CLOCK >= CLOCK) deleteLine();
+	}
+
 }
 
 void Lines::render()
