@@ -26,6 +26,11 @@ void MainScene::release()
 void MainScene::update()
 {
 	L->update();
+#ifdef _DEBUG
+	{
+		if (KEY->down('1')) { SND->stopAll(); L->AllDeleteLine(); crtScene = 3; cnt = 280; }
+	}
+#endif
 	if (crtScene == 0) Turn1();
 	if (crtScene == 1) Turn2();
 	if (crtScene == 2) Turn3();
@@ -42,7 +47,11 @@ void MainScene::Turn1() //로고
 	if (alpha > 0 && !cnt) alpha -= 5;
 	if (alpha <= 0 && cnt < 120)
 	{
-		cnt++;
+		if (KEY->down(VK_RETURN))
+		{
+			cnt = 120;
+		}
+		else cnt++;
 		alpha = 0;
 	}
 	if (cnt >= 120 && alpha < 255) alpha += 5;
@@ -75,8 +84,8 @@ void MainScene::Turn2() //로고
 		if (alpha <= 0)
 		{
 			L->CreateLine(MakePt(65, 768), "Select message speed & level.", "n", false);
-			L->CreateLine(MakePt(390, 255), "▶", "화살표1", false);
-			L->CreateLine(MakePt(100, 640), "▶", "화살표2", false);
+			L->CreateLine(MakePt(384, 255), "▶", "화살표1", false);
+			L->CreateLine(MakePt(94, 640), "▶", "화살표2", false);
 			cnt = 2;
 		}
 	}
@@ -182,7 +191,11 @@ void MainScene::Turn4()	//회사로고
 	}
 	else if (cnt >= 1 && cnt < 280)
 	{
-		cnt++;
+		if (KEY->down(VK_RETURN))
+		{
+			cnt = 280;
+		}
+		else cnt++;
 	}
 	
 	if (cnt == 280)
@@ -193,9 +206,7 @@ void MainScene::Turn4()	//회사로고
 			SND->stop("3 - Title Screen.mp3");
 		}
 		if (alpha >= 255) { SC->changeScene("게임 장면"); }
-		
 	}
-	
 	
 }
 

@@ -117,6 +117,7 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 		}
 	}
 	file.close();
+	++loadingParams->_currentCount;
 
 	// È¿°úÀ½
 	file.open("sounds/fx/fileList.txt");
