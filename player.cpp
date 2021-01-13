@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "player.h"
-
+#include "item.h"
 
 HRESULT player::init()
 {

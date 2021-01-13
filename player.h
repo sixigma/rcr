@@ -1,6 +1,7 @@
 #pragma once
 #include "character.h"
 
+class item;
 class player: public character
 {
 	STATE _p_state;
@@ -42,7 +43,7 @@ class player: public character
 		bool _isJump; // 점프용 bool 값
 		bool _isRun; // 대쉬용 bool 값
 
-		
+		vector<item*> _vItem;
 
 	public:
 	player() {};
@@ -79,5 +80,7 @@ class player: public character
 	void playerImgFind();		//플레이어 이미지 관련 함수
 	void playerSetAni();		//플레이어 애니메이션 등록 함수
 	void frameUp();				//애니메이션 재생 함수
+
+	vector<item*> &getVItem() { return _vItem; }
 };
 
