@@ -5,7 +5,6 @@
 #include "progressBar.h"
 #include <process.h> // _beginthreadex
 
-
 loadingScene::loadingScene(): _background(nullptr), _loadingBar(nullptr), _currentCount(0) {}
 
 loadingScene::~loadingScene() {}
@@ -93,11 +92,35 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	IMG->addF("동전", "images/coin.bmp", 64, 32, 2, 1, true, RGB(255, 0, 255));
 	++loadingParams->_currentCount;
 
-	// 타일셋 이미지, 화면 배경 이미지
-	IMG->addF("문자 타일셋", "images/tileset/tileset.bmp", 512, 256, 16, 8, false, RGB(0, 0, 0));
+	// 화면 배경 이미지
 	IMG->add("검은 화면", "images/blackScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
 	IMG->add("파란 화면", "images/blueScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
 	IMG->add("640파란 화면", "images/640blueScreen.bmp", WINW, 640, false, RGB(0, 0, 0));
+	++loadingParams->_currentCount;
+
+	ifstream file;
+	string line;
+	// 배경음
+	file.open("sounds/bgm/fileList.txt");
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			SND->addSound(line, "sounds/bgm/" + line, true, true);
+		}
+	}
+	file.close();
+
+	// 효과음
+	file.open("sounds/fx/fileList.txt");
+	if (file.is_open())
+	{
+		while (getline(file, line))
+		{
+			SND->addSound(line, "sounds/fx/" + line, false, false);
+		}
+	}
+	file.close();
 	++loadingParams->_currentCount;
 
 	while (loadingParams->_currentCount != MAX_SLEEP_CALLS)

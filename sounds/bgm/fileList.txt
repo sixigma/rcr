@@ -1,0 +1,13 @@
+1 - Game Mode & Character Select.mp3
+10 - A Tough Fight.mp3
+11 - A Tougher Fight.mp3
+12 - The Twin Dragons.mp3
+13 - The Final Fight.mp3
+2 - Prologue & Epilogue.mp3
+3 - Title Screen.mp3
+4 - Running Around.mp3
+5 - Menu.mp3
+6 - Password.mp3
+7 - Cutscene.mp3
+8 - Vacant 3rd Wheel Factory.mp3
+9 - River City High.mp3

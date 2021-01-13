@@ -10,10 +10,10 @@ HRESULT soundManager::init()
 	System_Create(&_system);
 
 	_system->init(TOTALSOUNDBUFFER, FMOD_INIT_NORMAL, NULL);
-	_sound = new Sound*[TOTALSOUNDBUFFER];
+	_sound = new Sound*[SOUNDBUFFER];
 	_channel = new Channel*[TOTALSOUNDBUFFER];
 
-	memset(_sound, 0, sizeof(Sound*) * TOTALSOUNDBUFFER);
+	memset(_sound, 0, sizeof(Sound*) * SOUNDBUFFER);
 	memset(_channel, 0, sizeof(Channel*) * TOTALSOUNDBUFFER);
 	return S_OK;
 }
