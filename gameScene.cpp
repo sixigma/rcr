@@ -7,11 +7,12 @@
 #include "map4.h"
 #include "map4-2.h"
 #include "map5.h"
+#include "shop.h"
 
 player* gameScene::_p;
 vector<map_*> gameScene::_mapList;
 map_* gameScene::_currMap;
-int gameScene::_prevMapNum, gameScene::_mapNum;
+int gameScene::_prevMapNum, gameScene::_mapNum, gameScene::_prevshopNum, gameScene::_shopNum;
 int gameScene::_countForReEnablingKeyInput;
 
 gameScene::gameScene()
@@ -38,8 +39,9 @@ HRESULT gameScene::init()
 	_mapList.push_back(new map4); // 3
 	_mapList.push_back(new map4_2); // 4
 	_mapList.push_back(new map5); // 5
+	_mapList.push_back(new shop); // »óÁ¡
 
-	_prevMapNum = _mapNum = 0;
+	_prevMapNum = _mapNum =  0;
 
 	_totRegion = { 0, 0, 3036, 640 };
 	_camMovLim = { _totRegion.left, _totRegion.top, _totRegion.right - _totRegion.left - WINW, _totRegion.top };
@@ -153,32 +155,44 @@ void gameScene::goToMap(int num)
 		case 1:
 			_totRegion = { 0, 96, 3036, 640 };
 			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_isInShop = false;
 			_currMap = _mapList[0];
 			break;
 		case 2:
 			_totRegion = { 0, 96, 2012, 640 };
 			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_isInShop = false;
 			_currMap = _mapList[1];
 			break;
 		case 3:
 			_totRegion = { 0, 96, 2012, 640 };
 			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_isInShop = false;
 			_currMap = _mapList[2];
 			break;
 		case 4:
 			_totRegion = { 0, 96, 3040, 640 };
 			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_isInShop = false;
 			_currMap = _mapList[3];
 			break;
 		case 402:
 			_totRegion = { 0, 96, 1884, 640 };
 			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_isInShop = false;
 			_currMap = _mapList[4];
 			break;
 		case 5:
 			_totRegion = { 0, 96, 2012, 640 };
 			_camMovLim = { _totRegion.left, 0, _totRegion.right - _totRegion.left - WINW, 0 };
+			_isInShop = false;
 			_currMap = _mapList[5];
+			break;
+		case 6:
+			_totRegion = { 0 ,96 , 1024, 640 };
+			_camMovLim = { 0, 0, 1024, 640 };
+			_isInShop = true;
+			_currMap = _mapList[6];
 			break;
 	}
 	_currMap->setLinkTo(_p);
