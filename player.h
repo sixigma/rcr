@@ -32,12 +32,15 @@ class player: public character
 			*_R_throw_chain, *_R_throw_knuckles, *_R_throw_rock, *_R_throw_trashcan,
 			*_R_throw_crate, *_R_throw_tire, *_R_throw_human, _R_roll;
 
+		RECT _attack_rc; // 공격용 렉트
 		int dash_cnt; // 대쉬 카운트
 		int _count; // 프레임 카운트
 		int _FrameI; // 프레임 인덱스
+		float deltaX; //미끄러짐 효과를 위한 player 위치 변수
 
-		
 		bool left; // 애니메이션 방향용 bool값
+		bool _isJump; // 점프용 bool 값
+		bool _isRun; // 대쉬용 bool 값
 
 		
 
@@ -72,7 +75,9 @@ class player: public character
 	int currentGuard() { return _p_status.guard; }
 	int currentEndure() { return _p_status.endure; }
 
-
-	void frameUp();
+	void playerSetStatus();		//플레이어 스탯 초기값 설정 함수
+	void playerImgFind();		//플레이어 이미지 관련 함수
+	void playerSetAni();		//플레이어 애니메이션 등록 함수
+	void frameUp();				//애니메이션 재생 함수
 };
 
