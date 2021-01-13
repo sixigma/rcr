@@ -106,7 +106,14 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	{
 		while (getline(file, line))
 		{
-			SND->addSound(line, "sounds/bgm/" + line, true, true);
+			if (line == "3 - Title Screen.mp3")
+			{
+				SND->addSound(line, "sounds/bgm/3 - Title Screen.mp3", true, false);
+			}
+			else
+			{
+				SND->addSound(line, "sounds/bgm/" + line, true, true);
+			}
 		}
 	}
 	file.close();
