@@ -15,7 +15,7 @@ private:
 	static vector<map_*> _mapList;
 	static map_* _currMap;
 
-	static int _prevMapNum, _mapNum;
+	static int _prevMapNum, _mapNum, _prevshopNum, _shopNum;
 
 	static int _countForReEnablingKeyInput;
 
@@ -30,6 +30,8 @@ public:
 	void update() override;
 	void render() override;
 	static void setMapNum(int num) { _mapNum = num; }
+	static void setShopNum(int num) { _shopNum = num; }
+	static int getShopNum() { return _shopNum; }
 	static int getPrevMapNum() { return _prevMapNum; }
 	static void goToMap(int num);
 	void updateViewport(int x, int y);

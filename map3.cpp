@@ -8,10 +8,10 @@ HRESULT map3::init()
 	currPlPos = &pl->getPos();
 	
 	if (getPrevMapNum() == 4) *currPlPos = { _totRegion.right - 40, 592, 0 };
-	else if (getPrevMapNum() == 301) *currPlPos = { 338, 484 + 8 };
-	else if (getPrevMapNum() == 302) *currPlPos = { 734, 484 + 8 };
-	else if (getPrevMapNum() == 303) *currPlPos = { 1144, 484 + 8 };
-	else if (getPrevMapNum() == 304) *currPlPos = { 1824, 484 + 8 };
+	else if (getShopNum() == 1) *currPlPos = { 338, 484 + 8 };
+	else if (getShopNum() == 2) *currPlPos = { 734, 484 + 8 };
+	else if (getShopNum() == 3) *currPlPos = { 1144, 484 + 8 };
+	else if (getShopNum() == 4) *currPlPos = { 1824, 484 + 8 };
 	else *currPlPos = { _totRegion.left + 40, 592, 0 };
 
 	obst.push_back({ 0, 96, 416, 480 });
@@ -36,21 +36,25 @@ void map3::update()
 	else if (currPlPos->x + 32 > _totRegion.right) gameScene::goToMap(4);
 	else if (currPlPos->y <= 484 && KEY->press('W'))
 	{
-		if (currPlPos->x - 32 <= 288 && currPlPos->x + 32 >= 388)
+		if (currPlPos->x - 32 >= 288 && currPlPos->x + 32 <= 388)
 		{
-			// goToMap(301); // 1번 상점으로
+			gameScene::setShopNum(1); //1번 상점으로
+			gameScene::goToMap(6); 
 		}
-		else if (currPlPos->x - 32 <= 644 && currPlPos->x + 32 >= 824)
+		else if (currPlPos->x - 32 >= 644 && currPlPos->x + 32 <= 824)
 		{
-			// goToMap(302); // 2번 상점으로
+			gameScene::setShopNum(2); //2번 상점으로
+			gameScene::goToMap(6);
 		}
-		else if (currPlPos->x - 32 <= 1068 && currPlPos->x + 32 >= 1220)
+		else if (currPlPos->x - 32 >= 1068 && currPlPos->x + 32 <= 1220)
 		{
-			// goToMap(303); // 3번 상점으로
+			gameScene::setShopNum(3); //2번 상점으로
+			gameScene::goToMap(6);
 		}
-		else if (currPlPos->x - 32 <= 1732 && currPlPos->x + 32 >= 1916)
+		else if (currPlPos->x - 32 >= 1732 && currPlPos->x + 32 <= 1916)
 		{
-			// goToMap(304); // 4번 상점으로
+			gameScene::setShopNum(4); //2번 상점으로
+			gameScene::goToMap(6);
 		}
 	}
 

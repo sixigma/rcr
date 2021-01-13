@@ -70,6 +70,7 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	IMG->add("맵 4", "images/maps/4.bmp", 3040, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 4-2", "images/maps/4-2.bmp", 1884, 640, false, RGB(255, 0, 255));
 	IMG->add("맵 5", "images/maps/5.bmp", 2012, 640, false, RGB(255, 0, 255));
+	IMG->add("상점맵", "images/maps/shopbasic.bmp", 1024, 640, false, RGB(255, 0, 255));
 	++loadingParams->_currentCount;
 
 	// 캐릭터 이미지
@@ -97,6 +98,9 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	IMG->add("파란 화면", "images/blueScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
 	IMG->add("640파란 화면", "images/640blueScreen.bmp", WINW, 640, false, RGB(0, 0, 0));
 	++loadingParams->_currentCount;
+
+	//상점 이미지
+	IMG->add("포인터", "images/maps/pointer.bmp", 40, 40, true, RGB(255, 0, 255));
 
 	ifstream file;
 	string line;
