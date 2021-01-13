@@ -10,10 +10,10 @@ HRESULT soundManager::init()
 	System_Create(&_system);
 
 	_system->init(TOTALSOUNDBUFFER, FMOD_INIT_NORMAL, NULL);
-	_sound = new Sound*[SOUNDBUFFER];
+	_sound = new Sound*[TOTALSOUNDBUFFER];
 	_channel = new Channel*[TOTALSOUNDBUFFER];
 
-	memset(_sound, 0, sizeof(Sound*) * SOUNDBUFFER);
+	memset(_sound, 0, sizeof(Sound*) * TOTALSOUNDBUFFER);
 	memset(_channel, 0, sizeof(Channel*) * TOTALSOUNDBUFFER);
 	return S_OK;
 }
@@ -143,7 +143,7 @@ void soundManager::resume(string strKey)
 
 bool soundManager::isPlaying(string strKey)
 {
-	bool isPlay = false;
+	bool isPlaying = false;
 	_soundListIter = _soundList.begin();
 
 	int count = 0;
@@ -152,27 +152,63 @@ bool soundManager::isPlaying(string strKey)
 	{
 		if (strKey == _soundListIter->first)
 		{
-			_channel[count]->isPlaying(&isPlay);
+			_channel[count]->isPlaying(&isPlaying);
 			break;
 		}
 	}
 
-	return isPlay;
+	return isPlaying;
 }
 
 bool soundManager::isPaused(string strKey)
 {
-	bool isPause = false;
+	bool isPaused = false;
 	_soundListIter = _soundList.begin();
 	int count = 0;
 	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
 	{
 		if (strKey == _soundListIter->first)
 		{
-			_channel[count]->getPaused(&isPause);
+			_channel[count]->getPaused(&isPaused);
 			break;
 		}
 	}
 
-	return isPause;
+	return isPaused;
+}
+
+void soundManager::pauseAll()
+{
+	_soundListIter = _soundList.begin();
+	int count = 0;
+	bool isPlaying;
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		_channel[count]->isPlaying(&isPlaying);
+		if (isPlaying) _channel[count]->setPaused(true);
+	}
+}
+
+void soundManager::resumeAll()
+{
+	_soundListIter = _soundList.begin();
+	int count = 0;
+	bool isPaused;
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		_channel[count]->getPaused(&isPaused);
+		if (isPaused) _channel[count]->setPaused(false);
+	}
+}
+
+void soundManager::stopAll()
+{
+	_soundListIter = _soundList.begin();
+	int count = 0;
+	bool isPlaying;
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		_channel[count]->isPlaying(&isPlaying);
+		if (isPlaying) _channel[count]->stop();
+	}
 }

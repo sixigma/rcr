@@ -42,7 +42,7 @@ public:
 	// 음악 파일 추가 함수(키 값, 파일명, 배경음인지 여부, 반복 재생 여부)
 	void addSound(string strKey, string soundFileName, bool isBGM, bool isLoop);
 
-	// 추가된 음악 파일을 재생하는 함수 (음량은 0.0f부터 1.0f까지)
+	// 추가된 음악 파일을 재생하는 함수 (음량: 0.0f부터 1.0f까지)
 	void play(string strKey, float volume = 1.0f);
 	
 	// 특정 음악 재생을 완전히 멈추는 함수
@@ -59,5 +59,14 @@ public:
 	
 	// 특정 음악 재생이 일시 정지 된 상태인지 검사하는 함수
 	bool isPaused(string strKey);
+
+	// 현재 재생 중인 음악을 전부 일시 정지 하는 함수
+	void pauseAll();
+
+	// 현재 일시 정지 중인 음악을 전부 재생하는 함수
+	void resumeAll();
+
+	// 현재 재생 중인 음악을 전부 정지하는 함수
+	void stopAll();
 };
 
