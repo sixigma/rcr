@@ -5,16 +5,17 @@ enum STATE
 {
 	IDLE,			//평상시
 	WALK,
-	ATTACK,			//공격
+	RUN, 			//달리기
+	PUNCH,			//펀치(run상태일 때 run+punch가 될 수 있다)
+	KICK,			//킥(run + jump 상태일 때 jump+kick이 될 수 있다)
+	ITEM_PICK,		//아이템 줍기
+	ITEM_ATTACK,	//아이템 공격
+	ITEM_THROW,		//아이템 던지기
 	DEFEND,		//방어
 	HIT,			//피격
-	FALL,			//쓰러짐
-	RUN, 			//달리기
-	RUN_ATTACK,		//달리기 공격
 	JUMP, 			//점프
-	JUMP_ATTACK,		//점프 공격
-	RUN_JUMP,		//달리기 점프
-	RUN_JUMP_ATTACK,	//달리기 점프 공격
+	FALL,			//벽 등에 부딪힐 때 / 공격받아서 솟아오를 때 / 아이템처럼 던져질 때 떨어짐
+	DOWN,			//HP가 0이 아닐 때 / 기력으로 부활할 때 쓰러짐
 	KO			//쓰러짐
 };
 
@@ -58,7 +59,7 @@ struct tagState
 {
 	bool run;		//달리기
 	bool jump;		//점프
-	bool W1, W2, W3, W4;	//무기
+	int W;			//무기(0은 보통, 1~8은 사진 순서대로)
 };
 
 
