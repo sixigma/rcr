@@ -19,6 +19,9 @@ private:
 	typedef map<string, Channel**>				channelList;
 	typedef map<string, Channel**>::iterator	channelListIter;
 
+	typedef map<string, bool>				bgmOrNotList;
+	//typedef map<string, bool>::iterator		bgmOrNotListIter;
+
 private:
 	System*			_system;
 	Sound**			_sound;
@@ -26,6 +29,7 @@ private:
 
 	soundList		_soundList;
 	soundListIter   _soundListIter;
+	bgmOrNotList	_bgmOrNotList;
 
 public:
 	soundManager();
@@ -68,5 +72,14 @@ public:
 
 	// 현재 재생 중인 음악을 전부 정지하는 함수
 	void stopAll();
+
+	// 마스터 음량 변경을 즉시 반영할 때 쓰는 함수
+	void updateMasterVolume();
+
+	// 배경음 음량 변경을 즉시 반영할 때 쓰는 함수
+	void updateBGMVolume();
+
+	// 효과음 음량 변경을 즉시 반영할 때 쓰는 함수
+	void updateSFXVolume();
 };
 

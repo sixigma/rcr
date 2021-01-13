@@ -74,6 +74,7 @@ void soundManager::addSound(string strKey, string soundFileName, bool isBGM, boo
 	}
 
 	_soundList.insert(make_pair(strKey, &_sound[_soundList.size()]));
+	_bgmOrNotList.insert(make_pair(strKey, isBGM));
 }
 
 void soundManager::play(string strKey, float volume)
@@ -210,5 +211,45 @@ void soundManager::stopAll()
 	{
 		_channel[count]->isPlaying(&isPlaying);
 		if (isPlaying) _channel[count]->stop();
+	}
+}
+
+void soundManager::updateMasterVolume()
+{
+	_soundListIter = _soundList.begin();
+	int count = 0;
+	bool isPlaying;
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		_channel[count]->isPlaying(&isPlaying);
+		if (!isPlaying) continue;
+		if (_bgmOrNotList.find(_soundListIter->first)->second) _channel[count]->setVolume(_currMasterVolume * _currBGMVolume);
+		else _channel[count]->setVolume(_currMasterVolume * _currSFXVolume);
+	}
+}
+
+void soundManager::updateBGMVolume()
+{
+	_soundListIter = _soundList.begin();
+	int count = 0;
+	bool isPlaying;
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		_channel[count]->isPlaying(&isPlaying);
+		if (!isPlaying) continue;
+		if (_bgmOrNotList.find(_soundListIter->first)->second) _channel[count]->setVolume(_currMasterVolume * _currBGMVolume);
+	}
+}
+
+void soundManager::updateSFXVolume()
+{
+	_soundListIter = _soundList.begin();
+	int count = 0;
+	bool isPlaying;
+	for (_soundListIter; _soundListIter != _soundList.end(); ++_soundListIter, ++count)
+	{
+		_channel[count]->isPlaying(&isPlaying);
+		if (!isPlaying) continue;
+		if (!_bgmOrNotList.find(_soundListIter->first)->second) _channel[count]->setVolume(_currMasterVolume * _currSFXVolume);
 	}
 }
