@@ -43,8 +43,6 @@ HRESULT playground::init()
 void playground::release()
 {
 	gameNode::release();
-
-
 }
 
 void playground::update()
@@ -55,10 +53,12 @@ void playground::update()
 	if (KEY->down(VK_SUBTRACT))
 	{
 		_currMasterVolume = max(0.f, _currMasterVolume - 0.1f);
+		SND->updateMasterVolume();
 	}
 	else if (KEY->down(VK_ADD))
 	{
 		_currMasterVolume = min(1.f, _currMasterVolume + 0.1f);
+		SND->updateMasterVolume();
 	}
 #endif
 
@@ -83,9 +83,11 @@ void playground::update()
 void playground::render()
 {
 	// PatBlt(getMemDC(), 0, 0, WINW, WINH, BLACKNESS);
-	if (!_shouldFadeOut) SC->render();
-	if (_blackScreenAlpha > 0x00) IMG->alphaRender("검은 화면", getMemDC(), _currOrg.x, _currOrg.y, _blackScreenAlpha);
 
+	if (!_shouldFadeOut) SC->render();
+
+	if (_blackScreenAlpha > 0x00) IMG->alphaRender("검은 화면", getMemDC(), _currOrg.x, _currOrg.y, _blackScreenAlpha);
+	
 	if (KEY->isToggledOn(VK_SCROLL))
 	{
 		TIME->render(getMemDC());
