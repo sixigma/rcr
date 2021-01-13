@@ -34,6 +34,7 @@ public:
 	virtual void render();
 
 	void CreateLine(POINT _rect, string _Lines, string _name, bool _bold, int _time = 99999);
+	void calmLine(POINT _rect, string _Lines);
 	void CorrectLine(string _name, POINT _pos);
 	void trgLine(Trigger _trg, string _name = "no");
 

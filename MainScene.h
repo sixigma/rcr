@@ -25,6 +25,7 @@ public:
 	void Turn2();
 	void Turn3();
 	void Turn4();
+	void setName();
 	void SceneRender();
 
 };
