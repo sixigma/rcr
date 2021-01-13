@@ -4,6 +4,18 @@
 
 HRESULT map4::init()
 {
+	if (SND->isPlaying("6 - Password.mp3"))
+	{
+		SND->stop("6 - Password.mp3");
+	}
+	if (!SND->isPlaying("4 - Running Around.mp3"))
+	{
+		SND->play("4 - Running Around.mp3", _currMasterVolume * _currBGMVolume);
+		SND->findChannel("4 - Running Around.mp3")->setLoopPoints(0, FMOD_TIMEUNIT_MS, 141084, FMOD_TIMEUNIT_MS);
+		SND->findChannel("4 - Running Around.mp3")->setPosition(0, FMOD_TIMEUNIT_MS);
+		SND->findChannel("4 - Running Around.mp3")->setLoopCount(-1);
+	}
+
 	setMapNum(4);
 	currPlPos = &pl->getPos();
 	if (getPrevMapNum() == 3) *currPlPos = { _totRegion.left + 40, 592, 0 };

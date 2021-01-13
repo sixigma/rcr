@@ -51,6 +51,11 @@ void MainScene::Turn1() //로고
 
 void MainScene::Turn2() //로고
 {
+	if (!SND->isPlaying("1 - Game Mode & Character Select.mp3"))
+	{
+		SND->play("1 - Game Mode & Character Select.mp3", _currMasterVolume * _currBGMVolume);
+	}
+
 	//cnt변수 재활용
 	if (cnt == 0)
 	{
@@ -112,6 +117,19 @@ void MainScene::Turn2() //로고
 
 void MainScene::Turn3()	//줄거리
 {
+	
+	if (SND->isPlaying("1 - Game Mode & Character Select.mp3"))
+	{
+		SND->stop("1 - Game Mode & Character Select.mp3");
+	}
+	if (!SND->isPlaying("2 - Prologue & Epilogue.mp3"))
+	{
+		SND->play("2 - Prologue & Epilogue.mp3", _currMasterVolume * _currBGMVolume);
+		SND->findChannel("2 - Prologue & Epilogue.mp3")->setLoopPoints(57842, FMOD_TIMEUNIT_MS, 153000, FMOD_TIMEUNIT_MS);
+		SND->findChannel("2 - Prologue & Epilogue.mp3")->setPosition(57842, FMOD_TIMEUNIT_MS);
+		SND->findChannel("2 - Prologue & Epilogue.mp3")->setLoopCount(-1);
+		
+	}
 	if (cnt == 0)
 	{
 		L->CreateLine(MakePt(64, 159),
@@ -149,20 +167,36 @@ void MainScene::Turn3()	//줄거리
 
 void MainScene::Turn4()	//회사로고
 {
+	if (SND->isPlaying("2 - Prologue & Epilogue.mp3"))
+	{
+		SND->stop("2 - Prologue & Epilogue.mp3");
+	}
+	if (!SND->isPlaying("3 - Title Screen.mp3") && cnt < 280)
+	{
+		SND->play("3 - Title Screen.mp3", _currMasterVolume * _currBGMVolume);
+	}
 	if (cnt == 0)
 	{
 		alpha -= 5;
 		if (alpha < 0) { alpha = 0; cnt = 1; }
 	}
-	else if (cnt >= 1 && cnt < 300)
+	else if (cnt >= 1 && cnt < 280)
 	{
 		cnt++;
 	}
-	if (cnt == 300)
+	
+	if (cnt == 280)
 	{
 		alpha += 5;
+		if (SND->isPlaying("3 - Title Screen.mp3"))
+		{
+			SND->stop("3 - Title Screen.mp3");
+		}
 		if (alpha >= 255) { SC->changeScene("게임 장면"); }
+		
 	}
+	
+	
 }
 
 void MainScene::SceneRender()
