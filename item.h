@@ -24,8 +24,7 @@ class item : public gameScene
 {
 private:
 string name;
-int _price1;		//그냥달러1~10자리
-int _price2;		//소수점
+int _price;		//그냥달러1~10자리
 int _plusPunch;		//펀치	
 int _plusKick;		//킥		
 int _plusWeapon;	//무기	
@@ -46,8 +45,7 @@ public:
 	void itemList(string _name);
 	
 	string getName() { return name; }
-	int getPrice() { return _price1; }
-	int getPrice2() { return _price2; }
+	int getPrice() { return _price; }
 	int getPlusPunch() { return _plusPunch; }
 	int getPlusKick(){ return _plusKick; }
 	int getPlusWeapon() { return _plusWeapon; }
