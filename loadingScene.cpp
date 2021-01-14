@@ -101,6 +101,12 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 
 	//상점 이미지
 	IMG->add("포인터", "images/maps/pointer.bmp", 40, 40, true, RGB(255, 0, 255));
+	IMG->add("빵집", "images/maps/bakery.bmp", 265, 265, false, RGB(0, 0, 0));
+	IMG->add("카페", "images/maps/cafe.bmp", 265, 265, false, RGB(0, 0, 0));
+	IMG->add("초밥집", "images/maps/sushishop.bmp", 265, 265, false, RGB(0, 0, 0));
+	IMG->add("서점", "images/maps/bookstore.bmp", 265, 265, false, RGB(0, 0, 0));
+
+
 
 	ifstream file;
 	string line;
