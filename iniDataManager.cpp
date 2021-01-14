@@ -72,7 +72,7 @@ string iniDataManager::loadDataString(const char * fileName, const char * subjec
 	return strData;
 }
 
-int iniDataManager::loadDataInterger(const char * fileName, const char * subject, const char * title)
+int iniDataManager::loadDataInteger(const char * fileName, const char * subject, const char * title)
 {
 	char str[256];
 	char dir[256];
