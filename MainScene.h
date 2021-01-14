@@ -9,8 +9,18 @@ private:
 		alpha,
 		cnt,
 		ypos,
-		xpos
+		xpos,
+		pulse,
+		_x, _y,
+		other
 		;
+
+	bool
+		pulser
+		;
+
+	char nameSet[384];
+	char myName[5];
 
 public:
 	MainScene();

@@ -14,7 +14,7 @@ playground::~playground()
 HRESULT playground::init()
 {
 	gameNode::init(true);
-	keysToCheck = { VK_ADD, VK_SUBTRACT, VK_RETURN, VK_LBUTTON, VK_RBUTTON, 'W', 'A', 'S', 'D', 'J', 'K' }; // 입력을 확인할 키 나열(토글 키 제외)
+	keysToCheck = { VK_ADD, VK_SUBTRACT, VK_RETURN, VK_LBUTTON, VK_RBUTTON, VK_RSHIFT, 'W', 'A', 'S', 'D', 'J', 'K' }; // 입력을 확인할 키 나열(토글 키 제외)
 
 #ifdef _DEBUG
 	vector<int> debugKeysToCheck = { VK_SPACE, VK_ESCAPE, 

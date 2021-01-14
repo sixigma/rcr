@@ -71,6 +71,7 @@ void LineManager::calmLine(POINT _rect, string _Lines)
 	_vLine.push_back(line);
 }
 
+//얘는 현재위치에서 +, - 해주는얘
 void LineManager::CorrectLine(string _name, POINT _pos)
 {
 	for (int i = 0; i < _vLine.size(); i++)
@@ -78,6 +79,18 @@ void LineManager::CorrectLine(string _name, POINT _pos)
 		if (_vLine[i]->getName() == _name)
 		{
 			_vLine[i]->setPos(_pos);
+			return;
+		}
+	}
+}
+//얘는 x, y축 자체를 입력됀 매게변수위치로 바꾸는얘
+void LineManager::setPosLine(string _name, POINT _pos)
+{
+	for (int i = 0; i < _vLine.size(); i++)
+	{
+		if (_vLine[i]->getName() == _name)
+		{
+			_vLine[i]->setPlace(_pos);
 			return;
 		}
 	}
@@ -127,6 +140,35 @@ void LineManager::AllDeleteLine()
 		SAFE_DEL(_vLine[i]);
 	}
 	_vLine.clear();
+}
+
+void LineManager::selectDeleteLine(string _name)
+{
+	for (int i = 0; i < _vLine.size(); )
+	{
+		if (_vLine[i]->getName() == _name)
+		{
+			SAFE_DEL(_vLine[i]);
+			_vLine.erase(_vLine.begin() + i);
+			return;
+		}
+		else
+		{
+			i++;
+		}
+	}
+}
+
+void LineManager::selectChangeLine(string _name, int _i, char _cW)
+{
+	for (int i = 0; i < _vLine.size(); i++)
+	{
+		if (_vLine[i]->getName() == _name)
+		{
+			_vLine[i]->chageWord(_i, _cW);
+			return;
+		}
+	}
 }
 
 string LineManager::txtFind(string _line, string _name, int _plusLine)

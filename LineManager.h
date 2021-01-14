@@ -36,11 +36,24 @@ public:
 	void CreateLine(POINT _rect, string _Lines, string _name, bool _bold, int _time = 99999);
 	void calmLine(POINT _rect, string _Lines);
 	void CorrectLine(string _name, POINT _pos);
+	void setPosLine(string _name, POINT _pos);
 	void trgLine(Trigger _trg, string _name = "no");
 
 	void AllDeleteLine();
+	void selectDeleteLine(string _name);
+
+	void selectChangeLine(string _name, int _i, char _cW);
 
 	string txtFind(string _line, string _name = "no", int _plusLine = 1);
-
+	POINT getLinePos(string _name)
+	{
+		for (int i = 0; i < _vLine.size(); i++)
+		{
+			if (_vLine[i]->getName() == _name)
+			{
+				return _vLine[i]->getPos();
+			}
+		}
+	}
 };
 
