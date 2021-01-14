@@ -134,8 +134,8 @@ void MainScene::Turn3()	//ÁÙ°Å¸®
 	if (!SND->isPlaying("2 - Prologue & Epilogue.mp3"))
 	{
 		SND->play("2 - Prologue & Epilogue.mp3", _currMasterVolume * _currBGMVolume);
-		SND->findChannel("2 - Prologue & Epilogue.mp3")->setLoopPoints(57842, FMOD_TIMEUNIT_MS, 153000, FMOD_TIMEUNIT_MS);
-		SND->findChannel("2 - Prologue & Epilogue.mp3")->setPosition(57842, FMOD_TIMEUNIT_MS);
+		SND->findChannel("2 - Prologue & Epilogue.mp3")->setLoopPoints(0, FMOD_TIMEUNIT_MS, 109027, FMOD_TIMEUNIT_MS);
+		SND->findChannel("2 - Prologue & Epilogue.mp3")->setPosition(0, FMOD_TIMEUNIT_MS);
 		SND->findChannel("2 - Prologue & Epilogue.mp3")->setLoopCount(-1);
 		
 	}
