@@ -5,21 +5,26 @@
 struct Flist
 {
 	RECT rc;
+	bool use; // 사용여부
 	bool enable;
 	int num;
 };
 class shop: public map_
 {
 private:
-	int shopnumber;
+	int shopNumber;
 public:
 	
-	bool keyenable;
+	bool apply;
+	bool keyEnable;
 	Flist _display;
-	Flist _shopname;
+	Flist _shopName;
 	Flist _money;
-	Flist _item[itemmax];
+	Flist _itemBox[itemmax];
 	Flist _point[itemmax];
+	Flist _yesNoBox[itemmax];
+	Flist _yesNoPoint[itemmax];
+
 
 	int tempnum;
 
@@ -30,5 +35,6 @@ public:
 	void update() override;
 	void render() override;
 	void pointmove();
+	void shopSetting();
 };
 
