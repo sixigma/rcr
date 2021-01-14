@@ -129,6 +129,7 @@ void gameScene::update()
 	}
 	if (KEY->down('3')) //플레이어 status 로드
 	{
+		_p->setPlayerChName(INI->loadDataString("STATUS", "PLAYER", "NAME"));
 		_p->setEndure(INI->loadDataInteger("STATUS", "PLAYER", "ENDURE"));
 		_p->setEnergy(INI->loadDataInteger("STATUS", "PLAYER", "ENERGY"));
 		_p->setGuard(INI->loadDataInteger("STATUS", "PLAYER", "GUARD"));
