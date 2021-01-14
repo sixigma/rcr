@@ -44,6 +44,7 @@ extern POINT		_mouse, _currOrg, _newOrg;
 extern RECT			_camMovLim, _totRegion;
 extern BOOL			_moveKeyDisabled, _isInShop, _shouldBePaused, _shouldFadeOut, _shouldShowMenuScreen;
 extern float		_currMasterVolume, _currBGMVolume, _currSFXVolume;
+extern string		_playerChName;
 
 #include "keyManager.h"
 #include "randomNumber.h"
