@@ -24,8 +24,12 @@ HRESULT shop::init()
 	*currPlPos = { _totRegion.right - 40, 592,0 };
 	prevPlPos = *currPlPos;
 	keyEnable = false;
+	yesNoEnable = false;
+	yesNoApply = false;
 	apply = false;
+	shopIndex = 0;
 	tempnum = 0;
+	max = 0;
 	for (int i = 0; i < 6; i++)
 	{
 		_point[i].enable = false;
@@ -38,6 +42,21 @@ HRESULT shop::init()
 	{
 		_itemBox[i].enable = false;
 		_itemBox[i].num = tempnum;
+		tempnum++;
+	}
+
+	for (int i = 0; i < 2; i++)
+	{
+		_yesNoPoint[i].enable = false;
+		_yesNoPoint[i].num = tempnum;
+		tempnum++;
+	}
+
+	tempnum = 0;
+	for (int i = 0; i < 2; i++)
+	{
+		_yesNoBox[i].enable = false;
+		_yesNoBox[i].num = tempnum;
 		tempnum++;
 	}
 
@@ -68,6 +87,11 @@ HRESULT shop::init()
 	_itemBox[5].rc = MakeRct(530, 536, 500, 50);
 
 	//YES NO
+	_yesNoPoint[0].rc = MakeRct(520, 680, 40, 40);
+	_yesNoPoint[1].rc = MakeRct(800, 680, 40, 40);
+
+	_yesNoBox[0].rc = MakeRct(570, 680, 200, 40);
+	_yesNoBox[1].rc = MakeRct(850, 680, 200, 40);
 
 	gameScene::setViewport(0, 96);
 	return S_OK;
@@ -83,6 +107,11 @@ void shop::update()
 	if (!apply)
 	{
 		shopSetting();
+	}
+	if ((keyEnable == true) && (yesNoApply == true))
+	{
+		L->CreateLine(MakePt(_yesNoBox[0].rc.left - 70, _yesNoBox[0].rc.top + 5), "YES", "n", false, 0);
+		L->CreateLine(MakePt(_yesNoBox[1].rc.left - 70, _yesNoBox[1].rc.top + 5), "NO", "n", false, 0);
 	}
 
 	pointmove();
@@ -129,6 +158,27 @@ void shop::render()
 			DeleteObject(SelectObject(getMemDC(), hOBrush));
 		}
 	}
+	//yesNo
+	if ((keyEnable) && (yesNoApply))
+	{
+		for (int i = 0; i < 2; i++)
+		{
+			if (_yesNoPoint[i].enable)
+			{
+				IMG->find("포인터")->render(getMemDC(), _yesNoPoint[i].rc.left, _yesNoPoint[i].rc.top, 0, 0, 40, 40);
+			}
+			if (_yesNoBox[i].enable)
+			{
+				HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
+				HBRUSH hBrush = CreateSolidBrush(RGB(0, 255, 0));
+				HPEN hOPen = (HPEN)SelectObject(getMemDC(), hPen);
+				HBRUSH hOBrush = (HBRUSH)SelectObject(getMemDC(), hBrush);
+				DrawRct(getMemDC(), _yesNoBox[i].rc);
+				DeleteObject(SelectObject(getMemDC(), hOPen));
+				DeleteObject(SelectObject(getMemDC(), hOBrush));
+			}
+		}
+	}
 	if (KEY->isToggledOn(VK_CAPITAL))
 	{
 		HPEN hPen = CreatePen(PS_SOLID, 1, RGB(0, 255, 0));
@@ -151,29 +201,8 @@ void shop::render()
 void shop::pointmove()
 {
 	int temp = 0;
-	int max = 0;
 
-	switch (shopNumber) // 상점번호에따라
-	{
-	case 1:
-		max = 6;
-	break;
-
-	case 2:
-		max = 6;
-	break;
-
-	case 3:
-		max = 4;
-	break;
-
-	case 4:
-		max = 4;
-	break;
-
-	}
-
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < max; i++)
 	{
 		if (_point[i].enable == true)
 		{
@@ -190,16 +219,85 @@ void shop::pointmove()
 				_point[i + 1].enable = true;
 				break;
 			}
+			// YES NO 등장할지 안등장할지 지정
+			if (keyEnable == true && (shopNumber != 3))
+			{
+				if (yesNoApply == false)
+				{
+					_yesNoPoint[0].enable = true;
+					yesNoApply = true;
+				}
+				if (KEY->down('A') && (_yesNoPoint[0].enable == false))
+				{
+					_yesNoPoint[1].enable = false;
+					_yesNoPoint[0].enable = true;
+					break;
+				}
+				if (KEY->down('D') && (_yesNoPoint[1].enable == false))
+				{
+					_yesNoPoint[0].enable = false;
+					_yesNoPoint[1].enable = true;
+					break;
+				}
+			}
+
+			if (KEY->down('K') && (keyEnable == true))
+			{
+				if (_yesNoPoint[0].enable)
+				{
+					//구매
+				}
+				if (_yesNoPoint[1].enable)
+				{
+					//되돌아가기
+					_yesNoPoint[0].enable = false;
+					_yesNoPoint[1].enable = false;
+					yesNoApply = false;
+					yesNoEnable = false;
+					_itemBox[i].enable = false;
+					keyEnable = false;
+				}
+				break;
+			}
 
 			if (KEY->down('K') && (_point[i].enable))
 			{
-				temp = _point[i].num;
-				if (temp == _itemBox[i].num)
+				if (_point[i].num == _itemBox[i].num)
 				{
-					_itemBox[i].enable = true;
-				}
-				keyEnable = true;
+					if (i == (max - 1) && (shopIndex == 0)) //
+					{
+						apply = false;
+						gameScene::goToMap(3);
+						gameScene::setShopNum(0);
+					}
+					if (i != (max - 1) && (!((shopNumber == 3) && (shopIndex == 0)))) //스시집이자 스시 index가0이 아닐때.
+					{
+						_itemBox[i].enable = true;
+						keyEnable = true;
+					}
+					else if (i != (max - 1) && (shopNumber == 3) && (shopIndex == 0)) //스시집일때
+					{
+						if (i == 0)
+						{
+							L->setKill("a");
+							shopIndex = 1;
+							apply = false;
+						}
+						if (i == 1)
+						{
+							L->setKill("a");
+							shopIndex = 2;
+							apply = false;
+						}
+						if (i == 2)
+						{
+							L->setKill("a");
+							shopIndex = 3;
+							apply = false;
+						}
+					}
 
+				}
 			}
 			if (KEY->down('J'))
 			{
@@ -207,12 +305,25 @@ void shop::pointmove()
 				{
 					apply = false;
 					gameScene::goToMap(3);
+					gameScene::setShopNum(0);
 				}
 				else if (keyEnable == true)
 				{
-					_itemBox[i].enable = false;
-					keyEnable = false;
+					if (yesNoEnable == true) //yes no가 활성화 되었을때
+					{
+						_yesNoPoint[0].enable = false;
+						_yesNoPoint[1].enable = false;
+						yesNoApply = false;
+						yesNoEnable = false;
+						keyEnable = false;
+					}
+					else if (yesNoEnable == false) //yesno가 비활성화됫을때
+					{
+						_itemBox[i].enable = false;
+						keyEnable = false;
+					}
 				}
+				break;
 			}
 		}
 	}
@@ -222,6 +333,7 @@ void shop::shopSetting()
 {
 	if (shopNumber == 1)//RISE & SHINE CAFE
 	{
+		max = 6;
 		L->CreateLine(MakePt(_shopName.rc.left - 70, _shopName.rc.top + 10), "Rise &%Shine%Cafe", "n", false);
 
 
@@ -234,6 +346,7 @@ void shop::shopSetting()
 	}
 	if (shopNumber == 2)//Bakery
 	{
+		max = 6;
 		L->CreateLine(MakePt(_shopName.rc.left - 70, _shopName.rc.top + 10), "Metro%Bakery", "n", false);
 
 
@@ -248,11 +361,47 @@ void shop::shopSetting()
 	{
 		L->CreateLine(MakePt(_shopName.rc.left - 70, _shopName.rc.top + 10), "Sushi%Bar", "n", false);
 
+		if (shopIndex == 0)
+		{
+			max = 4;
+			L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "Cheaper Sushi", "a", false);
+			L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Expensive Sushi", "a", false);
+			L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Rolls", "a", false);
+			L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Nothing", "a", false);
+		}
 
-		L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "Cheaper Sushi", "n", false);
-		L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Expensive Sushi", "n", false);
-		L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Rolls", "n", false);
-		L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Nothing", "n", false);
+		if (shopIndex == 1)//cheaperSushi
+		{
+			max = 6;
+			L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "Egg         2.25", "b", false);
+			L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Octopus     2.25", "b", false);
+			L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Squid       2.25", "b", false);
+			L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Conger Eel  3.75", "b", false);
+			L->CreateLine(MakePt(_itemBox[4].rc.left - 70, _itemBox[4].rc.top + 10), "Prawn       6.00", "b", false);
+			L->CreateLine(MakePt(_itemBox[5].rc.left - 70, _itemBox[5].rc.top + 10), "Main Menu", "b", false);
+		}
+
+		if (shopIndex == 2)//expensiveSushi
+		{
+			max = 6;
+			L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "Salmon      8.25", "b", false);
+			L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Ark Shell   9.00", "b", false);
+			L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Sea Urchin 11.50", "b", false);
+			L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Halibut    18.50", "b", false);
+			L->CreateLine(MakePt(_itemBox[4].rc.left - 70, _itemBox[4].rc.top + 10), "Swordfish  28.75", "b", false);
+			L->CreateLine(MakePt(_itemBox[5].rc.left - 70, _itemBox[5].rc.top + 10), "Main Menu", "b", false);
+		}
+
+		if (shopIndex == 3)//Roll
+		{
+			max = 5;
+			L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "Salad Roll  2.00", "b", false);
+			L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Tuna Roll   3.75", "b", false);
+			L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Shrimp Roll 6.25", "b", false);
+			L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Mixed Roll 10.50", "b", false);
+			L->CreateLine(MakePt(_itemBox[4].rc.left - 70, _itemBox[4].rc.top + 10), "Main Menu", "b", false);
+		}
+
 
 	}
 	if (shopNumber == 4)//bookstore

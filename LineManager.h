@@ -55,5 +55,15 @@ public:
 			}
 		}
 	}
+	void setKill(string _name)
+	{
+		for (int i = 0; i < _vLine.size(); i++)
+		{
+			if (_vLine[i]->getName() == _name)
+			{
+				_vLine[i]->setLineKill();
+			}
+		}
+	}
 };
 
