@@ -11,7 +11,7 @@ HRESULT map4::init()
 	if (!SND->isPlaying("4 - Running Around.mp3"))
 	{
 		SND->play("4 - Running Around.mp3", _currMasterVolume * _currBGMVolume);
-		SND->findChannel("4 - Running Around.mp3")->setLoopPoints(0, FMOD_TIMEUNIT_MS, 141084, FMOD_TIMEUNIT_MS);
+		SND->findChannel("4 - Running Around.mp3")->setLoopPoints(0, FMOD_TIMEUNIT_MS, 101084, FMOD_TIMEUNIT_MS);
 		SND->findChannel("4 - Running Around.mp3")->setPosition(0, FMOD_TIMEUNIT_MS);
 		SND->findChannel("4 - Running Around.mp3")->setLoopCount(-1);
 	}

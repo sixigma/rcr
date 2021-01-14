@@ -4,6 +4,17 @@
 
 HRESULT shop::init()
 {
+	if (SND->isPlaying("4 - Running Around.mp3"))
+	{
+		SND->stop("4 - Running Around.mp3");
+	}
+	if (!SND->isPlaying("5 - Menu.mp3"))
+	{
+		SND->play("5 - Menu.mp3", _currMasterVolume * _currBGMVolume);
+		SND->findChannel("5 - Menu.mp3")->setLoopPoints(66137, FMOD_TIMEUNIT_MS, 133153, FMOD_TIMEUNIT_MS);
+		SND->findChannel("5 - Menu.mp3")->setPosition(66137, FMOD_TIMEUNIT_MS);
+		SND->findChannel("5 - Menu.mp3")->setLoopCount(-1);
+	}
 	setMapNum(6);
 	int shopnumber = 0;
 	currPlPos = &pl->getPos();
