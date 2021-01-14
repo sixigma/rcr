@@ -66,6 +66,7 @@ class player: public character
 	void kickUp(int kAtkUp) { _p_status.kick += kAtkUp; }			//¹ßÂ÷±â °ø°Ý·Â »ó½Â
 	void punchUp(int pAtkUp) { _p_status.punch += pAtkUp; }			//ÁÖ¸Ô °ø°Ý·Â »ó½Â
 
+	int currentHP() { return _p_status.hp; }
 	int currentMaxHP() { return _p_status.maxHP; }
 	int currentEnergy() { return _p_status.energy; }
 	int currentPunch() { return _p_status.punch; }

@@ -4,11 +4,11 @@
 
 HRESULT player::init()
 {
-	pos = { 10, 400 };
-
 	_count = 0;
 
 	deltaX = 0;
+
+	dash_cnt = 0;
 
 	playerSetStatus();
 	playerImgFind();
@@ -20,6 +20,7 @@ HRESULT player::init()
 	_p_character_set.img = _walk;
 	_p_character_set.ani = _R_walk;
 
+
 	return S_OK;
 }
 
@@ -29,6 +30,10 @@ void player::release()
 	delete _L_walk;
 	delete _L_run;
 	delete _R_run;
+	delete _R_punch;
+	delete _L_punch;
+	delete _R_kick;
+	delete _L_kick;
 }
 
 void player::update()
@@ -99,16 +104,6 @@ void player::update()
 		pos.x += deltaX;
 
 		//-------------------------------------------------------------------------
-		if (KEY->up('D') && _p_state == WALK)
-		{
-			_p_state = IDLE;
-		}
-
-		if (KEY->up('A') && _p_state == WALK)
-		{
-			_p_state = IDLE;
-		}
-
 		if (KEY->press('W'))
 			pos.y -= 12;
 		else if (KEY->press('S'))
@@ -116,19 +111,60 @@ void player::update()
 
 
 		if (KEY->press('J'))
+		{
+			if (_p_state == IDLE || _p_state == RUN || _p_state == JUMP)
+			{
+				_p_state = PUNCH;
 
+				if (left)
+				{
+					if (_L_punch->getCurrPlaylistIdx() == 5)
+					{
+						_attack_rc = MakeRct(pos.x - 25, pos.y - 95, 50, 20);
+					}
+				}
 
+				else if (!left)
+				{
+					if (_R_punch->getCurrPlaylistIdx() == 2)
+					{
+						_attack_rc = MakeRct(pos.x + 25, pos.y - 95, 50, 20);
+					}
+				}
+			}
+		}
 
-			/*
-			if(KEY->press('K'))
-				//주먹 공격 & 줍기(&던지기)
-			if(KEY->press('K') && KEY->press('J'))
-				//점프
+		if (KEY->press('K'))
 
-				//대쉬후 점프는 더높이 1번 맵에서 점프후 착지가 가능한 정도의 높이
-			*/
+			if (_p_state == IDLE || _p_state == RUN || _p_state == JUMP)
+			{
+				_p_state = KICK;
+				{
+					if (left)
+					{
+						if (_L_kick->getCurrPlaylistIdx() == 5)
+						{
+							_attack_rc = MakeRct(pos.x - 45, pos.y - 75, 55, 30);
+						}
+					}
 
-			_p_character_set.ch = MakeRct(pos.x - 33, pos.y - 130, 66, 130);
+					else if (!left)
+					{
+						if (_R_kick->getCurrPlaylistIdx() == 2)
+						{
+							_attack_rc = MakeRct(pos.x + 45, pos.y - 75, 55, 30);
+						}
+					}
+				}
+			}
+		/*
+		if(KEY->press('K') && KEY->press('J'))
+			//점프
+
+			//대쉬후 점프는 더높이 1번 맵에서 점프후 착지가 가능한 정도의 높이
+		*/
+
+		_p_character_set.ch = MakeRct(pos.x - 33, pos.y - 130, 66, 130);
 		_p_character_set.ani->frameUpdate(TIME->getElapsedTime() * 10);
 
 		_count++;
@@ -144,7 +180,12 @@ void player::render()
 	if (KEY->isToggledOn(VK_TAB)) { DrawRct(getMemDC(), _p_character_set.ch); }
 
 	//이미지 -> 애니렌더(hdc , x씌울곳, y씌울곳, 애니메이션)을 입력합니다
-	_p_character_set.img->aniRender(getMemDC(), pos.x - 316 / 2, pos.y - 408 / 2, _p_character_set.ani);
+	if (_isInShop == false)
+	{
+		_p_character_set.img->aniRender(getMemDC(), pos.x - 316 / 2, pos.y - 408 / 2, _p_character_set.ani);
+
+	}
+	DrawRct(getMemDC(), _attack_rc);
 
 }
 
@@ -157,10 +198,12 @@ void player::playerSetStatus()
 	_p_status.energy = 15;
 	_p_status.guard = 15;
 	_p_status.hp = 63;
+	_p_status.maxHP = 127;
 	_p_status.kick = 15;
 	_p_status.power = 15;
 	_p_status.punch = 15;
 	_p_status.weapon = 15;
+
 }
 
 void player::frameUp()
@@ -170,23 +213,29 @@ void player::frameUp()
 		switch (_p_state)
 		{
 		case IDLE:
-			if (left)_p_character_set.ani = _L_run;
-			else if (!left)_p_character_set.ani = _R_run;
-			_p_character_set.ani->stop();
+			if (left) { _p_character_set.img = _walk; _p_character_set.ani = _L_walk; }
+			else if (!left) { _p_character_set.img = _walk; _p_character_set.ani = _R_walk; }
+			_p_character_set.ani->setCurrPlaylistIdx(1);
 			break;
 		case WALK:
-			if (left)_p_character_set.ani = _L_walk;
-			else if (!left)_p_character_set.ani = _R_walk;
+			if (left) { _p_character_set.img = _walk; _p_character_set.ani = _L_walk; }
+			else if (!left) { _p_character_set.img = _walk; _p_character_set.ani = _R_walk; }
 			_p_character_set.ani->resume();
 			break;
 		case RUN:
-			if (left)_p_character_set.ani = _L_run;
-			else if (!left)_p_character_set.ani = _R_run;
+			if (left) { _p_character_set.img = _run; _p_character_set.ani = _L_run; }
+			else if (!left) { _p_character_set.img = _run; _p_character_set.ani = _R_run; }
 			_p_character_set.ani->resume();
 			break;
 		case PUNCH:
+			if (left) { _p_character_set.img = _punch; _p_character_set.ani = _L_punch; }
+			else if (!left) { _p_character_set.img = _punch; _p_character_set.ani = _R_punch; }
+			_p_character_set.ani->resume();
 			break;
-			break;
+		case KICK:
+			if (left) { _p_character_set.img = _kick; _p_character_set.ani = _L_kick; }
+			else if (!left) { _p_character_set.img = _kick; _p_character_set.ani = _R_kick; }
+			_p_character_set.ani->resume();
 		case HIT:
 			break;
 		case KO:
@@ -195,6 +244,7 @@ void player::frameUp()
 			break;
 		}
 	}
+
 }
 
 void player::playerImgFind()
@@ -276,4 +326,47 @@ void player::playerSetAni()
 		_run->getFrameHeight());
 	_L_run->setPlaylist(_L_runArr, 2, true);
 	_L_run->setFPS(1);
+
+	int _R_punchArr[] = { 0,1,2 };
+
+	_R_punch = new animation;
+	_R_punch->init(_punch->getWidth(),
+		_punch->getHeight(),
+		_punch->getFrameWidth(),
+		_punch->getFrameHeight());
+	_R_punch->setPlaylist(_R_punchArr, 3, true);
+	_R_punch->setFPS(1);
+
+	int _L_punchArr[] = { 3,4,5 };
+
+
+	_L_punch = new animation;
+	_L_punch->init(_punch->getWidth(),
+		_punch->getHeight(),
+		_punch->getFrameWidth(),
+		_punch->getFrameHeight());
+	_L_punch->setPlaylist(_L_punchArr, 3, true);
+	_L_punch->setFPS(1);
+
+	int _R_kickArr[] = { 0,1,2 };
+
+	_R_kick = new animation;
+	_R_kick->init(_kick->getWidth(),
+		_kick->getHeight(),
+		_kick->getFrameWidth(),
+		_kick->getFrameHeight());
+	_R_kick->setPlaylist(_R_kickArr, 3, true);
+	_R_kick->setFPS(1);
+
+	int _L_kickArr[] = { 3,4,5 };
+
+
+	_L_kick = new animation;
+	_L_kick->init(_kick->getWidth(),
+		_kick->getHeight(),
+		_kick->getFrameWidth(),
+		_kick->getFrameHeight());
+	_L_kick->setPlaylist(_L_kickArr, 3, true);
+	_L_kick->setFPS(1);
+
 }
