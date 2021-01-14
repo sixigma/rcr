@@ -9,6 +9,7 @@ struct Flist
 	bool enable;
 	int num;
 };
+class item;
 class shop: public map_
 {
 private:
@@ -17,16 +18,22 @@ public:
 	
 	bool apply;
 	bool keyEnable;
+	bool yesNoApply;
+	bool yesNoEnable;
+
 	Flist _display;
 	Flist _shopName;
 	Flist _money;
 	Flist _itemBox[itemmax];
 	Flist _point[itemmax];
-	Flist _yesNoBox[itemmax];
-	Flist _yesNoPoint[itemmax];
+	Flist _yesNoBox[2];
+	Flist _yesNoPoint[2];
 
+	vector<item*> _itemList;
 
+	int max;
 	int tempnum;
+	int shopIndex;
 
 	shop(){}
 	~shop() override {}

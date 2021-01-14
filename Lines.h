@@ -143,6 +143,8 @@ public:
 	virtual void update();
 	virtual void render();
 
+	void setLineKill() { CURRENT_CLOCK = 99999; }
+
 	void charRender();
 
 	void deleteLine();

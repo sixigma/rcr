@@ -4,7 +4,7 @@
 
 HRESULT item::init(string _name)
 {
-	_price			= 0;	//
+	_price			= 0;	//센트 단위 게임 내 표기는 달러 그러므로 100 센트면 1달러 200센트면 게임 내에서는 $ 2.00
 	_plusPunch		= 0;	//펀치	
 	_plusKick		= 0;	//킥		
 	_plusWeapon		= 0;	//무기	
