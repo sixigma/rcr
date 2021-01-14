@@ -66,11 +66,12 @@ class player: public character
 	void kickUp(int kAtkUp) { _p_status.kick += kAtkUp; }			//¹ßÂ÷±â °ø°İ·Â »ó½Â
 	void punchUp(int pAtkUp) { _p_status.punch += pAtkUp; }			//ÁÖ¸Ô °ø°İ·Â »ó½Â
 
+	int currentMoney() { return _p_status.money; }
 	int currentHP() { return _p_status.hp; }
 	int currentMaxHP() { return _p_status.maxHP; }
 	int currentEnergy() { return _p_status.energy; }
 	int currentPunch() { return _p_status.punch; }
-	int currentkick() { return _p_status.kick; }
+	int currentKick() { return _p_status.kick; }
 	int currentWeapon() { return _p_status.weapon; }
 	int currentPower() { return _p_status.power; }
 	int currentAgility() { return _p_status.agility; }
