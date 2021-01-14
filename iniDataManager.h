@@ -37,7 +37,7 @@ public:
 	string loadDataString(const char* fileName, const char* subject, const char* title);
 
 	// 데이터를 정수로 로딩하는 함수
-	int loadDataInterger(const char* fileName, const char* subject, const char* title);
+	int loadDataInteger(const char* fileName, const char* subject, const char* title);
 
 };
 

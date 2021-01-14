@@ -87,57 +87,60 @@ void gameScene::update()
 	{
 		L->update();
 	}
-	//if (KEY->down('2')) //플레이어 status 저장
-	//{
-	//	string tempString;
-	//	tempString = to_string(_p->currentEndure());
-	//	INI->addData("PLAYER", "ENDURE", tempString.c_str());
-	//	string tempString1;
-	//	tempString1 = to_string(_p->currentEnergy());
-	//	INI->addData("PLAYER", "ENERGY", tempString1.c_str());
-	//	string tempString2;
-	//	tempString2 = to_string(_p->currentGuard());
-	//	INI->addData("PLAYER", "GUARD", tempString2.c_str());
-	//	string tempString3;
-	//	tempString3 = to_string(_p->currentHP());
-	//	INI->addData("PLAYER", "HP", tempString3.c_str());
-	//	string tempString4;
-	//	tempString4 = to_string(_p->currentMaxHP());
-	//	INI->addData("PLAYER", "MAXHP", tempString4.c_str());
-	//	string tempString5;
-	//	tempString5 = to_string(_p->currentKick());
-	//	INI->addData("PLAYER", "KICK", tempString5.c_str());
-	//	string tempString6;
-	//	tempString6 = to_string(_p->currentPower());
-	//	INI->addData("PLAYER", "POWER", tempString6.c_str());
-	//	string tempString7;
-	//	tempString7 = to_string(_p->currentWeapon());
-	//	INI->addData("PLAYER", "WEAPON", tempString7.c_str());
-	//	string tempString8;
-	//	tempString8 = to_string(_p->currentAgility());
-	//	INI->addData("PLAYER", "AGILITY", tempString8.c_str());
-	//	string tempString9;
-	//	tempString9 = to_string(_p->currentPunch());
-	//	INI->addData("PLAYER", "PUNCH", tempString9.c_str());
-	//	string tempString10;
-	//	tempString10 = to_string(_p->currentMoney());
-	//	INI->addData("PLAYER", "MONEY", tempString10.c_str());	   		 	  
-	//	INI->iniSave("STATUS");
-	//}
-	//if (KEY->down('3')) //플레이어 status 로드?
-	//{
-	//	INI->loadDataInterger("STATUS", "PLAYER", "ENDURE");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "ENERGY");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "GUARD");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "HP"); 
-	//	INI->loadDataInterger("STATUS", "PLAYER", "MAXHP");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "KICK");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "POWER");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "WEAPON");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "AGILITY");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "PUNCH");
-	//	INI->loadDataInterger("STATUS", "PLAYER", "MONEY");
-	//}
+	if (KEY->down('2')) //플레이어 status 저장
+	{
+		string name;
+		name = _p->getPlayerChName();
+		INI->addData("PLAYER", "NAME", name.c_str());
+		string tempString;
+		tempString = to_string(_p->currentEndure());
+		INI->addData("PLAYER", "ENDURE", tempString.c_str());
+		string tempString1;
+		tempString1 = to_string(_p->currentEnergy());
+		INI->addData("PLAYER", "ENERGY", tempString1.c_str());
+		string tempString2;
+		tempString2 = to_string(_p->currentGuard());
+		INI->addData("PLAYER", "GUARD", tempString2.c_str());
+		string tempString3;
+		tempString3 = to_string(_p->currentHP());
+		INI->addData("PLAYER", "HP", tempString3.c_str());
+		string tempString4;
+		tempString4 = to_string(_p->currentMaxHP());
+		INI->addData("PLAYER", "MAXHP", tempString4.c_str());
+		string tempString5;
+		tempString5 = to_string(_p->currentKick());
+		INI->addData("PLAYER", "KICK", tempString5.c_str());
+		string tempString6;
+		tempString6 = to_string(_p->currentPower());
+		INI->addData("PLAYER", "POWER", tempString6.c_str());
+		string tempString7;
+		tempString7 = to_string(_p->currentWeapon());
+		INI->addData("PLAYER", "WEAPON", tempString7.c_str());
+		string tempString8;
+		tempString8 = to_string(_p->currentAgility());
+		INI->addData("PLAYER", "AGILITY", tempString8.c_str());
+		string tempString9;
+		tempString9 = to_string(_p->currentPunch());
+		INI->addData("PLAYER", "PUNCH", tempString9.c_str());
+		string tempString10;
+		tempString10 = to_string(_p->currentMoney());
+		INI->addData("PLAYER", "MONEY", tempString10.c_str());
+		INI->iniSave("STATUS");
+	}
+	if (KEY->down('3')) //플레이어 status 로드
+	{
+		_p->setEndure(INI->loadDataInteger("STATUS", "PLAYER", "ENDURE"));
+		_p->setEnergy(INI->loadDataInteger("STATUS", "PLAYER", "ENERGY"));
+		_p->setGuard(INI->loadDataInteger("STATUS", "PLAYER", "GUARD"));
+		_p->setHP(INI->loadDataInteger("STATUS", "PLAYER", "HP"));
+		_p->setMaxHP(INI->loadDataInteger("STATUS", "PLAYER", "MAXHP"));
+		_p->setKick(INI->loadDataInteger("STATUS", "PLAYER", "KICK"));
+		_p->setPower(INI->loadDataInteger("STATUS", "PLAYER", "POWER"));
+		_p->setWeapon(INI->loadDataInteger("STATUS", "PLAYER", "WEAPON"));
+		_p->setAgility(INI->loadDataInteger("STATUS", "PLAYER", "AGILITY"));
+		_p->setPunch(INI->loadDataInteger("STATUS", "PLAYER", "PUNCH"));
+		_p->setMoney(INI->loadDataInteger("STATUS", "PLAYER", "MONEY"));
+	}
 
 }
 
