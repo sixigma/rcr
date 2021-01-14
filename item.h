@@ -26,17 +26,16 @@ private:
 string name;
 int _price1;		//±×³É´Ş·¯1~10ÀÚ¸®
 int _price2;		//¼Ò¼öÁ¡
-int _pluspunch;		//ÆİÄ¡	
-int _pluskick;		//Å±		
-int _plusweapon;	//¹«±â	
-int _pluspower;		//Èû	    
-int _plusagility;	//¹ÎÃ¸	
-int _plusguard;		//¹æ¾î	
-int _plusendure;	//¸ËÁı	
-int _plusenergy;	//±â·Â	
-int _recoveryhp;	//Ã¼·Â	
-int _plusmaxHP;		//ÃÖ´ëÃ¼·Â
-int cnt;			//¾ÆÀÌÅÛ °¹¼ö
+int _plusPunch;		//ÆİÄ¡	
+int _plusKick;		//Å±		
+int _plusWeapon;	//¹«±â	
+int _plusPower;		//Èû	    
+int _plusAgility;	//¹ÎÃ¸	
+int _plusGuard;		//¹æ¾î	
+int _plusEndure;	//¸ËÁı	
+int _plusEnergy;	//±â·Â	
+int _recoveryHp;	//Ã¼·Â	
+int _plusMaxHp;		//ÃÖ´ëÃ¼·Â
 public:
 	
 
@@ -44,20 +43,20 @@ public:
 	void release() override;
 	void update() override;
 	void render() override;
-	void itemlist(string _name);
+	void itemList(string _name);
 	
-	string getname() { return name; }
-	int getprice() { return _price1; }
-	int getprice2() { return _price2; }
-	int getpluspunch() { return _pluspunch; }
-	int getpluskick(){ return _pluskick; }
-	int getplusweapon() { return _plusweapon; }
-	int getpluspower() { return _pluspower; }
-	int getplusagility() { return _plusagility; }
-	int getplusguard() { return _plusguard; }
-	int getplusendure() { return _plusendure; }
-	int getplusenergy() { return _plusenergy; }
-	int getrecoveryhp() { return _recoveryhp; }
-	int getplusmaxHP() { return _plusmaxHP; }
+	string getName() { return name; }
+	int getPrice() { return _price1; }
+	int getPrice2() { return _price2; }
+	int getPlusPunch() { return _plusPunch; }
+	int getPlusKick(){ return _plusKick; }
+	int getPlusWeapon() { return _plusWeapon; }
+	int getPlusPower() { return _plusPower; }
+	int getPlusAgility() { return _plusAgility; }
+	int getPlusGuard() { return _plusGuard; }
+	int getPlusEndure() { return _plusEndure; }
+	int getPlusEnergy() { return _plusEnergy; }
+	int getRecoveryHp() { return _recoveryHp; }
+	int getPlusMaxHp() { return _plusMaxHp; }
 	
 };
