@@ -4,8 +4,7 @@
 
 HRESULT item::init(string _name)
 {
-	_price1			= 0;	//±×³É´Þ·¯1~10ÀÚ¸®
-	_price2			= 0;	//¼Ò¼öÁ¡
+	_price			= 0;	//
 	_plusPunch		= 0;	//ÆÝÄ¡	
 	_plusKick		= 0;	//Å±		
 	_plusWeapon		= 0;	//¹«±â	
@@ -46,27 +45,25 @@ void item::itemList(string _name)
 		_plusEnergy = 2;
 		_recoveryHp = 16;
 		_plusMaxHp = 4;
-		_price2 = 95;
+		_price = 95;
 	}
 	if(_name == "Tea")
 	{ 
 		_plusEnergy = 4;
-		_price2 = 95;
+		_price = 95;
 	}
-	if (_name == "Hot Cocoa")
+	if (_name == "HotCocoa")
 	{
 		_plusGuard = 1;
 		_recoveryHp = 24;
 		_plusMaxHp = 6;
-		_price1 = 1;
-		_price2 = 25;
+		_price = 125;
 	}
 	if (_name == "Pancakes")
 	{
 		_recoveryHp = 32;
 		_plusMaxHp = 8;
-		_price1 = 3;
-		_price2 = 30;
+		_price = 330;
 	}
 	
 	if(_name == "Waffles")
@@ -75,8 +72,7 @@ void item::itemList(string _name)
 		_plusEndure = 1;
 		_recoveryHp = 32;
 		_plusMaxHp = 8;
-		_price1 = 4;
-		_price2 = 10;
+		_price = 410;
 	}
 	//½ÑÃÊ¹ä
 	if (_name =="Egg" )
@@ -84,8 +80,7 @@ void item::itemList(string _name)
 		_plusPunch = 1;
 		_recoveryHp = 10;
 		_plusMaxHp = 2;
-		_price1 = 2;
-		_price2 = 25;
+		_price = 225;
 	}
 
 	if (_name == "Octopus")
@@ -93,25 +88,22 @@ void item::itemList(string _name)
 		_plusWeapon = 1;
 		_recoveryHp = 8;
 		_plusMaxHp = 2;
-		_price1 = 2;
-		_price2 = 25;
+		_price = 225;
 	}
 	if (_name == "Squid")
 	{
 		_plusPower = 2;
 		_recoveryHp = 4;
 		_plusMaxHp = 1;
-		_price1 = 2;
-		_price2 = 25;
+		_price = 225;
 	}
 	
-	if (_name == "Conger Eel")
+	if (_name == "CongerEel")
 	{
 		_plusGuard = 2;
 		_recoveryHp = 16;
 		_plusMaxHp = 4;
-		_price1 = 3;
-		_price2 = 75;
+		_price = 375;
 	}
 
 	if (_name == "Prawn")
@@ -119,7 +111,7 @@ void item::itemList(string _name)
 		_plusEndure = 2;
 		_recoveryHp = 32;
 		_plusMaxHp = 8;
-		_price1 = 6;
+		_price = 600;
 	}
 	//ºñ½ÑÃÊ¹ä
 	if (_name == "Salmon")
@@ -128,26 +120,25 @@ void item::itemList(string _name)
 		_plusEnergy = 2;
 		_recoveryHp = 40;
 		_plusMaxHp = 10;
-		_price1 = 8;
-		_price2 = 25;
+		_price = 825;
 	}
 	
-	if (_name == "Ark Shell")
+	if (_name == "ArkShell")
 	{
 		_plusWeapon = 1;
 		_plusEnergy = 2;
 		_recoveryHp = 50;
 		_plusMaxHp = 12;
-		_price1 = 9;
+		_price = 900;
 	}
-	if (_name == "Sea Urchin")
+	if (_name == "SeaUrchin")
 	{
 		_plusPower = 2;
 		_plusEnergy = 2;
 		_recoveryHp = 64;
 		_plusMaxHp = 16;
-		_price1 = 11;
-		_price2 = 50;
+		_price = 1150;
+		
 	}
 
 	if (_name =="Halibut")
@@ -156,8 +147,8 @@ void item::itemList(string _name)
 		_plusEnergy = 7;
 		_recoveryHp = 80;
 		_plusMaxHp = 20;
-		_price1 = 18;
-		_price2 = 50;
+		_price = 1850;
+		
 	}
 
 	if (_name == "SwordFish")
@@ -168,40 +159,38 @@ void item::itemList(string _name)
 		_plusEnergy = 5;
 		_recoveryHp = 80;
 		_plusMaxHp = 20;
-		_price1 = 28;
-		_price2 = 75;
+		_price = 2875;
 	}
 	
 	//·Ñ
-	if (_name == "Salad Roll")
+	if (_name == "SaladRoll")
 	{
 		_recoveryHp = 20;
 		_plusMaxHp = 5;
-		_price1 = 2;
+		_price = 200;
 	}
 	
 	if (_name == "TunaRoll")
 	{
 		_recoveryHp = 32;
 		_plusMaxHp = 8;
-		_price1 = 3;
-		_price2 = 75;
+		_price = 375;
+		
 	}
 	
 	if (_name == "ShrimpRoll")
 	{
 		_recoveryHp = 50;
 		_plusMaxHp = 12;
-		_price1 = 6;
-		_price2 = 25;
+		_price = 625;
 	}
 	
 	if (_name == "MixedRoll")
 	{
 		_recoveryHp = 80;
 		_plusMaxHp = 20;
-		_price1 = 10;
-		_price2 = 50;
+		_price = 1050;
+		
 	}
 
 	//»§Áý
@@ -209,7 +198,7 @@ void item::itemList(string _name)
 	if (_name == "Donut")
 	{
 		_plusEnergy = 6;
-		_price2 = 80;
+		_price = 80;
 		
 	}
 
@@ -218,7 +207,7 @@ void item::itemList(string _name)
 		_plusAgility = 1;
 		_recoveryHp = 6;
 		_plusMaxHp = 1;
-		_price2 = 90;
+		_price = 90;
 	}
 	
 	if (_name == "Bagel")
@@ -226,7 +215,7 @@ void item::itemList(string _name)
 		_plusGuard = 1;
 		_recoveryHp = 6;
 		_plusMaxHp = 1;
-		_price2 = 90;
+		_price = 90;
 	}
 
 	if (_name == "HoneyBun")
@@ -234,14 +223,14 @@ void item::itemList(string _name)
 		_plusEndure = 1;
 		_recoveryHp = 6;
 		_plusMaxHp = 1;
-		_price2 = 90;
+		_price = 90;
 	}
 
 	if (_name == "Croissant")
 	{
 		_recoveryHp = 8;
 		_plusMaxHp = 2;
-		_price1 = 1;
+		_price = 100;
 	}
 
 }
