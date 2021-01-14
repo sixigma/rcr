@@ -205,14 +205,13 @@ void player::playerSetStatus()
 	_p_status.weapon = 15;
 	_p_status.money = 2000;
 
-	//// 여기부터
 	if (_playerChName != "") setPlayerChName(_playerChName);
 	else
 	{
 		_playerChName = "ALEX";
 		setPlayerChName(_playerChName);
 	}
-	//// 여기까지
+
 }
 
 void player::frameUp()

@@ -4,6 +4,7 @@
 class item;
 class player: public character
 {
+	private:
 	STATE _p_state;
 	tagCharacterSetting _p_character_set;
 	tagStatus _p_status;
@@ -128,7 +129,6 @@ public:
 
 	inline void setPlayerChName(string name) { _p_character_set.chName = name; }
 	inline string getPlayerChName() { return _p_character_set.chName; }
-	//// 여기까지
 
 	void playerSetStatus();		//플레이어 스탯 초기값 설정 함수
 	void playerImgFind();		//플레이어 이미지 관련 함수
