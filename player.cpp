@@ -203,7 +203,7 @@ void player::playerSetStatus()
 	_p_status.power = 15;
 	_p_status.punch = 15;
 	_p_status.weapon = 15;
-
+	_p_status.money = 2000;
 }
 
 void player::frameUp()
