@@ -204,6 +204,7 @@
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="gameNode.cpp" />
     <ClCompile Include="consumable.cpp" />
+    <ClCompile Include="gameScene_MenuFunctions.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="gameScene.cpp" />
