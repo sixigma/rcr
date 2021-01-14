@@ -13,8 +13,27 @@ MainScene::~MainScene()
 
 HRESULT MainScene::init()
 {
-	crtScene = cnt = xpos = ypos = 0;
+	crtScene = cnt = xpos = ypos = pulse = _x = _y = other = 0;
 	alpha = 255;
+	pulser = false;
+
+	for (int i = 0; i < 5; i++)
+	{
+		myName[i] = ' ';
+	}
+
+	char cList[] =
+	{
+		'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'Z', 'z', ',',
+		'F', 'f', 'G', 'g', 'H', 'h', 'I', 'i', 'J', 'j', '.', '-',
+		'K', 'k', 'L', 'l', 'M', 'm', 'N', 'n', 'O', 'o',
+		'P', 'p', 'Q', 'q', 'R', 'r', 'S', 's', 'T', 't',
+		'U', 'u', 'V', 'v', 'W', 'w', 'X', 'x', 'Y', 'y',
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+	};
+
+	strcpy_s(nameSet, 384, cList);
+
 	return S_OK;
 }
 
@@ -33,6 +52,7 @@ void MainScene::update()
 #endif
 	if (crtScene == 0) Turn1();
 	if (crtScene == 1) Turn2();
+	if (crtScene == 100) setName();
 	if (crtScene == 2) Turn3();
 	if (crtScene == 3) Turn4();
 }
@@ -112,15 +132,33 @@ void MainScene::Turn2() //로고
 			xpos++;
 			L->CorrectLine("화살표2", MakePt(449, 0));
 		}
+		if (KEY->down(VK_RSHIFT))
+		{
+			cnt = 100;
+		}
 		if (KEY->down(VK_RETURN))
 		{
 			cnt = 3;
 		}
 	}
-	if (cnt == 3)
+	if (cnt == 3 || cnt == 100)
 	{
 		alpha += 5;
-		if (alpha > 255) { crtScene = 2; cnt = 0; L->AllDeleteLine(); }
+		if (alpha > 255)
+		{
+			if (cnt == 3)
+			{
+				crtScene = 2;
+				cnt = 0;
+				L->AllDeleteLine();
+			}
+			if (cnt == 100)
+			{
+				crtScene = 100;
+				cnt = 0;
+				L->AllDeleteLine();
+			}
+		}
 	}
 }
 
@@ -211,10 +249,181 @@ void MainScene::Turn4()	//회사로고
 
 void MainScene::setName()
 {
+
 	if (cnt == 0)
 	{
+		string word[] = {
+		"A", "a" , "B" , "b" , "C" , "c" , "D" , "d" , "E" , "e",
+		"F", "f", "G", "g", "H", "h", "I", "i", "J", "j",
+		"K", "k", "L", "l", "M", "m", "N", "n", "O", "o",
+		"P", "p", "Q", "q", "R", "r", "S", "s", "T", "t",
+		"U", "u", "V", "v", "W", "w", "X", "x", "Y", "y",
+		"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+		};
+
+		for (int i = 0; i < 6; i++)
+		{
+			for (int e = 0; e < 10; e++)
+			{
+				L->calmLine(MakePt(96 + (67 * e), 351 + (65 * i)), word[e + (i * 10)]);
+			}
+		}
+		L->calmLine(MakePt(768, 351), "Z"); L->calmLine(MakePt(768 + 67, 351), "z"); L->calmLine(MakePt(768 + 134, 351), ",");
+		L->calmLine(MakePt(768, 351 + 65), "."); L->calmLine(MakePt(768 + 67, 351 + 65), "-");
+		L->calmLine(MakePt(768, 351 + 130), "AHEAD");
+		L->calmLine(MakePt(768, 351 + 195), "BACK");
+		L->calmLine(MakePt(768, 351 + 260), "ERASE");
+		L->calmLine(MakePt(768, 351 + 325), "E N D");
+		cnt = 1;
+	}
+	if (cnt == 1)
+	{
 		if (alpha > 0) { alpha -= 5; }
-		//if(alpha <= 0) 
+		if (alpha <= 0)
+		{
+			xpos = ypos = 0;
+			_x = 65;
+			_y = 351;
+
+			L->CreateLine(MakePt(64, 351), ">", "이름화살표", false);
+
+			for (int i = 0; i < 5; i++)
+			{
+				char str[32];
+				char omyName[16];
+
+				sprintf_s(omyName, "%c", myName[i]);
+
+				sprintf_s(str, "이름%d", i);
+				L->CreateLine(MakePt(420 + (i * 32), 227), "￣", str, false);
+				sprintf_s(str, "네임%d", i);
+				L->CreateLine(MakePt(452 + (i * 32), 227 - 32), omyName, str, false);
+			}
+			cnt = 2;
+		}
+	}
+	if (cnt == 2)
+	{
+		pulse = pulse % 8;
+
+		if (KEY->down(VK_LEFT) && xpos > 0) { _x -= 67; xpos--; }
+		if (KEY->down(VK_RIGHT))
+		{
+			if (xpos < 12 && ypos == 0)
+			{
+				_x += 67;
+				xpos++;
+			}
+			if (xpos < 11 && ypos == 1)
+			{
+				_x += 67;
+				xpos++;
+			}
+			if (xpos < 10 && ypos > 1 && ypos < 6)
+			{
+				_x += 67;
+				xpos++;
+			}
+		}
+		if (KEY->down(VK_UP) && ypos > 0) { _y -= 65; ypos--; }
+		if (KEY->down(VK_DOWN))
+		{
+			if (xpos <= 10 && ypos < 5)
+			{
+				_y += 65;
+				ypos++;
+			}
+			if (xpos == 11 && ypos == 0)
+			{
+				_y += 65;
+				ypos++;
+			}
+		}
+
+		char oname[64];
+
+		if (KEY->down('K'))
+		{
+			bool otherOK = false;
+
+			if (xpos <= 10 && ypos <= 5)
+			{
+				myName[other] = nameSet
+					[
+						(
+							(ypos == 0) * 0 +
+							(ypos == 1) * 13 +
+							(ypos == 2) * 25 +
+							(ypos == 3) * 35 +
+							(ypos == 4) * 45 +
+							(ypos == 5) * 55
+							) + xpos
+					];
+			}
+
+			if (xpos == 11 && ypos == 0) myName[other] = nameSet[11];
+			if (xpos == 12 && ypos == 0) myName[other] = nameSet[12];
+			if (xpos == 11 && ypos == 1) myName[other] = nameSet[24];
+
+			if (xpos == 10 && ypos == 2)	//AHEAD
+			{
+				otherOK = true;
+				other++;
+			}
+			else if (xpos == 10 && ypos == 3)	//BACK
+			{
+				otherOK = true;
+				other--;
+			}
+			else if (xpos == 10 && ypos == 4)	//ERASE
+			{
+				otherOK = true;
+				for (int i = 0; i < 5; i++)
+				{
+					myName[i] = ' ';
+					sprintf_s(oname, "네임%d", i);
+					L->selectChangeLine(oname, 0, myName[i]);
+				}
+				other = 0;
+			}
+			else
+			{
+				sprintf_s(oname, "네임%d", other);
+				L->selectChangeLine(oname, 0, myName[other]);
+			}
+
+			if (other < 5 && !otherOK) other++;
+			if (other >= 5) other = 4;
+			if (other <= 0) other = 0;
+
+			for (int i = 0; i < 5; i++)
+			{
+				if (other != i)
+				{
+					sprintf_s(oname, "이름%d", i);
+					L->setPosLine(oname, MakePt(452 + (i * 32), 227));
+				}
+			}
+		}
+
+		//
+		sprintf_s(oname, "이름%d", other);
+
+		if (!pulse)
+		{
+			pulser = !pulser;
+			L->CorrectLine(oname, MakePt(
+				(2000 * ((pulser)+((!pulser)*(-1)))),
+				(2000 * ((pulser)+((!pulser)*(-1))))
+			));
+		}
+
+		L->setPosLine("이름화살표", MakePt(
+			_x + (2000 * ((pulser)+((!pulser)*(0)))),
+			_y + (2000 * ((pulser)+((!pulser)*(0))))
+		));
+
+		pulse++;
 	}
 }
 
@@ -238,6 +447,11 @@ void MainScene::SceneRender()
 	if (crtScene == 3)//회사로고
 	{
 		IMG->render("제목", getMemDC(), 0, 96);
+	}
+	if (crtScene == 100)//회사로고
+	{
+		IMG->render("이름설정파란화면", getMemDC(), 0, 96);
+
 	}
 
 	L->render();

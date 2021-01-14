@@ -94,6 +94,7 @@ unsigned CALLBACK loadingScene::threadFunc(LPVOID params)
 	++loadingParams->_currentCount;
 
 	// 화면 배경 이미지
+	IMG->add("이름설정파란화면", "images/NAMEblueScreen.bmp", WINW, 640, false, RGB(0, 0, 0));
 	IMG->add("검은 화면", "images/blackScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
 	IMG->add("파란 화면", "images/blueScreen.bmp", WINW, WINH, false, RGB(0, 0, 0));
 	IMG->add("640파란 화면", "images/640blueScreen.bmp", WINW, 640, false, RGB(0, 0, 0));

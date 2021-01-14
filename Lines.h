@@ -150,7 +150,13 @@ public:
 	void newLine();
 
 	bool getDead() { return IMDEAD; }
-
 	void setPos(POINT _pos);
+	void setPlace(POINT _pos);
 	string getName() { return NAME; }
+	void chageWord(int _i, char _cW);
+	POINT getPos()
+	{
+		POINT POS = { _vChar[0]._x, _vChar[0]._y };
+		return POS;
+	}
 };
