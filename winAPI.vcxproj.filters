@@ -124,6 +124,9 @@
     <ClCompile Include="MainScene.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="gameScene_MenuFunctions.cpp">
+      <Filter>Game\GameScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="playground.h">

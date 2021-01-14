@@ -8,6 +8,7 @@
 #include "map4-2.h"
 #include "map5.h"
 #include "shop.h"
+#include "item.h"
 
 player* gameScene::_p;
 vector<map_*> gameScene::_mapList;
@@ -48,6 +49,29 @@ HRESULT gameScene::init()
 	_currMap = _mapList[0];
 	_currMap->setLinkTo(_p);
 	_currMap->init();
+
+	_shouldShowBottomBoxArrow = false;
+	_shouldShowMenuScreen = FALSE;
+
+	_hFont = CreateFont(46, 0, 0, 0, 0, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, "RCR_MONO");
+	
+	_bottomBoxArrowPosIdx = 0;
+	_bottomBoxTextArea = { {100, 768 - 12, 418, 796 + 8}, {724, 768 - 12, 912, 796 + 8}, {100, 832 - 12, 292, 860 + 8}, {426, 832 - 12, 620, 860 + 8}, {788, 832 - 12, 912, 860 + 8} };
+	_topBoxTextArea = {64, 36 - 14, WINW - 64, 64 + 8};
+
+	for (int i = 0; i < _bottomBoxTextArea.size(); ++i)
+		_bottomBoxArrowPos.push_back({ _bottomBoxTextArea[i].left - 32, _bottomBoxTextArea[i].top + 14});
+
+	_hBoxDC = CreateCompatibleDC(getMemDC());
+	_hBoxBitmap = CreateCompatibleBitmap(getMemDC(), WINW, WINH);
+	_hOBoxBitmap = (HBITMAP)SelectObject(_hBoxDC, _hBoxBitmap);
+	SetTextColor(_hBoxDC, RGB(255, 255, 255));
+	SetBkMode(_hBoxDC, TRANSPARENT);
+	_hOFont = (HFONT)SelectObject(_hBoxDC, _hFont);
+
+	_countForFading = 0;
+	_shouldShowMoneyOnTop = false;
+
 	return S_OK;
 }
 
@@ -55,12 +79,15 @@ void gameScene::release()
 {
 	_p->release();
 	SAFE_DEL(_p);
-
 	_currMap->release();
 	for (size_t i = 0; i < _mapList.size(); ++i)
 	{
 		SAFE_DEL(_mapList[i]);
 	}
+
+	SelectObject(_hBoxDC, _hOFont);
+	DeleteObject(_hFont);
+	DeleteObject(SelectObject(_hBoxDC, _hOBoxBitmap));
 }
 
 void gameScene::update()
@@ -69,24 +96,253 @@ void gameScene::update()
 	{
 		if (_countForReEnablingKeyInput == 10) _shouldFadeOut = FALSE;
 		if (_countForReEnablingKeyInput == 0) _moveKeyDisabled = FALSE;
-		--_countForReEnablingKeyInput;
+		if (_countForReEnablingKeyInput > 0) --_countForReEnablingKeyInput;
 	}
 
-	if (!_shouldFadeOut && !_shouldShowMenuScreen && !_shouldBePaused)
+	if (!_shouldFadeOut && !_shouldShowMenuScreen)
 	{
-		_p->update();
-		_currMap->update();
+		if (!_shouldBePaused)
+		{
+			_p->update();
+			_currMap->update();
+		}
+
+		if (_mapNum > 0)
+		{
+			_hPString = "";
+			size_t hPBarsToDraw = static_cast<size_t>(_p->currentHP() + 7) / 8llu;
+			for (size_t i = 0; i < (hPBarsToDraw >> 1); ++i)
+			{
+				switch (_mapNum)
+				{
+					case 1:
+						_hPString += '[';
+						break;
+					case 2:
+						_hPString += '<';
+						break;
+					case 3:
+						_hPString += '(';
+						break;
+					case 4:
+						_hPString += '^';
+						break;
+					case 402:
+						_hPString += '@';
+						break;
+					case 5:
+						_hPString += '~';
+						break;
+					case 6:
+						_hPString += '{';
+						break;
+				}	
+			}
+			if (hPBarsToDraw % 2 == 1)
+			{
+				switch (_mapNum)
+				{
+					case 1:
+						_hPString += ']';
+						break;
+					case 2:
+						_hPString += '>';
+						break;
+					case 3:
+						_hPString += ')';
+						break;
+					case 4:
+						_hPString += '_';
+						break;
+					case 402:
+						_hPString += '|';
+						break;
+					case 5:
+						_hPString += '+';
+						break;
+					case 6:
+						_hPString += '}';
+						break;
+				}
+			}
+			L->selectDeleteLine("CaLm");
+			L->calmLine({ 64, 36 }, _p->getPlayerChName() + " " + _hPString);
+		}
 	}
 
-	if (KEY->down(VK_RETURN))
+	if (KEY->down(VK_RETURN) && !_isInShop)
 	{
-		if (!_shouldBePaused) SND->play("35.wav", _currMasterVolume * _currSFXVolume);
-		_shouldBePaused = !_shouldBePaused;
+		if (!_shouldBePaused)
+		{
+			SND->pauseAll();
+			SND->play("35.wav", _currMasterVolume * _currSFXVolume);
+			_shouldBePaused = !_shouldBePaused;
+		}
+		else if (!_shouldShowMenuScreen)
+		{
+			SND->resumeAll();
+			_bottomBoxArrowPosIdx = 0;
+			_shouldShowBottomBoxArrow = false;
+			_shouldBePaused = !_shouldBePaused;
+		}
 	}
+	
+	if (KEY->down(VK_RSHIFT) && !_isInShop)
+	{
+		SND->play("41.wav", _currMasterVolume * _currSFXVolume);
+		_shouldShowMoneyOnTop = !_shouldShowMoneyOnTop;
+	}
+
 	if (!_shouldBePaused)
 	{
 		L->update();
+		if (_bottomBoxAdjX != 0) _bottomBoxAdjX -= min(20, _bottomBoxAdjX);
 	}
+	else if (_bottomBoxAdjX != WINW)
+	{
+		_bottomBoxAdjX += min(20, WINW - _bottomBoxAdjX);
+	}
+	else if (_bottomBoxAdjX == WINW && !_shouldShowBottomBoxArrow && !_shouldShowMenuScreen)
+	{
+		if (_countForFading == 0) SND->play("36.wav", _currMasterVolume * _currSFXVolume);
+		_shouldShowBottomBoxArrow = true;
+	}
+
+	if (_shouldShowMoneyOnTop) _topBoxAdjX += min(20, WINW - _topBoxAdjX);
+	else if (_topBoxAdjX != 0) _topBoxAdjX -= min(20, _topBoxAdjX);
+
+	if (_shouldShowBottomBoxArrow)
+	{
+		if (KEY->down('D') && _bottomBoxArrowPosIdx < _bottomBoxArrowPos.size() - 1)
+		{
+			SND->play("36.wav", _currMasterVolume * _currSFXVolume);
+			++_bottomBoxArrowPosIdx;
+		}
+		else if (KEY->down('A') && _bottomBoxArrowPosIdx > 0)
+		{
+			SND->play("36.wav", _currMasterVolume * _currSFXVolume);
+			--_bottomBoxArrowPosIdx;
+		}
+		else if (KEY->down('K') && !_shouldShowMenuScreen && _countForFading == 0)
+		{
+			_shouldShowMenuScreen = TRUE;
+			_shouldShowBottomBoxArrow = false;
+			_countForFading = 0;
+		}
+	}
+
+	if (_shouldShowMenuScreen)
+	{
+		if (!_mainBoxArrowPos.empty() && _shouldShowMainBoxArrow)
+		{
+			if (KEY->down('S') && _mainBoxArrowPosIdx < _mainBoxArrowPos.size() - 1)
+			{
+				SND->play("36.wav", _currMasterVolume * _currSFXVolume);
+				++_mainBoxArrowPosIdx;
+			}
+			else if (KEY->down('W') && _mainBoxArrowPosIdx > 0)
+			{
+				SND->play("36.wav", _currMasterVolume * _currSFXVolume);
+				--_mainBoxArrowPosIdx;
+			}
+		}
+
+		if (_countForFading == 0)
+		{
+			_shouldFadeOut = TRUE;
+			_currMenuIdx = _bottomBoxArrowPosIdx;
+			++_countForFading;
+		}
+		else if (_countForFading > 0 && _countForFading < 21)
+		{
+			++_countForFading;
+		}
+		else if (_countForFading > 20 && _countForFading < 41)
+		{
+			if (_shouldFadeOut) _shouldFadeOut = FALSE;
+			++_countForFading;
+			if (_countForFading == 40)
+			{
+				switch (_currMenuIdx)
+				{
+					case 0:
+						{
+							if (!SND->isPlaying("5 - Menu.mp3"))
+							{
+								SND->play("5 - Menu.mp3", _currMasterVolume * _currBGMVolume);
+							}
+							_bottomBoxCountForBelongings = 0;
+						}
+						break;
+					case 1:
+						{
+							if (!SND->isPlaying("6 - Password.mp3"))
+							{
+								SND->play("6 - Password.mp3", _currMasterVolume * _currBGMVolume);
+							}
+							_bottomBoxCountForVolume = 0;
+						}
+						break;
+					case 2:
+						{
+							if (!SND->isPlaying("1 - Game Mode & Character Select.mp3"))
+							{
+								SND->play("1 - Game Mode & Character Select.mp3", _currMasterVolume * _currBGMVolume);
+							}
+							_bottomBoxCountForLevels = 0;
+						}
+						break;
+					case 3:
+						{
+							if (!SND->isPlaying("2 - Prologue & Epilogue.mp3"))
+							{
+								SND->play("2 - Prologue & Epilogue.mp3", _currMasterVolume * _currBGMVolume);
+							}
+							_bottomBoxCountForStatus = 0;
+						}
+						break;
+					case 4:
+						{
+							if (!SND->isPlaying("6 - Password.mp3"))
+							{
+								SND->play("6 - Password.mp3", _currMasterVolume * _currBGMVolume);
+							}
+							_bottomBoxCountForHelp = 0;
+						}
+						break;
+				}
+			}
+		}
+		else if (_countForFading > 40)
+		{
+			updateMenuScr(_currMenuIdx);
+		}	
+	}
+	else if (_countForFading > 40 && _countForFading < 60)
+	{
+		switch (_currMenuIdx)
+		{
+			case 0: SND->stop("5 - Menu.mp3"); break;
+			case 1: SND->stop("6 - Password.mp3"); break;
+			case 2: SND->stop("1 - Game Mode & Character Select.mp3"); break;
+			case 3: SND->stop("2 - Prologue & Epilogue.mp3"); break;
+			case 4: SND->stop("6 - Password.mp3"); break;
+		}
+
+		L->AllDeleteLine();
+		++_countForFading;
+	}
+	else if (_countForFading > 59 && _countForFading < 70)
+	{
+		_shouldFadeOut = FALSE;
+		++_countForFading;
+	}
+	else if (_countForFading == 70)
+	{
+		_countForFading = 0;
+	}
+
+#ifdef _DEBUG
 	if (KEY->down('2')) //플레이어 status 저장
 	{
 		string name;
@@ -129,7 +385,7 @@ void gameScene::update()
 	}
 	if (KEY->down('3')) //플레이어 status 로드
 	{
-		_p->setPlayerChName(INI->loadDataString("STATUS", "PLAYER", "NAME"));
+		_p->setPlayerChName(INI->loadDataString("STATUS", "PLAYER", "NAME").substr(0, 5));
 		_p->setEndure(INI->loadDataInteger("STATUS", "PLAYER", "ENDURE"));
 		_p->setEnergy(INI->loadDataInteger("STATUS", "PLAYER", "ENERGY"));
 		_p->setGuard(INI->loadDataInteger("STATUS", "PLAYER", "GUARD"));
@@ -140,19 +396,22 @@ void gameScene::update()
 		_p->setWeapon(INI->loadDataInteger("STATUS", "PLAYER", "WEAPON"));
 		_p->setAgility(INI->loadDataInteger("STATUS", "PLAYER", "AGILITY"));
 		_p->setPunch(INI->loadDataInteger("STATUS", "PLAYER", "PUNCH"));
-		_p->setMoney(INI->loadDataInteger("STATUS", "PLAYER", "MONEY"));
+		_p->setMoney(INI->loadDataInteger("STATUS", "PLAYER", "MONEY") % 1000000);
 	}
-
+#endif
 }
 
 void gameScene::render()
 {
-#ifdef _DEBUG
-	if (KEY->down(VK_F1)) _shouldShowMenuScreen = !_shouldShowMenuScreen; // 리마인더: 시험용
-#endif
+//#ifdef _DEBUG
+//	if (KEY->down(VK_F1))
+//	{
+//		_shouldShowMenuScreen = !_shouldShowMenuScreen;
+//		_countForFading = 0;
+//	}
+//#endif
 
-	if (_shouldShowMenuScreen) IMG->render("파란 화면", getMemDC(), _currOrg.x, 96, 0, 0, WINW, 640);
-	else
+	if (!_shouldShowMenuScreen)
 	{
 		PatBlt(getMemDC(), 0, 96, WINW, 640, WHITENESS);
 		_currMap->render();
@@ -167,8 +426,58 @@ void gameScene::render()
 #endif
 
 	PatBlt(getMemDC(), 0, 0, WINW, 96, BLACKNESS);
+
+	if (_shouldBePaused)
+	{
+		L->selectUpdate("CaLm");
+		L->selectRender("CaLm");
+	}
+
 	PatBlt(getMemDC(), 0, 96 + 640, WINW, WINH - 640 - 96, BLACKNESS);
-	L->render();
+
+	if (_shouldShowMenuScreen)
+	{
+		if (_countForFading > 20)
+		{
+			if (_currMenuIdx != 4) IMG->render("파란 화면", getMemDC(), _currOrg.x, 96, 0, 0, WINW, 640);
+			else IMG->render("파란 화면", getMemDC(), _currOrg.x, _currOrg.y, 0, 0, WINW, WINH);
+		}
+		if (_countForFading > 40)
+		{
+			switch (_currMenuIdx)
+			{
+				case 0:
+					showBelongingsScr();
+					break;
+				case 1:
+					showVolumeScr();
+					break;
+				case 2:
+					showLevelsScr();
+					break;
+				case 3:
+					showStatusScr();
+					break;
+				case 4:
+					showHelpScr();
+					break;
+			}
+		}
+	}
+	else L->render();
+
+
+	// 하단 영역에 메뉴 보이기
+	if (_topBoxAdjX > 0 && (_countForFading < 21 || _countForFading > 59) && !_isInShop)
+	{
+		drawTopSecondBox();
+	}
+
+	// 하단 영역에 메뉴 보이기
+	if (_bottomBoxAdjX > 0 && (_countForFading < 21 || _countForFading > 59) && !_isInShop)
+	{
+		drawBottomSecondBox();
+	}
 
 #ifdef _DEBUG
 		{

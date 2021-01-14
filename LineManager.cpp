@@ -5,7 +5,7 @@
 LineManager::LineManager() :
 	POSITION(false)
 {
-	AddFontResource("RCR.ttf");
+	AddFontResource("RCR_Mono.ttf");
 }
 LineManager::~LineManager()
 {
@@ -20,7 +20,7 @@ HRESULT LineManager::init()
 
 void LineManager::release()
 {
-	RemoveFontResourceA("RCR.ttf");
+	RemoveFontResourceA("RCR_Mono.ttf");
 	AllDeleteLine();
 }
 
@@ -41,11 +41,42 @@ void LineManager::update()
 	}
 }
 
+void LineManager::selectUpdate(string _name)
+{
+	for (int i = 0; i < _vLine.size(); i++)
+	{
+		if (_vLine[i]->getName() != _name) continue;
+		if (_vLine[i]->getDead())
+		{
+			SAFE_DEL(_vLine[i]);
+			_vLine.erase(_vLine.begin() + i);
+		}
+		else
+		{
+			_vLine[i]->update();
+			i++;
+		}
+		break;
+	}
+}
+
 void LineManager::render()
 {
 	for (int i = 0; i < _vLine.size(); i++)
 	{
 		_vLine[i]->render();
+	}
+}
+
+void LineManager::selectRender(string _name)
+{
+	for (int i = 0; i < _vLine.size(); i++)
+	{
+		if (_vLine[i]->getName() == _name)
+		{
+			_vLine[i]->render();
+			return;
+		}
 	}
 }
 

@@ -30,8 +30,12 @@ public:
 
 	virtual HRESULT init();
 	virtual void release();
+
 	virtual void update();
+	void selectUpdate(string _name);
+
 	virtual void render();
+	void selectRender(string _name);
 
 	void CreateLine(POINT _rect, string _Lines, string _name, bool _bold, int _time = 99999);
 	void calmLine(POINT _rect, string _Lines);
