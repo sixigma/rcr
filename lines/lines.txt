@@ -4,6 +4,9 @@
 <map245>
 * Sticksville *
 
+<map4-2>
+* Sherman Park *
+
 <map3>
 * Grotto Mall *
 

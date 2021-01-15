@@ -17,6 +17,9 @@ HRESULT map2::init()
 	prevPlPos = *currPlPos;
 	gameScene::setViewport(pl->getPos().x, pl->getPos().y);
 
+	L->AllDeleteLine();
+	L->trgLine(MAP2, "Map Name");
+
 	return S_OK;
 }
 

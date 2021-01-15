@@ -53,7 +53,7 @@ HRESULT gameScene::init()
 	_shouldShowBottomBoxArrow = false;
 	_shouldShowMenuScreen = FALSE;
 
-	_hFont = CreateFont(46, 0, 0, 0, 0, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, "RCR_MONO");
+	_hFont = CreateFont(46, 0, 0, 0, 0, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, NONANTIALIASED_QUALITY, FIXED_PITCH | FF_MODERN, "RCR_Mono2");
 	
 	_bottomBoxArrowPosIdx = 0;
 	_bottomBoxTextArea = { {100, 768 - 12, 418, 796 + 8}, {724, 768 - 12, 912, 796 + 8}, {100, 832 - 12, 292, 860 + 8}, {426, 832 - 12, 620, 860 + 8}, {788, 832 - 12, 912, 860 + 8} };
@@ -69,8 +69,28 @@ HRESULT gameScene::init()
 	SetBkMode(_hBoxDC, TRANSPARENT);
 	_hOFont = (HFONT)SelectObject(_hBoxDC, _hFont);
 
+	_hBrush1 = CreateSolidBrush(RGB(127, 127, 127));
+	_hBrush2 = CreateSolidBrush(RGB(152, 232, 0));
+
 	_countForFading = 0;
 	_shouldShowMoneyOnTop = false;
+
+	_xPosForLevels = 0;
+	switch (_lineSpd)
+	{
+		case 1:
+			_yPosForLevels = 2;
+			break;
+		case 3:
+			_yPosForLevels = 1;
+			break;
+		case 5:
+			_yPosForLevels = 0;
+			break;
+		default:
+			_yPosForLevels = 1;
+			break;
+	}
 
 	return S_OK;
 }
@@ -88,6 +108,8 @@ void gameScene::release()
 	SelectObject(_hBoxDC, _hOFont);
 	DeleteObject(_hFont);
 	DeleteObject(SelectObject(_hBoxDC, _hOBoxBitmap));
+	DeleteObject(_hBrush1);
+	DeleteObject(_hBrush2);
 }
 
 void gameScene::update()
@@ -187,7 +209,7 @@ void gameScene::update()
 		}
 	}
 	
-	if (KEY->down(VK_RSHIFT) && !_isInShop)
+	if (KEY->down(VK_RSHIFT) && !_isInShop && !_shouldFadeOut && !_shouldShowMenuScreen)
 	{
 		SND->play("41.wav", _currMasterVolume * _currSFXVolume);
 		_shouldShowMoneyOnTop = !_shouldShowMoneyOnTop;
@@ -312,6 +334,7 @@ void gameScene::update()
 						break;
 				}
 			}
+			if (_currMenuIdx > 1) updateMenuScr(_currMenuIdx);
 		}
 		else if (_countForFading > 40)
 		{
@@ -326,7 +349,7 @@ void gameScene::update()
 			case 1: SND->stop("6 - Password.mp3"); break;
 			case 2: SND->stop("1 - Game Mode & Character Select.mp3"); break;
 			case 3: SND->stop("2 - Prologue & Epilogue.mp3"); break;
-			case 4: SND->stop("6 - Password.mp3"); break;
+			case 4: { SND->stop("6 - Password.mp3"); SND->stop("5 - Menu.mp3"); } break;
 		}
 
 		L->AllDeleteLine();
@@ -386,17 +409,17 @@ void gameScene::update()
 	if (KEY->down('3')) //플레이어 status 로드
 	{
 		_p->setPlayerChName(INI->loadDataString("STATUS", "PLAYER", "NAME").substr(0, 5));
-		_p->setEndure(INI->loadDataInteger("STATUS", "PLAYER", "ENDURE"));
-		_p->setEnergy(INI->loadDataInteger("STATUS", "PLAYER", "ENERGY"));
-		_p->setGuard(INI->loadDataInteger("STATUS", "PLAYER", "GUARD"));
-		_p->setHP(INI->loadDataInteger("STATUS", "PLAYER", "HP"));
-		_p->setMaxHP(INI->loadDataInteger("STATUS", "PLAYER", "MAXHP"));
-		_p->setKick(INI->loadDataInteger("STATUS", "PLAYER", "KICK"));
-		_p->setPower(INI->loadDataInteger("STATUS", "PLAYER", "POWER"));
-		_p->setWeapon(INI->loadDataInteger("STATUS", "PLAYER", "WEAPON"));
-		_p->setAgility(INI->loadDataInteger("STATUS", "PLAYER", "AGILITY"));
-		_p->setPunch(INI->loadDataInteger("STATUS", "PLAYER", "PUNCH"));
-		_p->setMoney(INI->loadDataInteger("STATUS", "PLAYER", "MONEY") % 1000000);
+		_p->setEndure(INI->loadDataInteger("STATUS", "PLAYER", "ENDURE") % 64);
+		_p->setEnergy(INI->loadDataInteger("STATUS", "PLAYER", "ENERGY") % 64);
+		_p->setGuard(INI->loadDataInteger("STATUS", "PLAYER", "GUARD") % 64);
+		_p->setHP(INI->loadDataInteger("STATUS", "PLAYER", "HP") % 128);
+		_p->setMaxHP(INI->loadDataInteger("STATUS", "PLAYER", "MAXHP") % 128);
+		_p->setKick(INI->loadDataInteger("STATUS", "PLAYER", "KICK") % 64);
+		_p->setPower(INI->loadDataInteger("STATUS", "PLAYER", "POWER") % 64);
+		_p->setWeapon(INI->loadDataInteger("STATUS", "PLAYER", "WEAPON") % 64);
+		_p->setAgility(INI->loadDataInteger("STATUS", "PLAYER", "AGILITY") % 64);
+		_p->setPunch(INI->loadDataInteger("STATUS", "PLAYER", "PUNCH") % 64);
+		_p->setMoney(INI->loadDataInteger("STATUS", "PLAYER", "MONEY") % 999991);
 	}
 #endif
 }
@@ -441,7 +464,22 @@ void gameScene::render()
 		{
 			if (_currMenuIdx != 4) IMG->render("파란 화면", getMemDC(), _currOrg.x, 96, 0, 0, WINW, 640);
 			else IMG->render("파란 화면", getMemDC(), _currOrg.x, _currOrg.y, 0, 0, WINW, WINH);
+			switch (_currMenuIdx)
+			{
+				case 2:
+					showLevelsScr();
+					break;
+				case 3:
+					showStatusScr();
+					break;
+				case 4:
+					showHelpScr();
+					break;
+				default:
+					break;
+			}
 		}
+		
 		if (_countForFading > 40)
 		{
 			switch (_currMenuIdx)
@@ -452,14 +490,7 @@ void gameScene::render()
 				case 1:
 					showVolumeScr();
 					break;
-				case 2:
-					showLevelsScr();
-					break;
-				case 3:
-					showStatusScr();
-					break;
-				case 4:
-					showHelpScr();
+				default:
 					break;
 			}
 		}
@@ -488,21 +519,21 @@ void gameScene::render()
 
 				sprintf_s(str, "Pointer pos: %d, %d (%d, %d)", _mouse.x + _currOrg.x, _mouse.y + _currOrg.y, _mouse.x, _mouse.y);
 				TextOut(getMemDC(), 0, 64, str, static_cast<int>(strlen(str)));
-			}
 
-			if (_mouse.x + 42 < WINW)
-			{
-				Rectangle(getMemDC(), _mouse.x + 9, _mouse.y + 9, _mouse.x + 10 + 33, _mouse.y + 10 + 33);
-				StretchBlt(getMemDC(), _mouse.x + 10, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
-				DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
-				DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 30 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
-			}
-			else
-			{
-				Rectangle(getMemDC(), _mouse.x - 43, _mouse.y + 9, _mouse.x + 10 - 19, _mouse.y + 10 + 33);
-				StretchBlt(getMemDC(), _mouse.x - 42, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
-				DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
-				DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 22 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+				if (_mouse.x + 42 < WINW)
+				{
+					Rectangle(getMemDC(), _mouse.x + 9, _mouse.y + 9, _mouse.x + 10 + 33, _mouse.y + 10 + 33);
+					StretchBlt(getMemDC(), _mouse.x + 10, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
+					DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
+					DrawLine(getMemDC(), _mouse.x + 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x + 30 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+				}
+				else
+				{
+					Rectangle(getMemDC(), _mouse.x - 43, _mouse.y + 9, _mouse.x + 10 - 19, _mouse.y + 10 + 33);
+					StretchBlt(getMemDC(), _mouse.x - 42, _mouse.y + 10, 32, 32, getMemDC(), _mouse.x - 8, _mouse.y - 8, 16, 16, SRCCOPY);
+					DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 26 + _currOrg.x, _mouse.y + 30 + _currOrg.y);
+					DrawLine(getMemDC(), _mouse.x - 26 + _currOrg.x, _mouse.y + 26 + _currOrg.y, _mouse.x - 22 + _currOrg.x, _mouse.y + 26 + _currOrg.y);
+				}
 			}
 		}
 #endif

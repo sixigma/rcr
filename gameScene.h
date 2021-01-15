@@ -57,7 +57,10 @@ private:
 	// 특정 메뉴용 변수
 	int _bottomBoxCountForBelongings;
 	int _bottomBoxCountForVolume;
+	RECT _volumeRct[6];
+	HBRUSH _hBrush1, _hBrush2, _hOBrush;
 	int _bottomBoxCountForLevels;
+	int _prevYPosForLevels, _prevXPosForLevels, _yPosForLevels, _xPosForLevels;
 	int _bottomBoxCountForStatus;
 	int _bottomBoxCountForHelp;
 public:
