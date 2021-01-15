@@ -4,6 +4,7 @@
 
 HRESULT item::init(string _name)
 {
+	_iName			= _name;  //이름
 	_price			= 0;	//센트 단위 게임 내 표기는 달러 그러므로 100 센트면 1달러 200센트면 게임 내에서는 $ 2.00
 	_plusPunch		= 0;	//펀치	
 	_plusKick		= 0;	//킥		
@@ -15,7 +16,6 @@ HRESULT item::init(string _name)
 	_plusEnergy		= 0;	//기력	
 	_recoveryHp		= 0;	//체력	
 	_plusMaxHp		= 0;	//최대체력
-
 
 	itemList(_name);
 	return S_OK;
@@ -193,7 +193,7 @@ void item::itemList(string _name)
 		
 	}
 
-	//빵집
+	//빵집======휴대가능
 
 	if (_name == "Donut")
 	{
