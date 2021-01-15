@@ -17,11 +17,6 @@ HRESULT MainScene::init()
 	alpha = 255;
 	pulser = false;
 
-	for (int i = 0; i < 5; i++)
-	{
-		myName[i] = ' ';
-	}
-
 	char cList[] =
 	{
 		'A', 'a', 'B', 'b', 'C', 'c', 'D', 'd', 'E', 'e', 'Z', 'z', ',',
@@ -281,11 +276,17 @@ void MainScene::setName()
 		if (alpha > 0) { alpha -= 5; }
 		if (alpha <= 0)
 		{
+			other = 0;
+			for (int i = 0; i < 5; i++)
+			{
+				myName[i] = ' ';
+			}
+
 			xpos = ypos = 0;
 			_x = 65;
 			_y = 351;
 
-			L->CreateLine(MakePt(64, 351), ">", "이름화살표", false);
+			L->CreateLine(MakePt(64, 351), "`", "이름화살표", false);
 
 			for (int i = 0; i < 5; i++)
 			{
@@ -386,44 +387,72 @@ void MainScene::setName()
 				}
 				other = 0;
 			}
+			else if (xpos == 10 && ypos == 5)
+			{
+				char playerName[128] = { 0 };
+				int voidNameCheck = 0;
+
+				for (int i = 0; i < 5; i++)
+				{
+					char N[64];
+					sprintf_s(N, "네임%d", i);
+					sprintf_s(oname, "%c", L->getArrWord(N, 0));
+					strcat_s(playerName, sizeof(playerName), oname);
+					if (L->getArrWord(N, 0) == ' ') voidNameCheck++;
+				//	voidNameCheck += ((L->getArrWord(N, 0) == ' ')==true);
+				}
+				if(voidNameCheck != 5) _playerChName = playerName;
+			
+				cnt = 3;
+			}
 			else
 			{
 				sprintf_s(oname, "네임%d", other);
 				L->selectChangeLine(oname, 0, myName[other]);
 			}
 
-			if (other < 5 && !otherOK) other++;
-			if (other >= 5) other = 4;
-			if (other <= 0) other = 0;
-
-			for (int i = 0; i < 5; i++)
+			if (cnt != 3)
 			{
-				if (other != i)
+				if (other < 5 && !otherOK) other++;
+				if (other >= 5) other = 4;
+				if (other <= 0) other = 0;
+
+				for (int i = 0; i < 5; i++)
 				{
-					sprintf_s(oname, "이름%d", i);
-					L->setPosLine(oname, MakePt(452 + (i * 32), 227));
+					if (other != i)
+					{
+						sprintf_s(oname, "이름%d", i);
+						L->setPosLine(oname, MakePt(452 + (i * 32), 227));
+					}
 				}
 			}
 		}
-
-		//
-		sprintf_s(oname, "이름%d", other);
-
-		if (!pulse)
+		if (cnt != 3)
 		{
-			pulser = !pulser;
-			L->CorrectLine(oname, MakePt(
-				(2000 * ((pulser)+((!pulser)*(-1)))),
-				(2000 * ((pulser)+((!pulser)*(-1))))
+			//
+			sprintf_s(oname, "이름%d", other);
+
+			if (!pulse)
+			{
+				pulser = !pulser;
+				L->CorrectLine(oname, MakePt(
+					(2000 * ((pulser)+((!pulser)*(-1)))),
+					(2000 * ((pulser)+((!pulser)*(-1))))
+				));
+			}
+
+			L->setPosLine("이름화살표", MakePt(
+				_x + (2000 * ((pulser)+((!pulser)*(0)))),
+				_y + (2000 * ((pulser)+((!pulser)*(0))))
 			));
+
+			pulse++;
 		}
-
-		L->setPosLine("이름화살표", MakePt(
-			_x + (2000 * ((pulser)+((!pulser)*(0)))),
-			_y + (2000 * ((pulser)+((!pulser)*(0))))
-		));
-
-		pulse++;
+	}
+	if (cnt == 3)
+	{
+		alpha += 5;
+		if (alpha >= 255) { L->AllDeleteLine(); alpha = 255; cnt = xpos = ypos = 0; crtScene = 1; }
 	}
 }
 
@@ -437,8 +466,12 @@ void MainScene::SceneRender()
 			WINH / 2 - (IMG->find("제작사 로고")->getHeight() / 2));
 	}
 	if (crtScene == 1)
-	{
+	{	
 		IMG->render("640파란 화면", getMemDC(), 0, 96);
+		//이름이 잘저장돼나 확인용
+		char str[256];
+		sprintf_s(str, "%s", _playerChName.c_str());
+		TextOut(getMemDC(), 300, 300, str, strlen(str));
 	}
 	if (crtScene == 2)
 	{

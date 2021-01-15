@@ -161,4 +161,5 @@ public:
 		POINT POS = { _vChar[0]._x, _vChar[0]._y };
 		return POS;
 	}
+	char getSelectArrWord(int _i) { return WORD_CLIST[_vChar[_i].oChar]; }
 };
