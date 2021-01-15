@@ -249,6 +249,7 @@ void gameScene::update()
 		{
 			_shouldShowMenuScreen = TRUE;
 			_shouldShowBottomBoxArrow = false;
+			L->AllDeleteLine();
 			_countForFading = 0;
 		}
 	}
