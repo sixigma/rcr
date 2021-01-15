@@ -69,5 +69,15 @@ public:
 			}
 		}
 	}
+	char getArrWord(string _name, int _i)
+	{
+		for (int i = 0; i < _vLine.size(); i++)
+		{
+			if (_vLine[i]->getName() == _name)
+			{
+				return _vLine[i]->getSelectArrWord(_i);
+			}
+		}
+	}
 };
 
