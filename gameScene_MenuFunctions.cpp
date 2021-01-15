@@ -38,7 +38,7 @@ void gameScene::drawBottomSecondBox()
 void gameScene::showBelongingsScr()
 {
 	// 하단 영역 화살표 표시
-	if (_shouldShowBottomBoxArrow)
+	if (_shouldShowBottomBoxArrow && !_bottomBoxArrowPos.empty())
 	{
 		PatBlt(_hBoxDC, 0, 96 + 640, WINW, WINH - 640 - 96, BLACKNESS);
 		IMG->frameRender("타일셋", _hBoxDC, _bottomBoxArrowPos[_bottomBoxArrowPosIdx].x + _currOrg.x, _bottomBoxArrowPos[_bottomBoxArrowPosIdx].y + _currOrg.y, 11, 3);
@@ -46,7 +46,7 @@ void gameScene::showBelongingsScr()
 	}
 
 	// 주 화면 영역 화살표 표시
-	if (_shouldShowMainBoxArrow)
+	if (_shouldShowMainBoxArrow && !_mainBoxArrowPos.empty())
 	{
 		PatBlt(_hBoxDC, 0, 96, WINW, 640, BLACKNESS);
 		IMG->frameRender("타일셋", _hBoxDC, _mainBoxArrowPos[_mainBoxArrowPosIdx].x + _currOrg.x, _mainBoxArrowPos[_mainBoxArrowPosIdx].y + _currOrg.y, 10, 2);
@@ -205,7 +205,7 @@ void gameScene::updateMenuScr(BYTE idx)
 				}
 				else
 				{
-					for (int i = 0; i < _itemList.size(); ++i)
+					for (int i = 0; i < _itemPtrList.size(); ++i)
 					{
 						_itemList.push_back(_itemPtrList[i]->getName());
 					}
