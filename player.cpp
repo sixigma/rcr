@@ -229,7 +229,7 @@ void player::playerSetStatus()
 	_p_status.energy = 15;
 	_p_status.guard = 15;
 	_p_status.hp = 63;
-	_p_status.maxHP = 127;
+	_p_status.maxHP = 63;
 	_p_status.kick = 15;
 	_p_status.power = 15;
 	_p_status.punch = 15;
@@ -255,6 +255,7 @@ void player::frameUp()
 			if (left) { _p_character_set.img = _walk; _p_character_set.ani = _L_walk; }
 			else if (!left) { _p_character_set.img = _walk; _p_character_set.ani = _R_walk; }
 			_p_character_set.ani->setCurrPlaylistIdx(1);
+			_p_character_set.ani->pause();
 			break;
 		case WALK:
 			if (left) { _p_character_set.img = _walk; _p_character_set.ani = _L_walk; }
