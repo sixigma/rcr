@@ -119,12 +119,13 @@ void shop::update()
 		L->CreateLine(MakePt(_yesNoBox[1].rc.left - 70, _yesNoBox[1].rc.top + 5), "NO", "n", false, 0);
 	}
 
-	pointmove();
+	
 
 	if (!apply)
 	{
 		shopSetting();
 	}
+	pointmove();
 }
 
 void shop::render()
@@ -229,7 +230,7 @@ void shop::pointmove()
 				break;
 			}
 			// YES NO 등장할지 안등장할지 지정
-			if (keyEnable == true && (shopNumber != 3))
+			if (keyEnable == true && (!((shopNumber == 3)&&(shopIndex == 0))))
 			{
 				if (yesNoApply == false)
 				{
@@ -283,8 +284,10 @@ void shop::pointmove()
 					if (i == (max - 1) && (shopIndex == 0)) //
 					{
 						apply = false;
+						L->AllDeleteLine();
 						gameScene::goToMap(3);
 						gameScene::setShopNum(0);
+						
 					}
 					else if (i == (max - 1) && (shopIndex != 0))
 					{
@@ -328,6 +331,7 @@ void shop::pointmove()
 				if (keyEnable == false)
 				{
 					apply = false;
+					L->AllDeleteLine();
 					gameScene::goToMap(3);
 					gameScene::setShopNum(0);
 				}
@@ -451,7 +455,7 @@ void shop::shopSetting()
 	if (shopNumber == 4)//bookstore
 	{
 		L->CreateLine(MakePt(_shopName.rc.left - 70, _shopName.rc.top + 10), "Grotto%Book%Store", "n", false);
-
+		max = 4;
 		L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "MAHA PUNCH 26.95", "n", false);
 		L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "MAHA KICK  26.95", "n", false);
 		L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "SCREW BOMER26.95", "n", false);
@@ -466,62 +470,169 @@ void shop::shopbuy()
 {
 	if (buy == true)
 	{
+		item* _item;
+		_item = new item;
+
 		if (shopNumber == 1) //카페
 		{
 			if (_itemBox[0].enable == true)
 			{
-				_price = 95;
-
+				_itemName = "Coffee";
 				_itemBox[0].enable = false;
 			}
 			if (_itemBox[1].enable == true)
 			{
-				_price = 95;
-
+				_itemName = "Tea";
 				_itemBox[1].enable = false;
 			}
 			if (_itemBox[2].enable == true)
 			{
-				_price = 125;
-
+				_itemName = "HotCocoa";
 				_itemBox[2].enable = false;
 			}
 			if (_itemBox[3].enable == true)
 			{
-				_price = 330;
-
+				_itemName = "Pancakes";
 				_itemBox[3].enable = false;
 			}
 			if (_itemBox[4].enable == true)
 			{
-				_price = 410;
-
+				_itemName = "Waffles";
 				_itemBox[4].enable = false;
 			}
 		}
 
 		if (shopNumber == 2) // 빵집
 		{
-
+			if (_itemBox[0].enable == true)
+			{
+				_itemName = "Donut";
+				_itemBox[0].enable = false;
+			}
+			if (_itemBox[1].enable == true)
+			{
+				_itemName = "Muffin";
+				_itemBox[1].enable = false;
+			}
+			if (_itemBox[2].enable == true)
+			{
+				_itemName = "Bagel";
+				_itemBox[2].enable = false;
+			}
+			if (_itemBox[3].enable == true)
+			{
+				_itemName = "HoneyBun";
+				_itemBox[3].enable = false;
+			}
+			if (_itemBox[4].enable == true)
+			{
+				_itemName = "Croissant";
+				_itemBox[4].enable = false;
+			}
+		
 		}
 
 		if (shopNumber == 3 && shopIndex == 1) //스시집 싼스시
 		{
+			if (_itemBox[0].enable == true)
+			{
+				_itemName = "Egg";
+				_itemBox[0].enable = false;
+			}
+			if (_itemBox[1].enable == true)
+			{
+				_itemName = "Octopus";
+				_itemBox[1].enable = false;
+			}
+			if (_itemBox[2].enable == true)
+			{
+				_itemName = "Squid";
+				_itemBox[2].enable = false;
+			}
+			if (_itemBox[3].enable == true)
+			{
+				_itemName = "CongerEel";
+				_itemBox[3].enable = false;
+			}
+			if (_itemBox[4].enable == true)
+			{
+				_itemName = "Prawn";
+				_itemBox[4].enable = false;
+			}
 
 		}
 
 		if (shopNumber == 3 && shopIndex == 2) //스시집 비싼스시
 		{
+			if (_itemBox[0].enable == true)
+			{
+				_itemName = "Salmon";
+				_itemBox[0].enable = false;
+			}
+			if (_itemBox[1].enable == true)
+			{
+				_itemName = "ArkShell";
+				_itemBox[1].enable = false;
+			}
+			if (_itemBox[2].enable == true)
+			{
+				_itemName = "SeaUrchin";
+				_itemBox[2].enable = false;
+			}
+			if (_itemBox[3].enable == true)
+			{
+				_itemName = "Halibut";
+				_itemBox[3].enable = false;
+			}
+			if (_itemBox[4].enable == true)
+			{
+				_itemName = "SwordFish";
+				_itemBox[4].enable = false;
+			}
 
 		}
 
 		if (shopNumber == 3 && shopIndex == 3) //스시집 ROLL
 		{
+			if (_itemBox[0].enable == true)
+			{
+				_itemName = "SaladRoll";
+				_itemBox[0].enable = false;
+			}
+			if (_itemBox[1].enable == true)
+			{
+				_itemName = "TunaRoll";
+				_itemBox[1].enable = false;
+			}
+			if (_itemBox[2].enable == true)
+			{
+				_itemName = "ShrimpRoll";
+				_itemBox[2].enable = false;
+			}
+			if (_itemBox[3].enable == true)
+			{
+				_itemName = "MixedRoll";
+				_itemBox[3].enable = false;
+			}
+			
 
 		}
+
+		_item->init(_itemName);
+		_price = _item->getPrice();
 		if (_price <= _cMoney)//가격이 소지금 보다 작거나 같을 때
 		{
-			//pl->setAllStatusValuesUsingShopItem(int pAtkUp, int kAtkUp, int wepUp, int powUp, int agiUp, int defUp, int endUp, int engUp, int hpUp, int maxHpUp,_price)
+			pl->setAllStatusValuesUsingShopItem(
+				_item->getPlusPunch(),
+				_item->getPlusKick(),
+				_item->getPlusWeapon(),
+				_item->getPlusPower(),
+				_item->getPlusAgility(),
+				_item->getPlusGuard(),
+				_item->getPlusEndure(),
+				_item->getPlusEnergy(),
+				_item->getRecoveryHp(),
+				_item->getPlusMaxHp());
 			pl->moneyR(_price);
 			buy = false;
 		}

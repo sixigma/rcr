@@ -1,6 +1,7 @@
 #pragma once
 #include "map_.h"
 #include "gameScene.h"
+#include "item.h"
 #define itemmax 20
 struct Flist
 {
@@ -24,6 +25,7 @@ public:
 	int _cMoney;
 
 	string tempStr;
+	string _itemName;
 	Flist _display;
 	Flist _shopName;
 	Flist _money;
