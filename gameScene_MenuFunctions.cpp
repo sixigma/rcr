@@ -42,6 +42,13 @@ void gameScene::showBelongingsScr()
 	{
 		PatBlt(_hBoxDC, 0, 96 + 640, WINW, WINH - 640 - 96, BLACKNESS);
 		IMG->frameRender("타일셋", _hBoxDC, _bottomBoxArrowPos[_bottomBoxArrowPosIdx].x + _currOrg.x, _bottomBoxArrowPos[_bottomBoxArrowPosIdx].y + _currOrg.y, 11, 3);
+		
+		BitBlt(getMemDC(), 0, 96 + 640, WINW, WINH - 640 - 96, _hBoxDC, 0, 96 + 640, SRCCOPY);
+	}
+	if (_bottomBoxCountForBelongings > 1020 && _bottomBoxCountForBelongings < 1041)
+	{
+		PatBlt(_hBoxDC, 0, 96 + 640, WINW, WINH - 640 - 96, BLACKNESS);
+		IMG->frameRender("타일셋", _hBoxDC, 896 + 32 + _currOrg.x, 844 - 14 + _currOrg.y, 15, 7);
 		BitBlt(getMemDC(), 0, 96 + 640, WINW, WINH - 640 - 96, _hBoxDC, 0, 96 + 640, SRCCOPY);
 	}
 
@@ -52,7 +59,6 @@ void gameScene::showBelongingsScr()
 		IMG->frameRender("타일셋", _hBoxDC, _mainBoxArrowPos[_mainBoxArrowPosIdx].x + _currOrg.x, _mainBoxArrowPos[_mainBoxArrowPosIdx].y + _currOrg.y, 10, 2);
 		BitBlt(getMemDC(), 0, 96, WINW, 640, _hBoxDC, 0, 96, SRCPAINT);
 	}
-
 
 	//if (!_itemNameTextArea.empty())
 	//{
@@ -174,7 +180,7 @@ void gameScene::updateMenuScr(BYTE idx)
 		case 0: // Belongings
 			{
 				// 창 끄기
-				if (KEY->down('J') || (KEY->down('K') && _bottomBoxArrowPosIdx == 1))
+				if (KEY->down('J') && _bottomBoxCountForBelongings < 1000 || (KEY->down('K') && _bottomBoxArrowPosIdx == 1))
 				{
 					_itemNameTextArea.clear();
 					_mainBoxArrowPos.clear();
@@ -183,11 +189,49 @@ void gameScene::updateMenuScr(BYTE idx)
 				}
 
 				// 아이템 사용하기
+				if (KEY->down('K') && _shouldShowMainBoxArrow && _bottomBoxArrowPosIdx == 0 && !_itemPtrList.empty())
+				{
+					if (_bottomBoxCountForBelongings < 1000) _bottomBoxCountForBelongings = 1000;
+					else if (_bottomBoxCountForBelongings > 1000 && _bottomBoxCountForBelongings < 1041)
+					{
+						_bottomBoxCountForBelongings = 1100;
+					}
 
+					if (_bottomBoxCountForBelongings == 1100)
+					{
+						item* tempItem = _p->getVItem()[_mainBoxArrowPosIdx];
+						_p->setAllStatusValuesUsingShopItem(
+							tempItem->getPlusPunch(),
+							tempItem->getPlusKick(),
+							tempItem->getPlusWeapon(),
+							tempItem->getPlusPower(),
+							tempItem->getPlusAgility(),
+							tempItem->getPlusGuard(),
+							tempItem->getPlusEndure(),
+							tempItem->getPlusEnergy(),
+							tempItem->getRecoveryHp(),
+							tempItem->getPlusMaxHp()
+						);
+						SAFE_DEL(tempItem);
+
+						_p->getVItem().erase(_p->getVItem().begin() + _mainBoxArrowPosIdx);
+						if (_p->getVItem().empty()) _itemNameTextArea.clear();
+					}
+				}
+				else if (KEY->down('J') && _bottomBoxCountForBelongings > 999)
+				{
+					_bottomBoxCountForBelongings = 1100;
+				}
 
 				// 아이템 버리기
-
-
+				if (KEY->down('K') && _shouldShowMainBoxArrow && _bottomBoxArrowPosIdx == 2 && !_itemPtrList.empty())
+				{
+					item* tempItem = _p->getVItem()[_mainBoxArrowPosIdx];
+					SAFE_DEL(tempItem);
+					_p->getVItem().erase(_p->getVItem().begin() + _mainBoxArrowPosIdx);
+					if (_p->getVItem().empty()) _itemNameTextArea.clear();
+					_bottomBoxCountForBelongings = 1100;
+				}
 
 				// 창 내용 표시하기 준비
 				_itemPtrList = _p->getVItem();
@@ -195,13 +239,6 @@ void gameScene::updateMenuScr(BYTE idx)
 				if (_itemPtrList.empty())
 				{
 					_itemList.push_back("Nothing");
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
-					//_itemList.push_back("Nothing"); // 리마인더: 시험용
 				}
 				else
 				{
@@ -263,6 +300,27 @@ void gameScene::updateMenuScr(BYTE idx)
 
 						_mainBoxArrowPosIdx = 0;
 						_shouldShowMainBoxArrow = true;
+					}
+					else if (_bottomBoxCountForBelongings == 1000)
+					{
+						_shouldShowBottomBoxArrow = false;
+						L->selectDeleteLine("bottomBoxText");
+						L->CreateLine({ 64, 768 }, _p->getPlayerChName() + " ate the " + _p->getVItem()[_mainBoxArrowPosIdx]->getName() + ".", "bottomBoxText", false);
+						++_bottomBoxCountForBelongings;
+					}
+					else if (_bottomBoxCountForBelongings > 1000 && _bottomBoxCountForBelongings < 1021)
+					{
+						++_bottomBoxCountForBelongings;
+					}
+					else if (_bottomBoxCountForBelongings > 1020 && _bottomBoxCountForBelongings < 1041)
+					{
+						++_bottomBoxCountForBelongings;
+						if (_bottomBoxCountForBelongings == 1041) _bottomBoxCountForBelongings = 1001;
+					}
+					else if (_bottomBoxCountForBelongings == 1100)
+					{
+						L->selectDeleteLine("bottomBoxText");
+						_bottomBoxCountForBelongings = itemListSizeTimesTen;
 					}
 				}
 			}

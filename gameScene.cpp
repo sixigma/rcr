@@ -97,6 +97,14 @@ HRESULT gameScene::init()
 
 void gameScene::release()
 {
+	if (!_p->getVItem().empty())
+	{
+		for (int i = 0; i < _p->getVItem().size(); ++i)
+		{
+			SAFE_DEL(_p->getVItem()[i]);
+		}
+	}
+
 	_p->release();
 	SAFE_DEL(_p);
 	_currMap->release();
@@ -441,7 +449,7 @@ void gameScene::render()
 		_currMap->render();
 		_p->render();
 
-		IMG->execZ();
+		if (!_isInShop) IMG->execZ();
 	}
 	
 #ifdef _DEBUG

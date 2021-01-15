@@ -56,8 +56,7 @@ public:
 	void render() override;
 
 
-	//// 여기부터
-	inline void hitDamage(int damage) { _p_status.hp -= damage; }			//대미지
+	inline void hitDamage(int damage) { _p_status.hp -= min(damage, _p_status.hp); } //대미지
 	int recoveryHp(int hpUp)
 	{
 		if (_p_status.hp + hpUp > _p_status.maxHP)
@@ -69,16 +68,16 @@ public:
 		else _p_status.hp += hpUp;
 		return hpUp;
 	} //체력 회복
-	inline void maxHpUp(int MaxHpUp) { _p_status.maxHP += MaxHpUp; }		//최대 체력 증가(공식 적용 없음)
-	inline void recoveryEng(int engUp) { _p_status.energy += engUp; }		//기력 회복
-	inline void endureUp(int endUp) { _p_status.endure += endUp; }			//맷집 상승
-	inline void guardUp(int defUp) { _p_status.guard += defUp; }			//방어력 상승
-	inline void agilityUp(int agiUp) { _p_status.agility += agiUp; }		//민첩 상승
-	inline void powerUp(int powUp) { _p_status.power += powUp; }			//힘 상승
-	inline void weaponUp(int wepUp) { _p_status.weapon += wepUp; }			//무기 공격력 상승
-	inline void kickUp(int kAtkUp) { _p_status.kick += kAtkUp; }			//발차기 공격력 상승
-	inline void punchUp(int pAtkUp) { _p_status.punch += pAtkUp; }			//주먹 공격력 상승
-	inline void moneyR(int money) { _p_status.money -= money; }				//돈이깍임
+	inline void maxHpUp(int maxHpUp) { _p_status.maxHP += maxHpUp; _p_status.maxHP = min(_p_status.maxHP, 127); }		//최대 체력 증가(공식 적용 없음)
+	inline void recoveryEng(int engUp) { _p_status.energy += engUp; _p_status.energy = min(_p_status.energy, 64); }		//기력 회복
+	inline void endureUp(int endUp) { _p_status.endure += endUp; _p_status.endure = min(_p_status.endure, 64); }			//맷집 상승
+	inline void guardUp(int defUp) { _p_status.guard += defUp; _p_status.guard = min(_p_status.guard, 64); }			//방어력 상승
+	inline void agilityUp(int agiUp) { _p_status.agility += agiUp; _p_status.agility = min(_p_status.agility, 64); }		//민첩 상승
+	inline void powerUp(int powUp) { _p_status.power += powUp; _p_status.power = min(_p_status.power, 64); }			//힘 상승
+	inline void weaponUp(int wepUp) { _p_status.weapon += wepUp; _p_status.weapon = min(_p_status.weapon, 64); }			//무기 공격력 상승
+	inline void kickUp(int kAtkUp) { _p_status.kick += kAtkUp; _p_status.kick = min(_p_status.kick, 64); }			//발차기 공격력 상승
+	inline void punchUp(int pAtkUp) { _p_status.punch += pAtkUp; _p_status.punch = min(_p_status.punch, 64); }			//주먹 공격력 상승
+	inline void moneyR(int money) { _p_status.money -= money; }				//소지금 감소
 	pair<int, int> setAllStatusValuesUsingShopItem(int pAtkUp, int kAtkUp, int wepUp, int powUp, int agiUp, int defUp, int endUp, int engUp, int hpUp, int maxHpUp)
 	{
 		int realHPUp, remainingHPUp, realMaxHPUp;
@@ -92,15 +91,16 @@ public:
 		else { _p_status.hp += hpUp; realHPUp = hpUp; remainingHPUp = 0; }
 
 		realMaxHPUp = max(1, static_cast<int>(roundf(static_cast<float>(maxHpUp) * static_cast<float>(remainingHPUp) / static_cast<float>(hpUp)))); // 공식 적용
+		if (_p_status.maxHP + realMaxHPUp > 127) realMaxHPUp = 127 - _p_status.maxHP;
 		_p_status.maxHP += realMaxHPUp;
-		_p_status.energy += engUp;
-		_p_status.endure += endUp;
-		_p_status.guard += defUp;
-		_p_status.agility += agiUp;
-		_p_status.power += powUp;
-		_p_status.weapon += wepUp;
-		_p_status.kick += kAtkUp;
-		_p_status.punch += pAtkUp;
+		_p_status.energy += engUp; _p_status.energy = min(_p_status.energy, 64);
+		_p_status.endure += endUp; _p_status.endure = min(_p_status.endure, 64);
+		_p_status.guard += defUp; _p_status.guard = min(_p_status.guard, 64);
+		_p_status.agility += agiUp; _p_status.agility = min(_p_status.agility, 64);
+		_p_status.power += powUp; _p_status.power = min(_p_status.power, 64);
+		_p_status.weapon += wepUp; _p_status.weapon = min(_p_status.weapon, 64);
+		_p_status.kick += kAtkUp; _p_status.kick = min(_p_status.kick, 64);
+		_p_status.punch += pAtkUp; _p_status.punch = min(_p_status.punch, 64);
 		return make_pair(remainingHPUp, realMaxHPUp);
 	};
 
