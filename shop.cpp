@@ -328,12 +328,20 @@ void shop::pointmove()
 			}
 			if (KEY->down('J'))
 			{
-				if (keyEnable == false)
+				if (keyEnable == false && (!((shopNumber == 3) && ((shopIndex == 1) || (shopIndex == 2) || (shopIndex == 3)))))
 				{
 					apply = false;
 					L->AllDeleteLine();
 					gameScene::goToMap(3);
 					gameScene::setShopNum(0);
+				}
+				else if (keyEnable == false && (((shopNumber == 3) && ((shopIndex == 1) || (shopIndex == 2) || (shopIndex == 3)))))
+				{
+					L->setKill("b");
+					shopIndex = 0;
+					_point[i].enable = false;	//포인터값 초기화
+					_point[0].enable = true;		//포인터값 위치 초기화
+					apply = false;
 				}
 				else if (keyEnable == true)
 				{
@@ -622,6 +630,12 @@ void shop::shopbuy()
 		_price = _item->getPrice();
 		if (_price <= _cMoney)//가격이 소지금 보다 작거나 같을 때
 		{
+			if (shopNumber == 2) 
+			{
+				pl->getVItem().push_back(new item);
+				pl->getVItem()[pl->getVItem().size() - 1]->init(_itemName);
+			}
+			if(!(shopNumber == 2))
 			pl->setAllStatusValuesUsingShopItem(
 				_item->getPlusPunch(),
 				_item->getPlusKick(),

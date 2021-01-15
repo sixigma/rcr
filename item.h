@@ -4,7 +4,7 @@
 class item : public gameScene
 {
 private:
-string name;
+string _iName;
 int _price;			//센트 단위 게임 내 표기는 달러 그러므로 100 센트면 1달러 200센트면 게임 내에서는 $ 2.00
 int _plusPunch;		//펀치	
 int _plusKick;		//킥		
@@ -18,14 +18,13 @@ int _recoveryHp;	//체력
 int _plusMaxHp;		//최대체력
 public:
 	
-
 	HRESULT init(string _name);
 	void release() override;
 	void update() override;
 	void render() override;
 	void itemList(string _name);
 	
-	string getName() { return name; }
+	string getName() { return _iName; }
 	int getPrice() { return _price; }
 	int getPlusPunch() { return _plusPunch; }
 	int getPlusKick(){ return _plusKick; }
