@@ -27,9 +27,15 @@ HRESULT shop::init()
 	yesNoEnable = false;
 	yesNoApply = false;
 	apply = false;
+	buy = false;
+	_cMoney = 2000;
+	_price = 0;
 	shopIndex = 0;
 	tempnum = 0;
 	max = 0;
+	tempStr = to_string(_cMoney);
+	tempStr.insert(tempStr.end() - 2, 1, '.');
+
 	for (int i = 0; i < 6; i++)
 	{
 		_point[i].enable = false;
@@ -104,10 +110,9 @@ void shop::release()
 void shop::update()
 {
 	shopNumber = getShopNum();
-	if (!apply)
-	{
-		shopSetting();
-	}
+	shopbuy();
+	_cMoney = pl->currentMoney();
+	
 	if ((keyEnable == true) && (yesNoApply == true))
 	{
 		L->CreateLine(MakePt(_yesNoBox[0].rc.left - 70, _yesNoBox[0].rc.top + 5), "YES", "n", false, 0);
@@ -115,7 +120,11 @@ void shop::update()
 	}
 
 	pointmove();
-	
+
+	if (!apply)
+	{
+		shopSetting();
+	}
 }
 
 void shop::render()
@@ -246,6 +255,13 @@ void shop::pointmove()
 				if (_yesNoPoint[0].enable)
 				{
 					//구매
+					_yesNoPoint[0].enable = false;
+					_yesNoPoint[1].enable = false;
+					yesNoApply = false;
+					yesNoEnable = false;
+					keyEnable = false;
+					buy = true;
+					apply = false;
 				}
 				if (_yesNoPoint[1].enable)
 				{
@@ -269,6 +285,14 @@ void shop::pointmove()
 						apply = false;
 						gameScene::goToMap(3);
 						gameScene::setShopNum(0);
+					}
+					else if (i == (max - 1) && (shopIndex != 0))
+					{
+						L->setKill("b");
+						shopIndex = 0;
+						_point[max - 1].enable = false;	//포인터값 초기화
+						_point[0].enable = true;		//포인터값 위치 초기화
+						apply = false;
 					}
 					if (i != (max - 1) && (!((shopNumber == 3) && (shopIndex == 0)))) //스시집이자 스시 index가0이 아닐때.
 					{
@@ -331,6 +355,26 @@ void shop::pointmove()
 
 void shop::shopSetting()
 {
+	if (_cMoney >= 100)
+	{
+		tempStr = to_string(_cMoney);
+		tempStr.insert(tempStr.end() - 2, 1, '.');
+		L->setKill("a");																   //소지금 갱신
+		L->CreateLine(MakePt(_money.rc.left - 70, _money.rc.top + 5), tempStr, "a", false);
+	}
+	else if (_cMoney < 100 && 10 <= _cMoney)//소지금 출력 소지금 출력이 터져서
+	{
+		tempStr = to_string(_cMoney);
+		L->setKill("a");																   //소지금 갱신
+		L->CreateLine(MakePt(_money.rc.left - 70, _money.rc.top + 5), "0." + tempStr, "a", false);
+	}
+	else if (_cMoney < 10)
+	{
+		tempStr = to_string(_cMoney);
+		L->setKill("a");																   //소지금 갱신
+		L->CreateLine(MakePt(_money.rc.left - 70, _money.rc.top + 5), "0.0" + tempStr, "a", false);
+	}
+
 	if (shopNumber == 1)//RISE & SHINE CAFE
 	{
 		max = 6;
@@ -417,3 +461,76 @@ void shop::shopSetting()
 	apply = true;
 
 }
+
+void shop::shopbuy()
+{
+	if (buy == true)
+	{
+		if (shopNumber == 1) //카페
+		{
+			if (_itemBox[0].enable == true)
+			{
+				_price = 95;
+
+				_itemBox[0].enable = false;
+			}
+			if (_itemBox[1].enable == true)
+			{
+				_price = 95;
+
+				_itemBox[1].enable = false;
+			}
+			if (_itemBox[2].enable == true)
+			{
+				_price = 125;
+
+				_itemBox[2].enable = false;
+			}
+			if (_itemBox[3].enable == true)
+			{
+				_price = 330;
+
+				_itemBox[3].enable = false;
+			}
+			if (_itemBox[4].enable == true)
+			{
+				_price = 410;
+
+				_itemBox[4].enable = false;
+			}
+		}
+
+		if (shopNumber == 2) // 빵집
+		{
+
+		}
+
+		if (shopNumber == 3 && shopIndex == 1) //스시집 싼스시
+		{
+
+		}
+
+		if (shopNumber == 3 && shopIndex == 2) //스시집 비싼스시
+		{
+
+		}
+
+		if (shopNumber == 3 && shopIndex == 3) //스시집 ROLL
+		{
+
+		}
+		if (_price <= _cMoney)//가격이 소지금 보다 작거나 같을 때
+		{
+			//pl->setAllStatusValuesUsingShopItem(int pAtkUp, int kAtkUp, int wepUp, int powUp, int agiUp, int defUp, int endUp, int engUp, int hpUp, int maxHpUp,_price)
+			pl->moneyR(_price);
+			buy = false;
+		}
+		else if (_price > _cMoney) //가격이 소지금 보다 클 때
+		{
+			//소지금이 부족하다고 대사칠때 여기다가 넣으면될듯.
+			buy = false;
+		}
+		apply = false;
+	}
+}
+

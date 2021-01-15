@@ -9,18 +9,21 @@ struct Flist
 	bool enable;
 	int num;
 };
-class item;
 class shop: public map_
 {
 private:
 	int shopNumber;
 public:
 	
+	bool buy;
 	bool apply;
 	bool keyEnable;
 	bool yesNoApply;
 	bool yesNoEnable;
+	int _price;
+	int _cMoney;
 
+	string tempStr;
 	Flist _display;
 	Flist _shopName;
 	Flist _money;
@@ -29,7 +32,7 @@ public:
 	Flist _yesNoBox[2];
 	Flist _yesNoPoint[2];
 
-	vector<item*> _itemList;
+	item* _itemL;
 
 	int max;
 	int tempnum;
@@ -43,5 +46,6 @@ public:
 	void render() override;
 	void pointmove();
 	void shopSetting();
+	void shopbuy();
 };
 

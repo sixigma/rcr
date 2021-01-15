@@ -78,6 +78,7 @@ public:
 	inline void weaponUp(int wepUp) { _p_status.weapon += wepUp; }			//¹«±â °ø°Ý·Â »ó½Â
 	inline void kickUp(int kAtkUp) { _p_status.kick += kAtkUp; }			//¹ßÂ÷±â °ø°Ý·Â »ó½Â
 	inline void punchUp(int pAtkUp) { _p_status.punch += pAtkUp; }			//ÁÖ¸Ô °ø°Ý·Â »ó½Â
+	inline void moneyR(int money) { _p_status.money -= money; }				//µ·ÀÌ±ïÀÓ
 	pair<int, int> setAllStatusValuesUsingShopItem(int pAtkUp, int kAtkUp, int wepUp, int powUp, int agiUp, int defUp, int endUp, int engUp, int hpUp, int maxHpUp)
 	{
 		int realHPUp, remainingHPUp, realMaxHPUp;
