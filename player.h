@@ -46,6 +46,11 @@ protected:
 
 	vector<item*> _vItem;
 
+	float _JP;		//점프 올라가는 힘
+	float _G;		//점프 후 내려오게 하는 중력
+	float _deltaZ;	//pos.z에 대입시키기 위한 변수
+	float _MV;		//점프 시 deltaX에 대입시키기 위한 변수
+	bool _WD;		//벽내려오기용 bool값
 public:
 	player() {};
 	~player() override {};
@@ -136,6 +141,21 @@ public:
 	void playerSetAni();		//플레이어 애니메이션 등록 함수
 	void frameUp();				//애니메이션 재생 함수
 
+	/////////////map 점프 후 착지시 필요한 함수들
+	
+	float getDeltaZ() { return _deltaZ; }
+	bool getJump() { return _p_tagState.jump; }			//jump bool 접근자
+	STATE getPlState() { return _p_state; }				//플레이어용 STATE 접근자
+	
+	void setPlWD(bool WD) { _WD = WD; }					//WD(벽 내려오기 bool) 설정자
+	void setJump(bool jump) { _p_tagState.jump = jump; }//jump bool 설정자
+	void setPlState(STATE state) { _p_state = state; }//플레이어용 STATE 설정자
+
+	void jumpSwitch();		//점프용 스위치
+	
+	bool jumpDown();		//점프해서 내려올 때 true
+
+	//////////////
 	vector<item*> &getVItem() { return _vItem; }
 };
 

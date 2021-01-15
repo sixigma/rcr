@@ -21,7 +21,7 @@ enum STATE
 
 struct tagCharacterSetting
 {
-	POINT CH;	//캐릭터 렉트 그려질 포인트
+	POINT3D CH;	//캐릭터 렉트 그려질 포인트
 	RECT ch;		//캐릭터 렉트
 	RECT atk;	//캐릭터 공격렉트
 	image* img;	//이미지
