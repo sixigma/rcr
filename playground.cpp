@@ -74,7 +74,6 @@ void playground::update()
 		// 페이드인에 맞게 알파 값을 변경한다.
 		if (_blackScreenAlpha > 0x00) _blackScreenAlpha -= min(0x22, _blackScreenAlpha);
 	}
-	if (_blackScreenAlpha == 0xFF) L->AllDeleteLine();
 
 	SC->update();
 }

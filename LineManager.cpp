@@ -5,7 +5,7 @@
 LineManager::LineManager() :
 	POSITION(false)
 {
-	AddFontResource("RCR_Mono.ttf");
+	AddFontResource("RCR_Mono2.ttf");
 }
 LineManager::~LineManager()
 {
@@ -20,7 +20,7 @@ HRESULT LineManager::init()
 
 void LineManager::release()
 {
-	RemoveFontResourceA("RCR_Mono.ttf");
+	RemoveFontResourceA("RCR_Mono2.ttf");
 	AllDeleteLine();
 }
 
@@ -137,20 +137,23 @@ void LineManager::trgLine(Trigger _trg, string _name)
 {
 	if (_trg == MAP1)
 	{
-		CreateLine(MakePt(166, 766), "n", txtFind("<map1>"), false, 2);
-		//CreateLine(MakePt(47, 817), 40, "Àû Á¾·ù", 2);
+		CreateLine(MakePt(200, 766), txtFind("<map1>"), _name, false, 2);
 	}
 	else if (_trg == MAP2 || _trg == MAP4 || _trg == MAP5)
 	{
-		CreateLine(MakePt(187, 766), "n", txtFind("<map245>"), false, 2);
+		CreateLine(MakePt(248, 766), txtFind("<map245>"), _name, false, 2);
+	}
+	else if (_trg == MAP4_2)
+	{
+		CreateLine(MakePt(240, 766), txtFind("<map4-2>"), _name, false, 2);
 	}
 	else if (_trg == MAP3)
 	{
-		CreateLine(MakePt(229, 766), "n", txtFind("<map3>"), false, 2);
+		CreateLine(MakePt(248, 766), txtFind("<map3>"), _name, false, 2);
 	}
 	else if (_trg == P_DIE)
 	{
-		CreateLine(MakePt(34, 766), "n", txtFind("<p_die>"), false, 1);
+		CreateLine(MakePt(34, 766), txtFind("<p_die>"), _name, false, 1);
 	}
 	else if (_trg == E_DIE)
 	{
@@ -221,5 +224,5 @@ string LineManager::txtFind(string _line, string _name, int _plusLine)
 	}
 	file.close();
 
-	return _name != "no" ? _name + ":" + line : line;
+	return _name != "no"? _name + ":" + line : line;
 }

@@ -8,14 +8,15 @@
 enum Trigger
 {
 	NO,			//그냥 초기화
-	P_DIE,		//플레이어가 죽었을때
-	E_DIE,		//적이 죽었을때
-	E_HELP,		//적이 도망
-	MAP1,		//맵1 일때
-	MAP2,		//맵2 일때
-	MAP3,		//맵3 일때
-	MAP4,		//맵4 일때
-	MAP5		//맵5 일떄
+	P_DIE,		//플레이어가 죽었을 때
+	E_DIE,		//적이 죽었을 때
+	E_HELP,		//적이 도망갈 때
+	MAP1,		//맵 1일 때
+	MAP2,		//맵 2일 때
+	MAP3,		//맵 3일 때
+	MAP4,		//맵 4일 때
+	MAP4_2,		//맵 4-2일 때
+	MAP5		//맵 5일 때
 };
 
 class LineManager : public singleton<LineManager>
