@@ -398,7 +398,7 @@ void Lines::charRender()
 
 void Lines::newLine()
 {
-	CNT = CNT % 1;
+	CNT = CNT % _lineSpd;
 
 	if (!CNT)
 	{
@@ -418,7 +418,7 @@ void Lines::newLine()
 
 void Lines::deleteLine()
 {
-	CNT = CNT % 1;
+	CNT = CNT % _lineSpd;
 
 	if (!CNT)
 	{

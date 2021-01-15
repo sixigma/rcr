@@ -103,30 +103,31 @@ void MainScene::Turn2() //로고
 		if (alpha <= 0)
 		{
 			L->CreateLine(MakePt(65, 768), "Select message speed & level.", "n", false);
-			L->CreateLine(MakePt(384, 255), "▶", "화살표1", false);
+			L->CreateLine(MakePt(384, 255+64), "▶", "화살표1", false);
 			L->CreateLine(MakePt(94, 640), "▶", "화살표2", false);
+			ypos = 1;
 			cnt = 2;
 		}
 	}
 
 	if (cnt == 2)
 	{
-		if (KEY->down(VK_UP) && ypos > 0)
+		if (KEY->down('W') && ypos > 0)
 		{
 			ypos--;
 			L->CorrectLine("화살표1", MakePt(0, -64));
 		}
-		else if (KEY->down(VK_DOWN) && ypos < 2)
+		else if (KEY->down('S') && ypos < 2)
 		{
 			ypos++;
 			L->CorrectLine("화살표1", MakePt(0, 64));
 		}
-		if (KEY->down(VK_LEFT) && xpos > 0)
+		if (KEY->down('A') && xpos > 0)
 		{
 			xpos--;
 			L->CorrectLine("화살표2", MakePt(-449, 0));
 		}
-		else if (KEY->down(VK_RIGHT) && xpos < 1)
+		else if (KEY->down('D') && xpos < 1)
 		{
 			xpos++;
 			L->CorrectLine("화살표2", MakePt(449, 0));
@@ -137,6 +138,9 @@ void MainScene::Turn2() //로고
 		}
 		if (KEY->down(VK_RETURN))
 		{
+			if (ypos == 0) _lineSpd = 5;
+			if (ypos == 1) _lineSpd = 3;
+			if (ypos == 2) _lineSpd = 1;
 			cnt = 3;
 		}
 	}
@@ -283,6 +287,7 @@ void MainScene::setName()
 		L->calmLine(MakePt(768, 351 + 195), "BACK");
 		L->calmLine(MakePt(768, 351 + 260), "ERASE");
 		L->calmLine(MakePt(768, 351 + 325), "E N D");
+		L->CreateLine(MakePt(65, 768), "Name your Character.", "n", false);
 		cnt = 1;
 	}
 	if (cnt == 1)
@@ -321,8 +326,8 @@ void MainScene::setName()
 	{
 		pulse = pulse % 8;
 
-		if (KEY->down(VK_LEFT) && xpos > 0) { _x -= 67; xpos--; }
-		if (KEY->down(VK_RIGHT))
+		if (KEY->down('A') && xpos > 0) { _x -= 67; xpos--; }
+		if (KEY->down('D'))
 		{
 			if (xpos < 12 && ypos == 0)
 			{
@@ -340,8 +345,8 @@ void MainScene::setName()
 				xpos++;
 			}
 		}
-		if (KEY->down(VK_UP) && ypos > 0) { _y -= 65; ypos--; }
-		if (KEY->down(VK_DOWN))
+		if (KEY->down('W') && ypos > 0) { _y -= 65; ypos--; }
+		if (KEY->down('S'))
 		{
 			if (xpos <= 10 && ypos < 5)
 			{
