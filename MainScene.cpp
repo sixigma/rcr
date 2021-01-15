@@ -75,6 +75,10 @@ void MainScene::Turn1() //로고
 
 void MainScene::Turn2() //로고
 {
+	if (SND->isPlaying("5 - Menu.mp3"))
+	{
+		SND->stop("5 - Menu.mp3");
+	}
 	if (!SND->isPlaying("1 - Game Mode & Character Select.mp3"))
 	{
 		SND->play("1 - Game Mode & Character Select.mp3", _currMasterVolume * _currBGMVolume);
@@ -244,7 +248,17 @@ void MainScene::Turn4()	//회사로고
 
 void MainScene::setName()
 {
-
+	if (SND->isPlaying("1 - Game Mode & Character Select.mp3"))
+	{
+		SND->stop("1 - Game Mode & Character Select.mp3");
+	}
+	if (!SND->isPlaying("5 - Menu.mp3"))
+	{
+		SND->play("5 - Menu.mp3", _currMasterVolume * _currBGMVolume);
+		SND->findChannel("5 - Menu.mp3")->setLoopPoints(66137, FMOD_TIMEUNIT_MS, 133153, FMOD_TIMEUNIT_MS);
+		SND->findChannel("5 - Menu.mp3")->setPosition(66137, FMOD_TIMEUNIT_MS);
+		SND->findChannel("5 - Menu.mp3")->setLoopCount(-1);
+	}
 	if (cnt == 0)
 	{
 		string word[] = {
