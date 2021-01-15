@@ -17,6 +17,7 @@ HRESULT shop::init()
 		SND->findChannel("5 - Menu.mp3")->setLoopCount(-1);
 	}
 
+	L->AllDeleteLine();
 
 	setMapNum(6);
 	shopNumber = 0;
@@ -407,10 +408,10 @@ void shop::shopSetting()
 
 
 		L->CreateLine(MakePt(_itemBox[0].rc.left - 70, _itemBox[0].rc.top + 10), "Donut        .80", "n", false);
-		L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Muffin       .95", "n", false);
-		L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Bagel        .95", "n", false);
-		L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Honey Bun   3.30", "n", false);
-		L->CreateLine(MakePt(_itemBox[4].rc.left - 70, _itemBox[4].rc.top + 10), "Croissant   4.10", "n", false);
+		L->CreateLine(MakePt(_itemBox[1].rc.left - 70, _itemBox[1].rc.top + 10), "Muffin       .90", "n", false);
+		L->CreateLine(MakePt(_itemBox[2].rc.left - 70, _itemBox[2].rc.top + 10), "Bagel        .90", "n", false);
+		L->CreateLine(MakePt(_itemBox[3].rc.left - 70, _itemBox[3].rc.top + 10), "Honey Bun    .90", "n", false);
+		L->CreateLine(MakePt(_itemBox[4].rc.left - 70, _itemBox[4].rc.top + 10), "Croissant   1.00", "n", false);
 		L->CreateLine(MakePt(_itemBox[5].rc.left - 70, _itemBox[5].rc.top + 10), "Nothing", "n", false);
 	}
 	if (shopNumber == 3)//Sushi
@@ -630,29 +631,37 @@ void shop::shopbuy()
 		_price = _item->getPrice();
 		if (_price <= _cMoney)//가격이 소지금 보다 작거나 같을 때
 		{
-			if (shopNumber == 2) 
+			if (shopNumber == 2)
 			{
-				pl->getVItem().push_back(new item);
-				pl->getVItem()[pl->getVItem().size() - 1]->init(_itemName);
+				if (pl->getVItem().size() < 8)
+				{
+					pl->getVItem().push_back(_item);
+					pl->moneyR(_price);
+				}
+				else SAFE_DEL(_item);
 			}
-			if(!(shopNumber == 2))
-			pl->setAllStatusValuesUsingShopItem(
-				_item->getPlusPunch(),
-				_item->getPlusKick(),
-				_item->getPlusWeapon(),
-				_item->getPlusPower(),
-				_item->getPlusAgility(),
-				_item->getPlusGuard(),
-				_item->getPlusEndure(),
-				_item->getPlusEnergy(),
-				_item->getRecoveryHp(),
-				_item->getPlusMaxHp());
-			pl->moneyR(_price);
+			else
+			{
+				pl->setAllStatusValuesUsingShopItem(
+					_item->getPlusPunch(),
+					_item->getPlusKick(),
+					_item->getPlusWeapon(),
+					_item->getPlusPower(),
+					_item->getPlusAgility(),
+					_item->getPlusGuard(),
+					_item->getPlusEndure(),
+					_item->getPlusEnergy(),
+					_item->getRecoveryHp(),
+					_item->getPlusMaxHp());
+				SAFE_DEL(_item);
+				pl->moneyR(_price);
+			}
 			buy = false;
 		}
 		else if (_price > _cMoney) //가격이 소지금 보다 클 때
 		{
 			//소지금이 부족하다고 대사칠때 여기다가 넣으면될듯.
+			SAFE_DEL(_item);
 			buy = false;
 		}
 		apply = false;
