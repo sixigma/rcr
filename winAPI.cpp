@@ -13,6 +13,7 @@ RECT		_camMovLim, _totRegion;
 BOOL		_moveKeyDisabled, _isInShop, _shouldBePaused, _shouldFadeOut, _shouldShowMenuScreen;
 float		_currMasterVolume, _currBGMVolume, _currSFXVolume;
 string		_playerChName = "";
+int			_lineSpd = 2;
 
 playground _pg;
 
