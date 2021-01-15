@@ -34,13 +34,15 @@ void player::release()
 	delete _L_punch;
 	delete _R_kick;
 	delete _L_kick;
+	delete _R_jump;
+	delete _L_jump;
 }
 
 void player::update()
 {
 	if (!_moveKeyDisabled && !_isInShop)	// 씬 전환 직후가 아닐 때, 상점이 아닐 때만 조작 가능
 	{
-		if (_p_state != RUN)
+		if (_p_state != RUN && _p_state != JUMP)
 		{
 			if (KEY->press('D'))
 			{
@@ -53,7 +55,7 @@ void player::update()
 				_p_state = WALK;
 			}
 
-			if (KEY->press('A'))
+			if (KEY->press('A') && _p_state != JUMP)
 			{
 				if (!left)
 				{
@@ -65,15 +67,22 @@ void player::update()
 			}
 
 		}
+
 		if (dash_cnt == 0 && (KEY->down('D') || KEY->down('A')))
 			++dash_cnt;
 
-		else if (dash_cnt > 0 && dash_cnt < 40)
+		else if (dash_cnt > 0 && dash_cnt < 40 && _p_state != JUMP)
 		{
 			if (KEY->down('A') && left && _p_state != RUN)
+			{
 				_p_state = RUN;
+				_isRun = true;
+			}
 			if (KEY->down('D') && !left && _p_state != RUN)
+			{
 				_p_state = RUN;
+				_isRun = true;
+			}
 			++dash_cnt;
 		}
 
@@ -97,18 +106,48 @@ void player::update()
 
 		deltaX *= 0.9;
 		if (abs(deltaX) < 4) deltaX = 0;
-		if (deltaX == 0)
+		if (deltaX == 0 && _p_state != JUMP)
 		{
 			_p_state = IDLE;
 		}
 		pos.x += deltaX;
-
 		//-------------------------------------------------------------------------
-		if (KEY->press('W'))
-			pos.y -= 12;
-		else if (KEY->press('S'))
-			pos.y += 12;
+		//스위치 IDLE로 변경
+		if (KEY->up('D') && _p_state == WALK) { _p_state = IDLE; }
+		if (KEY->up('A') && _p_state == WALK) { _p_state = IDLE; }
 
+		if (KEY->press('W') && _p_state != JUMP)
+		{
+			if (pos.z == 0) { pos.y -= 12; }
+			else if (KEY->up('W') && _p_state == WALK)_p_state = IDLE;
+			if (_isRun)_p_state = RUN;
+			else if (!_isRun)_p_state = WALK;
+		}
+		else if (KEY->press('S') && _p_state != JUMP)
+		{
+			if (_isRun)_p_state = RUN;
+			else if (!_isRun)_p_state = WALK;
+			if (pos.z == 0) pos.y += 12;
+			else if (pos.z != 0 && _p_state != JUMP)
+			{
+				_p_tagState.jump = true;
+				_p_state = JUMP;
+				_JP = 2.f;
+				_G = 0.2f;
+				pos.y += 10;
+			}
+			else if (KEY->up('S') && _p_state == WALK)_p_state = IDLE;
+		}
+
+
+			//점프
+		//if (KEY->press('K') && KEY->press('J') && _p_state != JUMP)
+		if (KEY->down(VK_SPACE) && _p_state != JUMP)
+		{
+			_p_tagState.jump = true;
+			_p_state = JUMP;
+		}
+			//대쉬후 점프는 더높이 1번 맵에서 점프후 착지가 가능한 정도의 높이
 
 		if (KEY->press('J'))
 		{
@@ -118,9 +157,9 @@ void player::update()
 
 				if (left)
 				{
-					if (_L_punch->getCurrPlaylistIdx() == 5)
+					if (_L_punch->getCurrPlaylistIdx() == 2)
 					{
-						_attack_rc = MakeRct(pos.x - 25, pos.y - 95, 50, 20);
+						_attack_rc = MakeRct(pos.x - 25 - 40, pos.y - 95, 50, 20);
 					}
 				}
 
@@ -142,9 +181,9 @@ void player::update()
 				{
 					if (left)
 					{
-						if (_L_kick->getCurrPlaylistIdx() == 5)
+						if (_L_kick->getCurrPlaylistIdx() == 2)
 						{
-							_attack_rc = MakeRct(pos.x - 45, pos.y - 75, 55, 30);
+							_attack_rc = MakeRct(pos.x - 45 - 55, pos.y - 75, 55, 30);
 						}
 					}
 
@@ -157,16 +196,9 @@ void player::update()
 					}
 				}
 			}
-		/*
-		if(KEY->press('K') && KEY->press('J'))
-			//점프
-
-			//대쉬후 점프는 더높이 1번 맵에서 점프후 착지가 가능한 정도의 높이
-		*/
-
-		_p_character_set.ch = MakeRct(pos.x - 33, pos.y - 130, 66, 130);
+		_p_character_set.ch = MakeRct(pos.x - 33, pos.y - 130 + pos.z, 66, 130);
 		_p_character_set.ani->frameUpdate(TIME->getElapsedTime() * 10);
-
+		jumpSwitch();
 		_count++;
 		frameUp();
 		if (_count > 400) _count = 0;
@@ -178,11 +210,10 @@ void player::render()
 {
 	//x중앙, y하단
 	if (KEY->isToggledOn(VK_TAB)) { DrawRct(getMemDC(), _p_character_set.ch); }
-
 	//이미지 -> 애니렌더(hdc , x씌울곳, y씌울곳, 애니메이션)을 입력합니다
 	if (_isInShop == false)
 	{
-		_p_character_set.img->aniRender(getMemDC(), pos.x - 316 / 2, pos.y - 408 / 2, _p_character_set.ani);
+		_p_character_set.img->aniRender(getMemDC(), pos.x - 316 / 2, pos.y - 408 / 2 + pos.z, _p_character_set.ani);
 
 	}
 	DrawRct(getMemDC(), _attack_rc);
@@ -244,6 +275,12 @@ void player::frameUp()
 			if (left) { _p_character_set.img = _kick; _p_character_set.ani = _L_kick; }
 			else if (!left) { _p_character_set.img = _kick; _p_character_set.ani = _R_kick; }
 			_p_character_set.ani->resume();
+			break;
+		case JUMP:
+			if (left) { _p_character_set.img = _jump; _p_character_set.ani = _L_jump; }
+			else if (!left) { _p_character_set.img = _jump; _p_character_set.ani = _R_jump; }
+			_p_character_set.ani->setCurrPlaylistIdx(0);
+			break;
 		case HIT:
 			break;
 		case KO:
@@ -251,8 +288,84 @@ void player::frameUp()
 		default:
 			break;
 		}
+		_count = 0;
 	}
 
+}
+
+void player::jumpSwitch()
+{
+	if(_p_state!=JUMP){ _p_tagState.jump = false; }
+	
+	switch (_p_state)
+	{
+	case IDLE:
+		_MV = 0;
+		_JP = 10.f;
+		_G = 0.5f;
+		_isRun = false;
+	break;
+
+	case WALK:
+		if (_WD)
+		{
+			_p_tagState.jump = true;
+			_p_state = JUMP;
+			_JP = 2.f;
+			_G = 0.3f;
+			if (left && KEY->press('A'))_MV = -5;
+			else if (!left && KEY->press('D'))_MV = 5;
+		}
+		else
+		{
+			_JP = 10.f;
+			_G = 0.5f;
+			if (left && KEY->press('A'))  _MV = -6; 
+			else if (!left && KEY->press('D'))_MV = 6;
+		}
+	break;
+
+	case RUN:
+		if (_WD)
+		{
+			_p_tagState.jump = true;
+			_p_state = JUMP;
+			_JP = 3.f;
+			_G = 0.3f;
+			if (left)_MV = -6;
+			else if (!left)_MV = 6;
+		}
+		else
+		{
+			_JP = 15.f;
+			_G = 0.5f;
+			if (left)_MV = -12;
+			else if (!left)_MV = 12;
+		}
+
+	break;
+
+	case JUMP:
+		_deltaZ -= _JP;
+		_JP -= _G;
+		pos.z = _deltaZ;
+		deltaX = _MV;
+		if (pos.z + pos.y > pos.y)
+		{
+			pos.z = _deltaZ = _JP = _G = 0;
+			_p_state = IDLE;
+			_p_tagState.jump = false;
+			_WD = false;
+		}
+		break;
+	}
+
+}
+
+bool player::jumpDown()
+{
+	if (_JP < _G)return true;
+	else return false;
 }
 
 void player::playerImgFind()
@@ -305,7 +418,7 @@ void player::playerSetAni()
 	_R_walk->setPlaylist(_R_walkArr, 4, true);
 	_R_walk->setFPS(1);
 
-	int _L_walkArr[] = { 3,4,5,4 };
+	int _L_walkArr[] = { 5,4,3,4 };
 
 	_L_walk = new animation;
 	_L_walk->init(_walk->getWidth(),
@@ -325,7 +438,7 @@ void player::playerSetAni()
 	_R_run->setPlaylist(_R_runArr, 2, true);
 	_R_run->setFPS(1);
 
-	int _L_runArr[] = { 2,3 };
+	int _L_runArr[] = { 3,2 };
 
 	_L_run = new animation;
 	_L_run->init(_run->getWidth(),
@@ -345,7 +458,7 @@ void player::playerSetAni()
 	_R_punch->setPlaylist(_R_punchArr, 3, true);
 	_R_punch->setFPS(1);
 
-	int _L_punchArr[] = { 3,4,5 };
+	int _L_punchArr[] = { 5,4,3 };
 
 
 	_L_punch = new animation;
@@ -366,7 +479,7 @@ void player::playerSetAni()
 	_R_kick->setPlaylist(_R_kickArr, 3, true);
 	_R_kick->setFPS(1);
 
-	int _L_kickArr[] = { 3,4,5 };
+	int _L_kickArr[] = { 5,4,3 };
 
 
 	_L_kick = new animation;
@@ -377,4 +490,23 @@ void player::playerSetAni()
 	_L_kick->setPlaylist(_L_kickArr, 3, true);
 	_L_kick->setFPS(1);
 
+	int _R_jumpArr[] = {0,1};
+
+	_R_jump = new animation;
+	_R_jump->init(_jump->getWidth(),
+		_jump->getHeight(),
+		_jump->getFrameWidth(),
+		_jump->getFrameHeight());
+	_R_jump->setPlaylist(_R_jumpArr, 2, false);
+	_R_jump->setFPS(1);
+
+	int _L_jumpArr[] = { 3,2 };
+
+	_L_jump = new animation;
+	_L_jump->init(_jump->getWidth(),
+		_jump->getHeight(),
+		_jump->getFrameWidth(),
+		_jump->getFrameHeight());
+	_L_jump->setPlaylist(_L_jumpArr, 2, false);
+	_L_jump->setFPS(1);
 }

@@ -55,7 +55,7 @@ void map4::update()
 		currPlPos->y = unlandable.bottom + 4;
 	for (size_t i = 0; i < obst.size(); ++i)
 	{
-		if (currPlPos->y < obst[i].top - 1 && prevPlPos.y > obst[i].top - 1 &&
+		/*if (currPlPos->y < obst[i].top - 1 && prevPlPos.y > obst[i].top - 1 &&
 			currPlPos->x + 32 >= obst[i].left && currPlPos->x - 32 <= obst[i].right)
 			currPlPos->y = obst[i].top - 1;
 		else if (currPlPos->y - 4 < obst[i].bottom && prevPlPos.y - 4 >= obst[i].bottom &&
@@ -66,7 +66,71 @@ void map4::update()
 			currPlPos->x = obst[i].right + 32;
 		else if (currPlPos->x + 32 > obst[i].left && currPlPos->x + 32 < obst[i].right
 				 && currPlPos->y - 4 < obst[i].bottom && prevPlPos.x != currPlPos->x)
+			currPlPos->x = obst[i].left - 32;*/
+		if (currPlPos->x + 32 >= obst[i].left && currPlPos->x - 32 <= obst[i].right
+			&&currPlPos->y >= obst[i].bottom + 4 && currPlPos->y <= obst[i].bottom + 8)
+
+		{
+			if (currPlPos->y + currPlPos->z >= obst[i].top - 1 && pl->getJump() && pl->jumpDown() && currPlPos->y + currPlPos->z <= obst[i].top + 2)
+			{
+				currPlPos->z = (obst[i].top - 1) - currPlPos->y;
+				pl->setPlState(IDLE);
+				pl->setJump(false);
+				pl->setPlWD(false);
+			}
+		}
+
+		else if (
+			currPlPos->y - 4 < obst[i].bottom &&
+			prevPlPos.y - 4 >= obst[i].bottom &&
+			currPlPos->x + 32 > obst[i].left && currPlPos->x - 32 < obst[i].right)
+		{
+			currPlPos->y = obst[i].bottom + 4;
+		}
+
+		if (currPlPos->x >= unlandable.left && currPlPos->x + 32 < unlandable.right && currPlPos->z != 0 && pl->getJump() == false)//left->right
+		{
+			pl->setPlWD(true);
+			currPlPos->y = unlandable.bottom + 4;
+
+		}
+		else if (currPlPos->x <= unlandable.right && currPlPos->x - 32 > unlandable.left && currPlPos->z != 0 && pl->getJump() == false)//right->left
+		{
+			pl->setPlWD(true);
+			currPlPos->y = unlandable.bottom + 4;
+		}
+		if (currPlPos->x >= 1376 && currPlPos->x + 32 < 1420 && currPlPos->z != 0 && pl->getJump() == false)//left->right
+		{
+			pl->setPlWD(true);
+			currPlPos->y = unlandable.bottom + 4;
+
+		}
+		else if (currPlPos->x <= 1440 && currPlPos->x - 32 > 1400 && currPlPos->z != 0 && pl->getJump() == false)//right->left
+		{
+			pl->setPlWD(true);
+			currPlPos->y = unlandable.bottom + 4;
+		}
+		if (currPlPos->x >= 1632 && currPlPos->x + 32 < 1670 && currPlPos->z != 0 && pl->getJump() == false)//left->right
+		{
+			pl->setPlWD(true);
+			currPlPos->y = unlandable.bottom + 4;
+
+		}
+		else if (currPlPos->x <= 1700 && currPlPos->x - 32 > 1660 && currPlPos->z != 0 && pl->getJump() == false)//right->left
+		{
+			pl->setPlWD(true);
+			currPlPos->y = unlandable.bottom + 4;
+		}
+		if (currPlPos->x - 32 > obst[i].left && currPlPos->x - 32 < obst[i].right
+			&& currPlPos->y - 4 < obst[i].bottom && prevPlPos.x != currPlPos->x&&currPlPos->y + currPlPos->z >= obst[i].top - 1)
+		{
+			currPlPos->x = obst[i].right + 32;
+		}
+		else if (currPlPos->x + 32 > obst[i].left && currPlPos->x + 32 < obst[i].right
+			&& currPlPos->y - 4 < obst[i].bottom && prevPlPos.x != currPlPos->x&&currPlPos->y + currPlPos->z >= obst[i].top - 1)
+		{
 			currPlPos->x = obst[i].left - 32;
+		}
 	}
 
 	if (currPlPos->y > 96 + 640) currPlPos->y = 96 + 640;
