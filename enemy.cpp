@@ -2176,42 +2176,42 @@ void enemy::aniSwitch()
 		if (_emState.W == 0)
 		{
 			_emSet.img = _run;
-			if (left)_emSet.ani = _2_1Lani;
-			else if (!left)_emSet.ani = _2_1Rani;
+			if (_left)_emSet.ani = _2_1Lani;
+			else if (!_left)_emSet.ani = _2_1Rani;
 			_emSet.ani->stop();
 		}
 
 		break;
 	case WALK:
 		_emSet.img = _walk;
-		if (left)_emSet.ani = _3LaniL;
-		else if (!left)_emSet.ani = _3RaniL;
+		if (_left)_emSet.ani = _3LaniL;
+		else if (!_left)_emSet.ani = _3RaniL;
 		_emSet.ani->resume();
 		break;
 	case RUN:
 		_emSet.img = _run;
-		if (left)_emSet.ani = _2LaniL;
-		else if (!left)_emSet.ani = _2RaniL;
+		if (_left)_emSet.ani = _2LaniL;
+		else if (!_left)_emSet.ani = _2RaniL;
 		_emSet.ani->resume();
 		break;
 	case PUNCH:
 		_emSet.img = _punch;
-		if (left)_emSet.ani = _3Lani;
-		else if (!left)_emSet.ani = _3Rani;
+		if (_left)_emSet.ani = _3Lani;
+		else if (!_left)_emSet.ani = _3Rani;
 		_emSet.ani->resume();
 		//공격모션 끝나고 바로든 조금있다가든 후에 IDLE로 변환
 		break;
 	case KICK:
 		_emSet.img = _kick;
-		if (left)_emSet.ani = _3Lani;
-		else if (!left)_emSet.ani = _3Rani;
+		if (_left)_emSet.ani = _3Lani;
+		else if (!_left)_emSet.ani = _3Rani;
 		_emSet.ani->resume();
 		//공격모션 끝나고 바로든 조금있다가든 후에 IDLE로 변환
 		break;
 	case ITEM_PICK:
 		_emSet.img = _jump;
-		if (left)_emSet.ani = _2_2Lani;
-		else if (!left)_emSet.ani = _2_2Rani;
+		if (_left)_emSet.ani = _2_2Lani;
+		else if (!_left)_emSet.ani = _2_2Rani;
 		_emSet.ani->stop();
 		break;
 	case ITEM_ATTACK:
@@ -2223,8 +2223,8 @@ void enemy::aniSwitch()
 		else if (_emState.W == 6)_emSet.img = _lift_crate;
 		else if (_emState.W == 7)_emSet.img = _lift_tire;
 		else if (_emState.W == 8)_emSet.img = _lift_human;
-		if (left)_emSet.ani = _4Lani;
-		else if (!left)_emSet.ani = _4Rani;
+		if (_left)_emSet.ani = _4Lani;
+		else if (!_left)_emSet.ani = _4Rani;
 		_emSet.ani->resume();
 		break;
 	case ITEM_THROW:
@@ -2236,26 +2236,26 @@ void enemy::aniSwitch()
 		else if (_emState.W == 6)_emSet.img = _throw_crate;
 		else if (_emState.W == 7)_emSet.img = _throw_tire;
 		else if (_emState.W == 8)_emSet.img = _throw_human;
-		if (left)_emSet.ani = _6Lani;
-		else if (!left)_emSet.ani = _6Rani;
+		if (_left)_emSet.ani = _6Lani;
+		else if (!_left)_emSet.ani = _6Rani;
 		_emSet.ani->resume();
 		break;
 	case DEFEND:
 		_emSet.img = _defend;
-		if (left)_emSet.ani = _1Lani;
-		else if (!left)_emSet.ani = _1Rani;
+		if (_left)_emSet.ani = _1Lani;
+		else if (!_left)_emSet.ani = _1Rani;
 		_emSet.ani->stop();
 		break;
 	case HIT:
 		_emSet.img = _beatup;
-		if (left)
+		if (_left)
 		{
 			//마주보고 맞을 때
 			_emSet.ani = _7_3L_Lani;
 			//등뒤를 맞을 때
 			_emSet.ani = _7_2R_Lani;
 		}
-		else if (!left)
+		else if (!_left)
 		{
 			//마주보고 맞을 때
 			_emSet.ani = _7_3R_Rani;
@@ -2266,14 +2266,14 @@ void enemy::aniSwitch()
 		break;
 	case FALL:
 		_emSet.img = _beatup;
-		if (left)_emSet.ani = _7_1Lani;
-		if (!left)_emSet.ani = _7_1Rani;
+		if (_left)_emSet.ani = _7_1Lani;
+		if (!_left)_emSet.ani = _7_1Rani;
 		_emSet.ani->stop();
 		break;
 	case JUMP:
 		_emSet.img = _jump;
-		if (left)_emSet.ani = _7_1Lani;
-		if (!left)_emSet.ani = _7_1Rani;
+		if (_left)_emSet.ani = _7_1Lani;
+		if (!_left)_emSet.ani = _7_1Rani;
 		_emSet.ani->stop();
 		//점프 해제시
 		{
@@ -2282,8 +2282,8 @@ void enemy::aniSwitch()
 		break;
 	case KO:
 		_emSet.img = _ko;
-		if (left)_emSet.ani = _2Lani;
-		if (!left)_emSet.ani = _2Rani;
+		if (_left)_emSet.ani = _2Lani;
+		if (!_left)_emSet.ani = _2Rani;
 
 		_emSet.ani->resume();
 		break;
